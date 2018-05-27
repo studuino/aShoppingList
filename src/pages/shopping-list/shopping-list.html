@@ -11,7 +11,13 @@
   <ion-list>
     <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
       <ion-icon [name]="item.icon" item-start></ion-icon>
+      <div *ngIf="item.quantity === 1; then oneItem else moreItems"></div>
+      <ng-template #oneItem>
       {{item.title}}
+      </ng-template>
+      <ng-template #moreItems>
+        {{item.title}} - [{{item.quantity}}]
+      </ng-template>
       <div class="item-note" item-end>
         {{item.note}}
       </div>

@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
+import {ShoppingItem} from '../../entities/ShoppingItem';
 
 @Component({
   selector: 'page-shopping-list',
@@ -8,7 +9,7 @@ import {DetailItemPage} from './detail-item/detail-item';
 })
 export class ShoppingListPage {
   icons: string[];
-  items: Array<{title: string, note: string, icon: string}>;
+  items: Array<ShoppingItem>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     // Let's populate this page with some filler content for funzies
@@ -19,7 +20,8 @@ export class ShoppingListPage {
     for (let i = 1; i < 11; i++) {
       this.items.push({
         title: 'Item ' + i,
-        note: 'This is item #' + i,
+        note: 'Note for item #' + i,
+        quantity: Math.floor(Math.random() * this.items.length) + 1,
         icon: this.icons[Math.floor(Math.random() * this.icons.length)]
       });
     }
