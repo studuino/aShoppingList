@@ -13,3 +13,7 @@ An alternative is to emulate the app on a device or upload it to the ionic cloud
 ## Bugs and Issues
 
 Have a bug or an issue with this template? [Open a new issue](https://github.com/onero/aShoppingList/issues) here on Github.
+
+## Creator
+
+The template was created by and is maintained by **[Adam Hansen](https://adamino.dk)**
