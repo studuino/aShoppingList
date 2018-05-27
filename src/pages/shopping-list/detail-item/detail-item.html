@@ -38,25 +38,27 @@
           <h5 text-center>Quantity</h5>
         </ion-col>
       </ion-row>
-      <ion-row justify-content-center>
-        <ion-col>
+      <ion-row>
+        <ion-col col-5>
           <!--DECREASE-->
-          <button ion-button
+          <button float-end ion-button
                   outline
                   (click)="decreaseAmount()">
             <ion-icon name="remove"></ion-icon>
           </button>
+        </ion-col>
+        <ion-col>
+          <!--DISPLAY AMOUNT-->
+          <ion-input text-center item-end type="number"
+                     [(ngModel)]="selectedItem.quantity"></ion-input>
+        </ion-col>
+        <ion-col col-5>
           <!--INCREASE-->
           <button ion-button
                   outline
                   (click)="increaseAmount()">
             <ion-icon name="add"></ion-icon>
           </button>
-        </ion-col>
-        <ion-col>
-          <!--DISPLAY AMOUNT-->
-          <ion-input item-end type="number"
-                     [(ngModel)]="selectedItem.quantity"></ion-input>
         </ion-col>
       </ion-row>
       <ion-item-divider></ion-item-divider>
