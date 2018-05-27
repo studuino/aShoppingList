@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import {Component} from '@angular/core';
+import {NavController, NavParams} from 'ionic-angular';
+import {ShoppingItem} from '../../../entities/ShoppingItem';
 
 /**
  * Generated class for the ShoppingListDetailItemPage page.
@@ -13,7 +14,7 @@ import { NavController, NavParams } from 'ionic-angular';
   templateUrl: 'detail-item.html',
 })
 export class DetailItemPage {
-  selectedItem: any;
+  selectedItem: ShoppingItem;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     // If we navigated to this page, we will have an item available as a nav param
@@ -22,6 +23,22 @@ export class DetailItemPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DetailItemPage');
+  }
+
+  /**
+   * Increase amount of selected item
+   */
+  increaseAmount() {
+    this.selectedItem.quantity += 1;
+  }
+
+  /**
+   * Decrease amount of selected item, if more than 1 is available
+   */
+  decreaseAmount() {
+    if (this.selectedItem.quantity > 1) {
+      this.selectedItem.quantity -= 1;
+    }
   }
 
 }
