@@ -1,0 +1,8 @@
+{
+  "name": "aShoppingList",
+  "app_id": "b0216347",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
+}
