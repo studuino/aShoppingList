@@ -8,6 +8,7 @@ import {ShoppingItem} from '../../entities/ShoppingItem';
   templateUrl: 'shopping-list.html'
 })
 export class ShoppingListPage {
+  newItemTitle: string;
   icons: string[];
   items: Array<ShoppingItem>;
 
@@ -17,7 +18,7 @@ export class ShoppingListPage {
     'american-football', 'boat', 'bluetooth', 'build'];
 
     this.items = [];
-    for (let i = 1; i < 11; i++) {
+    for (let i = 1; i < 4; i++) {
       this.items.push({
         title: 'Item ' + i,
         note: 'Note for item #' + i,
@@ -27,6 +28,28 @@ export class ShoppingListPage {
     }
   }
 
+  /**
+   * React on user adding item to list
+   */
+  addItem() {
+    // Create new item from input
+    const newItem: ShoppingItem = {
+      title: this.newItemTitle,
+      icon: 'beer',
+      quantity: 1,
+    };
+    // Add item to list
+    this.items.push(newItem);
+    console.log(`Added ${newItem.title}!`);
+    // Reset newItemTitle
+    this.newItemTitle = null;
+  }
+
+  /**
+   * User tapped on item in list
+   * @param event
+   * @param item
+   */
   itemTapped(event, item) {
     // That's right, we're pushing to ourselves!
     this.navCtrl.push(DetailItemPage, {
