@@ -45,11 +45,14 @@ export class ShoppingListPage {
   /**
    * Edit provided item
    * @param {ShoppingItem} item
+   * @param slidingItem
    */
-  editItem(item: ShoppingItem) {
+  editItem(item: ShoppingItem, slidingItem: ItemSliding) {
     this.navCtrl.push(DetailItemPage, {
       item: item
     });
+    // Close slider for nice UX!
+    slidingItem.close();
   }
 
   /**
