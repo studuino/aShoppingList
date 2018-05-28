@@ -3,6 +3,6 @@ export interface ShoppingItem {
   category?: string;
   title: string;
   note?: string;
-  icon?: string;
+  checked?: boolean;
   quantity: number;
 }

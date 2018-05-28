@@ -9,7 +9,6 @@ import {ShoppingItem} from '../../entities/ShoppingItem';
 })
 export class ShoppingListPage {
   newItemTitle: string;
-  icons: string[];
   items: Array<ShoppingItem>;
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
@@ -20,7 +19,7 @@ export class ShoppingListPage {
         title: 'Item ' + i,
         note: 'Note for item #' + i,
         quantity: Math.floor(Math.random() * this.items.length) + 1,
-        icon: 'beer'
+        checked: i%2 == 1
       });
     }
   }
@@ -32,7 +31,7 @@ export class ShoppingListPage {
     // Create new item from input
     const newItem: ShoppingItem = {
       title: this.newItemTitle,
-      icon: 'beer',
+      checked: false,
       quantity: 1,
     };
 
@@ -45,10 +44,9 @@ export class ShoppingListPage {
 
   /**
    * User tapped on item in list
-   * @param event
    * @param item
    */
-  itemTapped(event, item) {
+  itemTapped(item) {
     // That's right, we're pushing to ourselves!
     this.navCtrl.push(DetailItemPage, {
       item: item
