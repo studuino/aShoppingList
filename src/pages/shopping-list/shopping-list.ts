@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
+import {ItemSliding, NavController, NavParams} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
 
@@ -43,13 +43,24 @@ export class ShoppingListPage {
   }
 
   /**
-   * User tapped on item in list
-   * @param item
+   * Edit provided item
+   * @param {ShoppingItem} item
    */
-  itemTapped(item) {
-    // That's right, we're pushing to ourselves!
+  editItem(item: ShoppingItem) {
     this.navCtrl.push(DetailItemPage, {
       item: item
     });
+  }
+
+  /**
+   * Delete provided item
+   * @param {ShoppingItem} item
+   * @param slidingItem
+   */
+  deleteItem(item: ShoppingItem, slidingItem: ItemSliding) {
+    const indexOfItemToRemove = this.items.findIndex(item => item === item);
+    this.items.splice(indexOfItemToRemove, 1);
+    // Close slider for nice UX!
+    slidingItem.close();
   }
 }
