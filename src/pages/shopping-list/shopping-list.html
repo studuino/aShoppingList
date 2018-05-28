@@ -19,7 +19,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list reorder="true">
     <ion-item-sliding #slidingItem *ngFor="let item of items">
       <ion-item>
         <ion-checkbox item-start [checked]="item.checked"></ion-checkbox>
