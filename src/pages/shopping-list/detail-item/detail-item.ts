@@ -1,6 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {ShoppingItem} from '../../../entities/ShoppingItem';
+import {ShoppingCategory} from '../../../entities/ShoppingCategory';
+import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
 
 /**
  * Generated class for the ShoppingListDetailItemPage page.
@@ -15,10 +17,17 @@ import {ShoppingItem} from '../../../entities/ShoppingItem';
 })
 export class DetailItemPage {
   selectedItem: ShoppingItem;
+  selectedCategory: ShoppingCategory;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  @Output()
+  itemUpdated =new EventEmitter<ShoppingItem>();
+
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private shoppingListProvider: ShoppingListProvider) {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
+    this.selectedCategory = navParams.get('category');
   }
 
   ionViewDidLoad() {
@@ -30,6 +39,14 @@ export class DetailItemPage {
    */
   increaseAmount() {
     this.selectedItem.quantity += 1;
+    this.upateSelectedItemInCategory();
+  }
+
+  /**
+   * Update the currently selected item
+   */
+  upateSelectedItemInCategory() {
+    this.shoppingListProvider.updateCategory(this.selectedCategory);
   }
 
   /**
@@ -38,6 +55,7 @@ export class DetailItemPage {
   decreaseAmount() {
     if (this.selectedItem.quantity > 1) {
       this.selectedItem.quantity -= 1;
+      this.upateSelectedItemInCategory();
     }
   }
 

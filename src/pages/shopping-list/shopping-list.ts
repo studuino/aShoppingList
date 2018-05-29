@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {ItemSliding, NavController, NavParams} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
@@ -52,11 +52,13 @@ export class ShoppingListPage {
 
   /**
    * Edit provided item
+   * @param category
    * @param {ShoppingItem} item
    * @param slidingItem
    */
-  editItem(item: ShoppingItem, slidingItem: ItemSliding) {
+  editItem(category: ShoppingCategory, item: ShoppingItem, slidingItem: ItemSliding) {
     this.navCtrl.push(DetailItemPage, {
+      category: category,
       item: item
     });
     // Close slider for nice UX!
@@ -70,14 +72,24 @@ export class ShoppingListPage {
    * @param {ShoppingItem} item
    * @param slidingItem
    */
-  removeItem(shoppingList: ShoppingList, category: ShoppingCategory, item: ShoppingItem, slidingItem: ItemSliding) {
+  removeItem(category: ShoppingCategory, item: ShoppingItem, slidingItem: ItemSliding) {
     // Find index of item to remove from category
-    // const indexOfItemToRemove = category.items.findIndex(item => item.uid === item.uid);
-    // // Remove item
-    // category.items.splice(indexOfItemToRemove, 1);
-    // // Send updated shopping list to update in firestore
-    // this.shoppingListProvider.updateCategory(shoppingList);
+    const indexOfItemToRemove = category.items.findIndex(item => item.uid === item.uid);
+    // Remove item
+    category.items.splice(indexOfItemToRemove, 1);
+    // Send updated shopping list to update in firestore
+    this.shoppingListProvider.updateCategory(category);
     // Close slider for nice UX!
     slidingItem.close();
+  }
+
+  /**
+   * Mark item as checked
+   * @param categoryWithCheckedItem
+   * @param {ShoppingItem} item
+   */
+  changeChecked(categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
+    item.checked = !item.checked;
+    this.shoppingListProvider.updateCategory(categoryWithCheckedItem);
   }
 }
