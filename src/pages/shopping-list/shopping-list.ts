@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {ItemSliding, NavController, NavParams} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';

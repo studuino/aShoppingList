@@ -1,11 +1,9 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {ShoppingItem} from '../../../entities/ShoppingItem';
 import {ShoppingCategory} from '../../../entities/ShoppingCategory';
-import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
 import {CategoryProvider} from '../../../providers/categories/category';
 import {Observable} from 'rxjs/Observable';
-import {s} from '@angular/core/src/render3';
 
 /**
  * Generated class for the ShoppingListDetailItemPage page.
@@ -20,11 +18,12 @@ import {s} from '@angular/core/src/render3';
 })
 export class DetailItemPage {
   selectedItem: ShoppingItem;
+  // Category Selected item origins from
   selectedCategory: ShoppingCategory;
-  $categoryNames: Observable<string[]>;
+  // User selected category, that selectedItem should be placed in
+  selectorCategoryTitle: string;
 
-  @Output()
-  itemUpdated =new EventEmitter<ShoppingItem>();
+  $categories: Observable<ShoppingCategory[]>;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -32,11 +31,11 @@ export class DetailItemPage {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
     this.selectedCategory = navParams.get('category');
+    this.selectorCategoryTitle = this.selectedCategory.title;
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad DetailItemPage');
-    this.$categoryNames = this.categoryProvider.getCategoryNames();
+    this.$categories = this.categoryProvider.getCategories();
   }
 
   /**
@@ -64,4 +63,23 @@ export class DetailItemPage {
     }
   }
 
+  /**
+   * Move item from selectedCategory to categoryToMoveItemTo by selectorCategoryTitle
+   * @param categories
+   */
+  moveItemToCategory(categories) {
+    const categoriesAsShopping = categories as ShoppingCategory[];
+    // Get the category to move selectedItem to
+    const categoryToMoveItemTo = categoriesAsShopping.find(category => category.title === this.selectorCategoryTitle);
+    // Add item to new category
+    categoryToMoveItemTo.items.push(this.selectedItem);
+    // Filter moved item away from old list
+    this.selectedCategory.items = this.selectedCategory.items.filter(item => item.title !== this.selectedItem.title);
+    // Update categoryToMoveItemTo on firestore
+    this.categoryProvider.updateCategory(categoryToMoveItemTo);
+    // Update selected category on firestore
+    this.categoryProvider.updateCategory(this.selectedCategory)
+      // Set selectedCategory to categoryToMoveItemTo
+      .then(() => this.selectedCategory = categoryToMoveItemTo);
+  }
 }

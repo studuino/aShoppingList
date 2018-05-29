@@ -31,15 +31,9 @@ export class CategoryProvider {
 
   /**
    * Return all category names
-   * @returns {Observable<string[]>}
    */
-  getCategoryNames(): Observable<string[]> {
-    return this.afs.collection<ShoppingCategory>(this.CATEGORIES_COLLECTION).valueChanges()
-      .map(categories => {
-        const categoryTitles: string[] = [];
-        categories.forEach(category => categoryTitles.push(category.title));
-        return categoryTitles;
-      });
+  getCategories() {
+    return this.afs.collection<ShoppingCategory>(this.CATEGORIES_COLLECTION).valueChanges();
   }
 
   /**

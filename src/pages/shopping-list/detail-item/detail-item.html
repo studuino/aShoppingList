@@ -75,9 +75,10 @@
       <ion-row>
         <ion-col>
           <ion-list>
-            <ion-item *ngIf="$categoryNames | async as categoryNames">
-                <ion-select class="category-select" [(ngModel)]="selectedCategory.title">
-                  <ion-option *ngFor="let categoryName of categoryNames" [value]="categoryName">{{categoryName}}
+            <ion-item *ngIf="$categories | async as categories">
+                <ion-select class="category-select" (ionChange)="moveItemToCategory(categories)" [(ngModel)]="selectorCategoryTitle">
+                  <ion-option *ngFor="let category of categories"
+                              [value]="category.title">{{category.title}}
                   </ion-option>
                 </ion-select>
             </ion-item>
