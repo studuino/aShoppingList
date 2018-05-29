@@ -39,13 +39,13 @@ export class DetailItemPage {
    */
   increaseAmount() {
     this.selectedItem.quantity += 1;
-    this.upateSelectedItemInCategory();
+    this.updateSelectedItemInCategory();
   }
 
   /**
    * Update the currently selected item
    */
-  upateSelectedItemInCategory() {
+  updateSelectedItemInCategory() {
     this.shoppingListProvider.updateCategory(this.selectedCategory);
   }
 
@@ -55,7 +55,7 @@ export class DetailItemPage {
   decreaseAmount() {
     if (this.selectedItem.quantity > 1) {
       this.selectedItem.quantity -= 1;
-      this.upateSelectedItemInCategory();
+      this.updateSelectedItemInCategory();
     }
   }
 
