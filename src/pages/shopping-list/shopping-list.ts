@@ -94,4 +94,13 @@ export class ShoppingListPage {
     item.checked = !item.checked;
     this.categoryProvider.updateCategory(categoryWithCheckedItem);
   }
+
+  /**
+   * Compute shopping list total
+   * @param {ShoppingList} shoppingList
+   * @returns {number}
+   */
+  computeTotalOfItemsInList(shoppingList: ShoppingList): number {
+    return this.shoppingListProvider.calculateShoppingListTotal(shoppingList)
+  }
 }

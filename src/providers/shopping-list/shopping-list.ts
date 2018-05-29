@@ -25,4 +25,27 @@ export class ShoppingListProvider {
   getShoppingListByUid(uid: string) {
     return this.afs.doc<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}/${uid}`).valueChanges()
   }
+
+  /**
+   * Sum total price of items in each category in shopping list
+   * @returns {number}
+   */
+  calculateShoppingListTotal(shoppingList: ShoppingList): number {
+    let total = 0;
+    // Check for instantiation
+    if (shoppingList.categories) {
+      shoppingList.categories.forEach(category => {
+        if (category.items) {
+          category.items.forEach(item => {
+            // Check if item has a price
+            if (item.price) {
+              // Increase total
+              total += (item.price * item.quantity);
+            }
+          })
+        }
+      });
+    }
+    return total;
+  }
 }

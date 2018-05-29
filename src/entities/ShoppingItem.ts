@@ -4,5 +4,6 @@ export interface ShoppingItem {
   title?: string;
   note?: string;
   checked?: boolean;
-  quantity: number;
+  quantity?: number;
+  price?: number;
 }
