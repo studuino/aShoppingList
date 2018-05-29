@@ -13,7 +13,6 @@ import {ShoppingCategory} from '../../entities/ShoppingCategory';
 export class ShoppingListProvider {
 
   private SHOPPING_LISTS_COLLECTION = 'shoppingLists';
-  private CATEGORIES_COLLECTION = 'categories';
 
   constructor(private afs: AngularFirestore) {
   }
@@ -25,24 +24,5 @@ export class ShoppingListProvider {
    */
   getShoppingListByUid(uid: string) {
     return this.afs.doc<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}/${uid}`).valueChanges()
-  }
-
-  /**
-   * Get Categories by shopping list uid
-   * @param {string} shoppingListUid
-   * @returns {Observable<ShoppingCategory[]>}
-   */
-  getCategoriesByShoppingListUid(shoppingListUid: string) {
-    return this.afs.collection<ShoppingCategory>(this.CATEGORIES_COLLECTION,
-      ref => ref.where('shoppingListUid', '==', shoppingListUid)).valueChanges()
-  }
-
-  /**
-   * Add item to provided category
-   * @param category
-   */
-  updateCategory(category: ShoppingCategory) {
-    return this.afs.doc<ShoppingCategory>(`${this.CATEGORIES_COLLECTION}/${category.uid}`)
-      .set(category, {merge: true});
   }
 }

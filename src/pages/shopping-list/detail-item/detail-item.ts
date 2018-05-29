@@ -3,6 +3,9 @@ import {NavController, NavParams} from 'ionic-angular';
 import {ShoppingItem} from '../../../entities/ShoppingItem';
 import {ShoppingCategory} from '../../../entities/ShoppingCategory';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
+import {CategoryProvider} from '../../../providers/categories/category';
+import {Observable} from 'rxjs/Observable';
+import {s} from '@angular/core/src/render3';
 
 /**
  * Generated class for the ShoppingListDetailItemPage page.
@@ -18,13 +21,14 @@ import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-li
 export class DetailItemPage {
   selectedItem: ShoppingItem;
   selectedCategory: ShoppingCategory;
+  $categoryNames: Observable<string[]>;
 
   @Output()
   itemUpdated =new EventEmitter<ShoppingItem>();
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private shoppingListProvider: ShoppingListProvider) {
+              private categoryProvider: CategoryProvider) {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
     this.selectedCategory = navParams.get('category');
@@ -32,6 +36,7 @@ export class DetailItemPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad DetailItemPage');
+    this.$categoryNames = this.categoryProvider.getCategoryNames();
   }
 
   /**
@@ -46,7 +51,7 @@ export class DetailItemPage {
    * Update the currently selected item
    */
   updateSelectedItemInCategory() {
-    this.shoppingListProvider.updateCategory(this.selectedCategory);
+    this.categoryProvider.updateCategory(this.selectedCategory);
   }
 
   /**

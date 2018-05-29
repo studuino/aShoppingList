@@ -11,6 +11,7 @@ import {DetailItemPage} from '../pages/shopping-list/detail-item/detail-item';
 import {ShoppingListProvider} from '../providers/shopping-list/shopping-list';
 import {AngularFireModule} from 'angularfire2';
 import {AngularFirestoreModule} from 'angularfire2/firestore';
+import { CategoryProvider } from '../providers/categories/category';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -44,7 +45,8 @@ export const firebaseConfig = {
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ShoppingListProvider
+    ShoppingListProvider,
+    CategoryProvider
   ]
 })
 export class AppModule {

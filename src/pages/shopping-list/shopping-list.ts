@@ -8,6 +8,7 @@ import {Observable} from 'rxjs';
 import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import 'rxjs-compat/add/operator/switchMap';
 import 'rxjs-compat/add/operator/map';
+import {CategoryProvider} from '../../providers/categories/category';
 
 @Component({
   selector: 'page-shopping-list',
@@ -20,13 +21,14 @@ export class ShoppingListPage {
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private shoppingListProvider: ShoppingListProvider) {
+              private shoppingListProvider: ShoppingListProvider,
+              private categoryProvider: CategoryProvider) {
   }
 
   ionViewDidLoad() {
     this.$shoppingList = this.shoppingListProvider.getShoppingListByUid(this.tempUid)
       .switchMap(shoppingList => {
-        return this.shoppingListProvider.getCategoriesByShoppingListUid(shoppingList.uid)
+        return this.categoryProvider.getCategoriesByShoppingListUid(shoppingList.uid)
           .map(categories => {
             shoppingList.categories = categories as ShoppingCategory[];
             return shoppingList;
@@ -45,7 +47,7 @@ export class ShoppingListPage {
       quantity: 1,
     };
     shoppingList.categories[0].items.push(newItem);
-    this.shoppingListProvider.updateCategory(shoppingList.categories[0]);
+    this.categoryProvider.updateCategory(shoppingList.categories[0]);
     // Reset newItemTitle
     this.newItemTitle = null;
   }
@@ -78,7 +80,7 @@ export class ShoppingListPage {
     // Remove item
     category.items.splice(indexOfItemToRemove, 1);
     // Send updated shopping list to update in firestore
-    this.shoppingListProvider.updateCategory(category);
+    this.categoryProvider.updateCategory(category);
     // Close slider for nice UX!
     slidingItem.close();
   }
@@ -90,6 +92,6 @@ export class ShoppingListPage {
    */
   changeChecked(categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
     item.checked = !item.checked;
-    this.shoppingListProvider.updateCategory(categoryWithCheckedItem);
+    this.categoryProvider.updateCategory(categoryWithCheckedItem);
   }
 }

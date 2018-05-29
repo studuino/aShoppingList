@@ -71,9 +71,17 @@
           <h5 text-center>Category</h5>
         </ion-col>
       </ion-row>
+      <!--CATEGORY SELECT-->
       <ion-row>
         <ion-col>
-          <p text-center>{{selectedCategory.title}}</p>
+          <ion-list>
+            <ion-item *ngIf="$categoryNames | async as categoryNames">
+                <ion-select class="category-select" [(ngModel)]="selectedCategory.title">
+                  <ion-option *ngFor="let categoryName of categoryNames" [value]="categoryName">{{categoryName}}
+                  </ion-option>
+                </ion-select>
+            </ion-item>
+          </ion-list>
         </ion-col>
       </ion-row>
       <!--DIVIDER-->
