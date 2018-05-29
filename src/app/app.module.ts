@@ -1,14 +1,17 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { ErrorHandler, NgModule } from '@angular/core';
-import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import {BrowserModule} from '@angular/platform-browser';
+import {ErrorHandler, NgModule} from '@angular/core';
+import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
 
-import { MyApp } from './app.component';
+import {MyApp} from './app.component';
 
-import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
+import {StatusBar} from '@ionic-native/status-bar';
+import {SplashScreen} from '@ionic-native/splash-screen';
 import {ShoppingListPage} from '../pages/shopping-list/shopping-list';
-import {AngularFireModule} from 'angularfire2';
 import {DetailItemPage} from '../pages/shopping-list/detail-item/detail-item';
+import {ShoppingListProvider} from '../providers/shopping-list/shopping-list';
+import {AngularFireModule} from 'angularfire2';
+import {AngularFirestore, AngularFirestoreModule} from 'angularfire2/firestore';
+import {AngularFireDatabase, AngularFireDatabaseModule} from 'angularfire2/database';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -29,7 +32,8 @@ export const firebaseConfig = {
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(firebaseConfig)
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFirestoreModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -40,7 +44,10 @@ export const firebaseConfig = {
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    ShoppingListProvider,
+    AngularFirestore
   ]
 })
-export class AppModule {}
+export class AppModule {
+}

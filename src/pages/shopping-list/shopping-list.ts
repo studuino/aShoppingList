@@ -2,6 +2,9 @@ import {Component} from '@angular/core';
 import {ItemSliding, NavController, NavParams} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
+import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
+import {ShoppingList} from '../../entities/ShoppingList';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'page-shopping-list',
@@ -9,19 +12,16 @@ import {ShoppingItem} from '../../entities/ShoppingItem';
 })
 export class ShoppingListPage {
   newItemTitle: string;
-  items: Array<ShoppingItem>;
+  $shoppingList: Observable<ShoppingList>;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController,
+              public navParams: NavParams,
+              private shoppingListProvider: ShoppingListProvider) {
+  }
 
-    this.items = [];
-    for (let i = 1; i < 4; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'Note for item #' + i,
-        quantity: Math.floor(Math.random() * this.items.length) + 1,
-        checked: i%2 == 1
-      });
-    }
+  ionViewDidLoad() {
+    const tempUid = 'kN7tXRn9Imy72pvkF7cZ';
+    this.$shoppingList = this.shoppingListProvider.getShoppingListByUid(tempUid);
   }
 
   /**
@@ -29,14 +29,15 @@ export class ShoppingListPage {
    */
   addItem() {
     // Create new item from input
-    const newItem: ShoppingItem = {
-      title: this.newItemTitle,
-      checked: false,
-      quantity: 1,
-    };
+    // const newItem: ShoppingItem = {
+    //   title: this.newItemTitle,
+    //   checked: false,
+    //   quantity: 1,
+    // };
 
     // Add item to list
-    this.items.push(newItem);
+    //TODO ALH: Reimplement
+    // this.$items.push(newItem);
 
     // Reset newItemTitle
     this.newItemTitle = null;
@@ -61,8 +62,9 @@ export class ShoppingListPage {
    * @param slidingItem
    */
   deleteItem(item: ShoppingItem, slidingItem: ItemSliding) {
-    const indexOfItemToRemove = this.items.findIndex(item => item === item);
-    this.items.splice(indexOfItemToRemove, 1);
+    // const indexOfItemToRemove = this.$items.findIndex(item => item === item);
+    // TODO ALH: Reimplement
+    // this.$items.splice(indexOfItemToRemove, 1);
     // Close slider for nice UX!
     slidingItem.close();
   }
