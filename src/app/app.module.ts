@@ -10,8 +10,7 @@ import {ShoppingListPage} from '../pages/shopping-list/shopping-list';
 import {DetailItemPage} from '../pages/shopping-list/detail-item/detail-item';
 import {ShoppingListProvider} from '../providers/shopping-list/shopping-list';
 import {AngularFireModule} from 'angularfire2';
-import {AngularFirestore, AngularFirestoreModule} from 'angularfire2/firestore';
-import {AngularFireDatabase, AngularFireDatabaseModule} from 'angularfire2/database';
+import {AngularFirestoreModule} from 'angularfire2/firestore';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -33,7 +32,7 @@ export const firebaseConfig = {
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseConfig),
-    AngularFirestoreModule
+    AngularFirestoreModule.enablePersistence()
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -45,8 +44,7 @@ export const firebaseConfig = {
     StatusBar,
     SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ShoppingListProvider,
-    AngularFirestore
+    ShoppingListProvider
   ]
 })
 export class AppModule {

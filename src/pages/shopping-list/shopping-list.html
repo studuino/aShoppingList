@@ -5,21 +5,21 @@
     </button>
     <ion-title>Shopping List</ion-title>
   </ion-navbar>
-  <ion-item>
-    <ion-input type="text"
-               placeholder="Type Name Of Item To Add"
-               [(ngModel)]="newItemTitle"></ion-input>
-    <button ion-button round
-            *ngIf="newItemTitle || newItemTitle?.length > 0"
-            item-right
-            (click)="addItem()">
-      Add Item
-    </button>
-  </ion-item>
 </ion-header>
 
 <ion-content>
   <div *ngIf="$shoppingList | async as shoppingList">
+    <ion-item>
+      <ion-input type="text"
+                 placeholder="Type Name Of Item To Add"
+                 [(ngModel)]="newItemTitle"></ion-input>
+      <button ion-button round
+              *ngIf="newItemTitle || newItemTitle?.length > 0"
+              item-right
+              (click)="addItem(shoppingList)">
+        Add Item
+      </button>
+    </ion-item>
     <ion-list *ngFor="let category of shoppingList.categories">
       <ion-list-header>
         {{category.title}}
@@ -39,9 +39,9 @@
             </button>
             <button ion-button
                     color="danger"
-                    (click)="deleteItem(item, slidingItem)">
+                    (click)="removeItem(shoppingList, category, item, slidingItem)">
               <ion-icon name="trash"></ion-icon>
-              Delete
+              Remove
             </button>
           </ion-item-options>
         </ion-item-sliding>
