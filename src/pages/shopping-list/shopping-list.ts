@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ItemSliding, NavController, NavParams} from 'ionic-angular';
+import {ItemSliding, NavController, NavParams, Platform} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
 import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
@@ -9,6 +9,8 @@ import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import 'rxjs-compat/add/operator/switchMap';
 import 'rxjs-compat/add/operator/map';
 import {CategoryProvider} from '../../providers/categories/category';
+import {ScreenOrientation} from '@ionic-native/screen-orientation';
+import {platformBrowser} from '@angular/platform-browser';
 
 @Component({
   selector: 'page-shopping-list',
@@ -26,7 +28,7 @@ export class ShoppingListPage {
   }
 
   ionViewDidLoad() {
-    this.$shoppingList = this.shoppingListProvider.getShoppingListByUid(this.tempUid)
+        this.$shoppingList = this.shoppingListProvider.getShoppingListByUid(this.tempUid)
       .switchMap(shoppingList => {
         return this.categoryProvider.getCategoriesByShoppingListUid(shoppingList.uid)
           .map(categories => {

@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {ShoppingList} from '../../entities/ShoppingList';
-import {ShoppingCategory} from '../../entities/ShoppingCategory';
 
 /*
   Generated class for the ShoppingListProvider provider.

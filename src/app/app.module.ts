@@ -11,7 +11,8 @@ import {DetailItemPage} from '../pages/shopping-list/detail-item/detail-item';
 import {ShoppingListProvider} from '../providers/shopping-list/shopping-list';
 import {AngularFireModule} from 'angularfire2';
 import {AngularFirestoreModule} from 'angularfire2/firestore';
-import { CategoryProvider } from '../providers/categories/category';
+import {CategoryProvider} from '../providers/categories/category';
+import {ScreenOrientation} from '@ionic-native/screen-orientation';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -44,6 +45,7 @@ export const firebaseConfig = {
   providers: [
     StatusBar,
     SplashScreen,
+    ScreenOrientation,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ShoppingListProvider,
     CategoryProvider

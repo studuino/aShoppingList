@@ -1,4 +1,3 @@
-import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import {AngularFirestore} from 'angularfire2/firestore';
