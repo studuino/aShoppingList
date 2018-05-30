@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ItemSliding, NavController, NavParams, Platform} from 'ionic-angular';
+import {ItemSliding, NavController, NavParams} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
 import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
@@ -9,8 +9,7 @@ import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import 'rxjs-compat/add/operator/switchMap';
 import 'rxjs-compat/add/operator/map';
 import {CategoryProvider} from '../../providers/categories/category';
-import {ScreenOrientation} from '@ionic-native/screen-orientation';
-import {platformBrowser} from '@angular/platform-browser';
+import {ReorderIndexes} from 'ionic-angular/umd/components/item/item-reorder';
 
 @Component({
   selector: 'page-shopping-list',
@@ -70,6 +69,14 @@ export class ShoppingListPage {
   }
 
   /**
+   * Update provided category
+   * @param category
+   */
+  updateCategory(category) {
+    // this.categoryProvider.updateCategory(category);
+  }
+
+  /**
    * Remove provided item
    * @param shoppingList
    * @param category
@@ -78,7 +85,7 @@ export class ShoppingListPage {
    */
   removeItem(category: ShoppingCategory, item: ShoppingItem, slidingItem: ItemSliding) {
     // Find index of item to remove from category
-    const indexOfItemToRemove = category.items.findIndex(item => item.uid === item.uid);
+    const indexOfItemToRemove = category.items.findIndex(itemInList => itemInList.title === item.title);
     // Remove item
     category.items.splice(indexOfItemToRemove, 1);
     // Send updated shopping list to update in firestore
@@ -104,5 +111,19 @@ export class ShoppingListPage {
    */
   computeTotalOfItemsInList(shoppingList: ShoppingList): number {
     return this.shoppingListProvider.calculateShoppingListTotal(shoppingList)
+  }
+
+  /**
+   * Update order of items in in category
+   * @param {ReorderIndexes} indexes
+   * @param {ShoppingCategory} category
+   */
+  updateListOrder(indexes: ReorderIndexes, category: ShoppingCategory) {
+    // Use splicing to reorder items (https://stackoverflow.com/questions/2440700/reordering-arrays/2440723)
+    category.items.splice(
+      indexes.to, 0, // Index we're moving to
+      category.items.splice(indexes.from, 1)[0]); // Item we are moving (splice returns array of removed items!)
+    // Send updated list to firestore!
+    this.categoryProvider.updateCategory(category);
   }
 }

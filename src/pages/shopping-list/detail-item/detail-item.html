@@ -26,6 +26,7 @@
         <ion-item>
           <ion-input text-center
                      type="text"
+                     (ionChange)="updateSelectedItemInCategory()"
                      [(ngModel)]="selectedItem.title"></ion-input>
         </ion-item>
       </ion-row>
@@ -97,9 +98,12 @@
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col>
-          <p text-center>TO BE IMPLEMENTED</p>
-        </ion-col>
+        <ion-item>
+          <ion-input text-center
+                     type="text"
+                     (ionChange)="updateSelectedItemInCategory()"
+                     [(ngModel)]="selectedItem.price"></ion-input>
+        </ion-item>
       </ion-row>
     </ion-grid>
   </div>

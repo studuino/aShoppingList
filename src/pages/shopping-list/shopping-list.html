@@ -24,7 +24,7 @@
       <ion-list-header>
         {{category.title}}
       </ion-list-header>
-      <ion-item-group reorder="true">
+      <ion-item-group (ionItemReorder)="updateListOrder($event, category)" reorder="true">
         <ion-item-sliding #slidingItem *ngFor="let item of category.items">
           <ion-item>
             <ion-checkbox item-start (ionChange)="changeChecked(category, item)"

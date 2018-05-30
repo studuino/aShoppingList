@@ -31,6 +31,11 @@ export class DetailItemPage {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
     this.selectedCategory = navParams.get('category');
+    // // Find selected item in selected category
+    // const indexOfItemToReplace = this.selectedCategory.items.findIndex(itemInList => itemInList.title === this.selectedItem.title);
+    // // Make sure we are working directly on the selected item
+    // this.selectedCategory.items.splice(indexOfItemToReplace, 1, this.selectedItem);
+    // Set title for the popup selector
     this.selectorCategoryTitle = this.selectedCategory.title;
   }
 
