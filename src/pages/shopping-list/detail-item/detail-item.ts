@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams} from 'ionic-angular';
+import {AlertController, NavController, NavParams} from 'ionic-angular';
 import {ShoppingItem} from '../../../entities/ShoppingItem';
 import {ShoppingCategory} from '../../../entities/ShoppingCategory';
 import {CategoryProvider} from '../../../providers/categories/category';
@@ -27,14 +27,11 @@ export class DetailItemPage {
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private categoryProvider: CategoryProvider) {
+              private categoryProvider: CategoryProvider,
+              public alertCtrl: AlertController) {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
     this.selectedCategory = navParams.get('category');
-    // // Find selected item in selected category
-    // const indexOfItemToReplace = this.selectedCategory.items.findIndex(itemInList => itemInList.title === this.selectedItem.title);
-    // // Make sure we are working directly on the selected item
-    // this.selectedCategory.items.splice(indexOfItemToReplace, 1, this.selectedItem);
     // Set title for the popup selector
     this.selectorCategoryTitle = this.selectedCategory.title;
   }
@@ -56,6 +53,34 @@ export class DetailItemPage {
    */
   updateSelectedItemInCategory() {
     this.categoryProvider.updateCategory(this.selectedCategory);
+  }
+
+  promptForNewCategory() {
+    let prompt = this.alertCtrl.create({
+      title: 'New Category',
+      message: "Enter a name for this new category",
+      inputs: [
+        {
+          name: 'title',
+          placeholder: 'Title'
+        },
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Save',
+          handler: data => {
+            console.log(data);
+          }
+        }
+      ]
+    });
+    prompt.present();
   }
 
   /**
@@ -84,7 +109,7 @@ export class DetailItemPage {
     this.categoryProvider.updateCategory(categoryToMoveItemTo);
     // Update selected category on firestore
     this.categoryProvider.updateCategory(this.selectedCategory)
-      // Set selectedCategory to categoryToMoveItemTo
+    // Set selectedCategory to categoryToMoveItemTo
       .then(() => this.selectedCategory = categoryToMoveItemTo);
   }
 }

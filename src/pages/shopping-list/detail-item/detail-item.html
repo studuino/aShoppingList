@@ -88,25 +88,35 @@
       <br>
 
       <!--CATEGORY-->
-      <ion-row>
-        <ion-col>
-          <h5 text-center>Category</h5>
-        </ion-col>
-      </ion-row>
-      <!--CATEGORY SELECT-->
-      <ion-row>
-        <ion-col>
-          <ion-list>
-            <ion-item *ngIf="$categories | async as categories">
-              <ion-select class="category-select" (ionChange)="moveItemToCategory(categories)" [(ngModel)]="selectorCategoryTitle">
-                <ion-option *ngFor="let category of categories"
-                            [value]="category.title">{{category.title}}
-                </ion-option>
-              </ion-select>
-            </ion-item>
-          </ion-list>
-        </ion-col>
-      </ion-row>
+      <div align="center">
+        <ion-row align-items-center>
+          <ion-col>
+            <h5 text-center>Category</h5>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <button text-center ion-button (click)="promptForNewCategory()">
+              <ion-icon name="create"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+        <!--CATEGORY SELECT-->
+        <ion-row>
+          <ion-col>
+            <ion-list>
+              <ion-item *ngIf="$categories | async as categories">
+                <ion-select class="category-select" (ionChange)="moveItemToCategory(categories)"
+                            [(ngModel)]="selectorCategoryTitle">
+                  <ion-option *ngFor="let category of categories"
+                              [value]="category.title">{{category.title}}
+                  </ion-option>
+                </ion-select>
+              </ion-item>
+            </ion-list>
+          </ion-col>
+        </ion-row>
+      </div>
 
     </ion-grid>
   </div>
