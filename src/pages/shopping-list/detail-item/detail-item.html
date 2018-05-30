@@ -66,6 +66,27 @@
 
       <br>
 
+      <!--UNIT PRICE-->
+      <ion-row>
+        <ion-col>
+          <h5 text-center>Unit Price</h5>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-list inset>
+            <ion-item>
+              <ion-label>Kr.</ion-label>
+              <ion-input text-center type="number"
+                         (ionChange)="updateSelectedItemInCategory()"
+                         [(ngModel)]="selectedItem.price"></ion-input>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+
+      <br>
+
       <!--CATEGORY-->
       <ion-row>
         <ion-col>
@@ -77,34 +98,16 @@
         <ion-col>
           <ion-list>
             <ion-item *ngIf="$categories | async as categories">
-                <ion-select class="category-select" (ionChange)="moveItemToCategory(categories)" [(ngModel)]="selectorCategoryTitle">
-                  <ion-option *ngFor="let category of categories"
-                              [value]="category.title">{{category.title}}
-                  </ion-option>
-                </ion-select>
+              <ion-select class="category-select" (ionChange)="moveItemToCategory(categories)" [(ngModel)]="selectorCategoryTitle">
+                <ion-option *ngFor="let category of categories"
+                            [value]="category.title">{{category.title}}
+                </ion-option>
+              </ion-select>
             </ion-item>
           </ion-list>
         </ion-col>
       </ion-row>
-      <!--DIVIDER-->
-      <ion-item-divider></ion-item-divider>
 
-      <br>
-
-      <!--UNIT PRICE-->
-      <ion-row>
-        <ion-col>
-          <h5 text-center>Unit Price</h5>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-item>
-          <ion-input text-center
-                     type="text"
-                     (ionChange)="updateSelectedItemInCategory()"
-                     [(ngModel)]="selectedItem.price"></ion-input>
-        </ion-item>
-      </ion-row>
     </ion-grid>
   </div>
 </ion-content>
