@@ -15,7 +15,6 @@ export class CategoryProvider {
   private CATEGORIES_COLLECTION = 'categories';
 
   constructor(private afs: AngularFirestore) {
-    console.log('Hello CategoryProvider Provider');
   }
 
   /**
@@ -25,7 +24,9 @@ export class CategoryProvider {
    */
   getCategoriesByShoppingListUid(shoppingListUid: string) {
     return this.afs.collection<ShoppingCategory>(this.CATEGORIES_COLLECTION,
-      ref => ref.where('shoppingListUid', '==', shoppingListUid)).valueChanges()
+      ref =>
+        ref.where('shoppingListUid', '==', shoppingListUid)
+          .orderBy('index')).valueChanges()
   }
 
   /**

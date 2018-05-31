@@ -11,7 +11,6 @@ import {AlertButton, AlertController} from 'ionic-angular';
 export class AlertProvider {
 
   constructor(private alertCtrl: AlertController) {
-    console.log('Hello AlertProvider Provider');
   }
 
   /**

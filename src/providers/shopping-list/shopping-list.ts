@@ -31,7 +31,8 @@ export class ShoppingListProvider {
    */
   getShoppingLists() {
     return this.afs.collection<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}`,
-      ref => ref.orderBy('title')).valueChanges();
+      ref =>
+        ref.orderBy('title')).valueChanges();
   }
 
   /**

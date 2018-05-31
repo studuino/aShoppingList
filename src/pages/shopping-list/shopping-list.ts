@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ItemSliding, NavController, NavParams} from 'ionic-angular';
+import {ItemSliding, LoadingController, NavController, NavParams} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
 import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
