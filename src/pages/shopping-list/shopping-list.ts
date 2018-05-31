@@ -17,8 +17,9 @@ import {ReorderIndexes} from 'ionic-angular/umd/components/item/item-reorder';
 })
 export class ShoppingListPage {
   newItemTitle: string;
-  $shoppingList: Observable<ShoppingList>;
-  tempUid = 'kN7tXRn9Imy72pvkF7cZ';
+  $shoppingLists: Observable<ShoppingList[]>;
+  $currentShoppingList: Observable<ShoppingList>;
+  shoppingListTitle: string;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -27,12 +28,19 @@ export class ShoppingListPage {
   }
 
   ionViewDidLoad() {
-        this.$shoppingList = this.shoppingListProvider.getShoppingListByUid(this.tempUid)
-      .switchMap(shoppingList => {
-        return this.categoryProvider.getCategoriesByShoppingListUid(shoppingList.uid)
+    // Load all shopping lists
+    this.$shoppingLists = this.shoppingListProvider.getShoppingLists();
+    // Set current shopping list as first from list
+    this.$currentShoppingList = this.$shoppingLists
+      .switchMap(shoppingLists => {
+        // Load categories from shopping list
+        return this.categoryProvider.getCategoriesByShoppingListUid(shoppingLists[0].uid)
           .map(categories => {
-            shoppingList.categories = categories as ShoppingCategory[];
-            return shoppingList;
+            // Set categories in shopping list
+            shoppingLists[0].categories = categories as ShoppingCategory[];
+            //
+            this.shoppingListTitle = shoppingLists[0].title;
+            return shoppingLists[0];
           });
       });
   }
@@ -66,14 +74,6 @@ export class ShoppingListPage {
     });
     // Close slider for nice UX!
     slidingItem.close();
-  }
-
-  /**
-   * Update provided category
-   * @param category
-   */
-  updateCategory(category) {
-    // this.categoryProvider.updateCategory(category);
   }
 
   /**
@@ -125,5 +125,24 @@ export class ShoppingListPage {
       category.items.splice(indexes.from, 1)[0]); // Item we are moving (splice returns array of removed items!)
     // Send updated list to firestore!
     this.categoryProvider.updateCategory(category);
+  }
+
+  /**
+   * Load selected shopping list
+   * @param {ShoppingList} shoppingList
+   */
+  loadSelectedShoppingList(shoppingList: ShoppingList) {
+    this.$currentShoppingList =
+      // Get shopping list
+      this.shoppingListProvider.getShoppingListByUid(shoppingList.uid)
+        // Switch to loading categories in shopping list
+      .switchMap(shoppingList => {
+        return this.categoryProvider.getCategoriesByShoppingListUid(shoppingList.uid)
+          .map(categories => {
+            // Assign categories to list
+            shoppingList.categories = categories;
+            return shoppingList;
+          })
+      });
   }
 }

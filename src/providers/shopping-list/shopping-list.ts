@@ -26,6 +26,15 @@ export class ShoppingListProvider {
   }
 
   /**
+   * Get all shopping lists
+   * @returns {Observable<ShoppingList[]>}
+   */
+  getShoppingLists() {
+    return this.afs.collection<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}`,
+      ref => ref.orderBy('title')).valueChanges();
+  }
+
+  /**
    * Sum total price of items in each category in shopping list
    * @returns {number}
    */

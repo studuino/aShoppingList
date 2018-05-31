@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import {AngularFirestore} from 'angularfire2/firestore';
-import {Observable} from 'rxjs/Observable';
 
 /*
   Generated class for the CategoryProvider provider.

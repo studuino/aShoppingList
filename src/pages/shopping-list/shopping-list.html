@@ -3,12 +3,19 @@
     <button ion-button menuToggle>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Shopping List</ion-title>
+    <div *ngIf="$shoppingLists | async as shoppingLists">
+      <ion-select [(ngModel)]="shoppingListTitle"
+                  interface="popover">
+        <ion-option *ngFor="let shoppingList of shoppingLists"
+                    [value]="shoppingList.title"
+                    (ionSelect)="loadSelectedShoppingList(shoppingList)">{{shoppingList.title}}</ion-option>
+      </ion-select>
+    </div>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <div *ngIf="$shoppingList | async as shoppingList">
+  <div *ngIf="$currentShoppingList | async as shoppingList">
     <ion-item>
       <ion-input type="text"
                  placeholder="Type Name Of Item To Add"
@@ -60,7 +67,7 @@
 </ion-content>
 
 <ion-footer>
-  <div *ngIf="$shoppingList | async as shoppingList">
+  <div *ngIf="$currentShoppingList | async as shoppingList">
     <ion-toolbar>
       <h3 text-center>Shopping List Total {{computeTotalOfItemsInList(shoppingList)}} Kr.</h3>
       <!--<ion-buttons end>-->
