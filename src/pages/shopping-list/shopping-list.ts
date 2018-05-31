@@ -63,12 +63,14 @@ export class ShoppingListPage {
 
   /**
    * Edit provided item
+   * @param shoppingListUid
    * @param category
    * @param {ShoppingItem} item
    * @param slidingItem
    */
-  editItem(category: ShoppingCategory, item: ShoppingItem, slidingItem: ItemSliding) {
+  editItem(shoppingListUid: string, category: ShoppingCategory, item: ShoppingItem, slidingItem: ItemSliding) {
     this.navCtrl.push(DetailItemPage, {
+      shoppingListUid: shoppingListUid,
       category: category,
       item: item
     });

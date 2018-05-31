@@ -29,9 +29,12 @@ export class CategoryProvider {
 
   /**
    * Return all category names
+   * @param {string} shoppingListUid
+   * @return {Observable<ShoppingCategory[]>}
    */
-  getCategories() {
-    return this.afs.collection<ShoppingCategory>(this.CATEGORIES_COLLECTION).valueChanges();
+  getCategoriesByShoppingListUId(shoppingListUid: string) {
+    return this.afs.collection<ShoppingCategory>(this.CATEGORIES_COLLECTION,
+      ref => ref.where('shoppingListUid', '==', shoppingListUid)).valueChanges();
   }
 
   /**

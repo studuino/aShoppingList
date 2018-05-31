@@ -20,6 +20,8 @@ export class DetailItemPage {
   selectedItem: ShoppingItem;
   // Category Selected item origins from
   selectedCategory: ShoppingCategory;
+  // Current shopping list uid
+  selectedShoppingListUid: string;
   // User selected category, that selectedItem should be placed in
   selectorCategoryTitle: string;
 
@@ -32,12 +34,13 @@ export class DetailItemPage {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
     this.selectedCategory = navParams.get('category');
+    this.selectedShoppingListUid = navParams.get('shoppingListUid');
     // Set title for the popup selector
     this.selectorCategoryTitle = this.selectedCategory.title;
   }
 
   ionViewDidLoad() {
-    this.$categories = this.categoryProvider.getCategories();
+    this.$categories = this.categoryProvider.getCategoriesByShoppingListUId(this.selectedShoppingListUid);
   }
 
   /**
