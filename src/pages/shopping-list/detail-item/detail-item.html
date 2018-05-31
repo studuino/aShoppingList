@@ -76,7 +76,7 @@
         <ion-col>
           <ion-list inset>
             <ion-item>
-              <ion-label>Kr.</ion-label>
+              <ion-label text-right>Kr.</ion-label>
               <ion-input text-center type="number"
                          (ionChange)="updateSelectedItemInCategory()"
                          [(ngModel)]="selectedItem.price"></ion-input>
@@ -94,13 +94,6 @@
             <h5 text-center>Category</h5>
           </ion-col>
         </ion-row>
-        <ion-row>
-          <ion-col>
-            <button text-center ion-button (click)="promptForNewCategory()">
-              <ion-icon name="create"></ion-icon>
-            </button>
-          </ion-col>
-        </ion-row>
         <!--CATEGORY SELECT-->
         <ion-row>
           <ion-col>
@@ -114,6 +107,14 @@
                 </ion-select>
               </ion-item>
             </ion-list>
+          </ion-col>
+        </ion-row>
+        <!--CREATE NEW CATEGORY-->
+        <ion-row>
+          <ion-col>
+            <button text-center ion-button color="secondary" (click)="promptForNewCategory()">
+              <ion-icon name="add"></ion-icon>
+            </button>
           </ion-col>
         </ion-row>
       </div>

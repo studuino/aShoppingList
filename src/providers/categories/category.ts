@@ -36,7 +36,8 @@ export class CategoryProvider {
    */
   getCategoriesByShoppingListUId(shoppingListUid: string) {
     return this.afs.collection<ShoppingCategory>(this.CATEGORIES_COLLECTION,
-      ref => ref.where('shoppingListUid', '==', shoppingListUid)).valueChanges();
+      ref =>
+        ref.where('shoppingListUid', '==', shoppingListUid)).valueChanges();
   }
 
   /**

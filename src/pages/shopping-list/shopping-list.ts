@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ItemSliding, LoadingController, NavController, NavParams} from 'ionic-angular';
+import {ItemSliding, NavController, NavParams} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
 import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
@@ -38,7 +38,7 @@ export class ShoppingListPage {
           .map(categories => {
             // Set categories in shopping list
             shoppingLists[0].categories = categories as ShoppingCategory[];
-            //
+            // Set title of Shopping List for Header dropdown
             this.shoppingListTitle = shoppingLists[0].title;
             return shoppingLists[0];
           });
