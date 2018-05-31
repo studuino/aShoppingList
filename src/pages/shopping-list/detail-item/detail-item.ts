@@ -1,8 +1,11 @@
 import {Component} from '@angular/core';
-import {AlertController, NavController, NavParams} from 'ionic-angular';
+import {NavController, NavParams} from 'ionic-angular';
 import {ShoppingItem} from '../../../entities/ShoppingItem';
 import {ShoppingCategory} from '../../../entities/ShoppingCategory';
 import {CategoryProvider} from '../../../providers/categories/category';
+import {AlertProvider} from '../../../providers/alert/alert';
+import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
+import 'rxjs-compat/add/operator/take';
 import {Observable} from 'rxjs/Observable';
 
 /**
@@ -30,7 +33,8 @@ export class DetailItemPage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private categoryProvider: CategoryProvider,
-              public alertCtrl: AlertController) {
+              private shoppingListProvider: ShoppingListProvider,
+              private alertProvider: AlertProvider) {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
     this.selectedCategory = navParams.get('category');
@@ -58,32 +62,45 @@ export class DetailItemPage {
     this.categoryProvider.updateCategory(this.selectedCategory);
   }
 
+  /**
+   * Prompt user for new category name
+   */
   promptForNewCategory() {
-    let prompt = this.alertCtrl.create({
-      title: 'New Category',
-      message: "Enter a name for this new category",
-      inputs: [
-        {
-          name: 'title',
-          placeholder: 'Title'
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          handler: data => {
-            console.log('Cancel clicked');
-          }
-        },
-        {
-          text: 'Save',
-          handler: data => {
-            console.log(data);
-          }
+    let prompt = this.alertProvider.getAlert(
+      'New Category',
+      'Enter a name for this new category',
+      {
+        text: 'Save',
+        handler: data => {
+          // Get new category name from user input data
+          const nameOfNewCategory = data.title;
+          this.createCategory(nameOfNewCategory)
         }
-      ]
-    });
+      });
     prompt.present();
+  }
+
+  /**
+   * Create a new category
+   * @param {string} nameOfNewCategory
+   */
+  createCategory(nameOfNewCategory: string) {
+    this.shoppingListProvider
+    // Get shopping list to update category index
+      .getShoppingListByUid(this.selectedShoppingListUid)
+      .take(1)
+      .map(shoppingList => {
+        // Increase amount of categories by one
+        shoppingList.amountOfCategories += 1;
+        this.categoryProvider
+        // Create category
+          .createCategoryForShoppingListUid(shoppingList, nameOfNewCategory)
+          .then(() => {
+            // Update shopping list on firestore
+            // TODO ALH: Refactor out to Firebase Functions!
+            this.shoppingListProvider.updateShoppingList(shoppingList);
+          });
+      }).subscribe();
   }
 
   /**

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import {AngularFirestore} from 'angularfire2/firestore';
+import {ShoppingList} from '../../entities/ShoppingList';
 
 /*
   Generated class for the CategoryProvider provider.
@@ -46,4 +47,20 @@ export class CategoryProvider {
       .set(category, {merge: true});
   }
 
+  /**
+   * Create new category for shopping list
+   * @param selectedShoppingList
+   * @param {string} nameOfNewCategory
+   */
+  createCategoryForShoppingListUid(selectedShoppingList: ShoppingList, nameOfNewCategory: string) {
+    const newUid = this.afs.createId();
+    return this.afs.doc<ShoppingCategory>(`${this.CATEGORIES_COLLECTION}/${newUid}`)
+      .set({
+        uid: newUid,
+        shoppingListUid: selectedShoppingList.uid,
+        index: selectedShoppingList.amountOfCategories,
+        title: nameOfNewCategory,
+        items: []
+      }, {merge: true});
+  }
 }

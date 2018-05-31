@@ -22,7 +22,7 @@ export class ShoppingListProvider {
    * @returns {Observable<ShoppingList | undefined>}
    */
   getShoppingListByUid(uid: string) {
-    return this.afs.doc<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}/${uid}`).valueChanges()
+    return this.afs.doc<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}/${uid}`).valueChanges();
   }
 
   /**
@@ -55,5 +55,15 @@ export class ShoppingListProvider {
       });
     }
     return total;
+  }
+
+  /**
+   * Update provided shopping list on firestore
+   * @param {ShoppingList} shoppingList
+   * @return {Promise<void>}
+   */
+  updateShoppingList(shoppingList: ShoppingList) {
+    return this.afs.doc(`${this.SHOPPING_LISTS_COLLECTION}/${shoppingList.uid}`)
+      .set(shoppingList, {merge: true});
   }
 }
