@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ItemSliding, NavController, NavParams} from 'ionic-angular';
+import {ItemSliding, NavController, NavParams, PopoverController} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
 import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
@@ -10,6 +10,7 @@ import 'rxjs-compat/add/operator/switchMap';
 import 'rxjs-compat/add/operator/map';
 import {CategoryProvider} from '../../providers/categories/category';
 import {ReorderIndexes} from 'ionic-angular/umd/components/item/item-reorder';
+import {ShoppingListOptionsPage} from './shopping-list-options/shopping-list-options';
 
 @Component({
   selector: 'page-shopping-list',
@@ -19,23 +20,47 @@ export class ShoppingListPage {
   newItemTitle: string;
   $shoppingLists: Observable<ShoppingList[]>;
   $currentShoppingList: Observable<ShoppingList>;
+  $locationSortedCategories: Observable<any[]>;
   shoppingListTitle: string;
+  locationTitle: string;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
+              private popoverCtrl: PopoverController,
               private shoppingListProvider: ShoppingListProvider,
               private categoryProvider: CategoryProvider) {
   }
 
   ionViewDidLoad() {
+    this.$locationSortedCategories = this.categoryProvider.getLocationSortedCategoriesByUserUid('fprXH7XZKsWEa0T5TrAv');
     // Load all shopping lists
     this.$shoppingLists = this.shoppingListProvider.getShoppingLists();
     // Set current shopping list as first from list
     this.$currentShoppingList = this.$shoppingLists
       .switchMap(shoppingLists => {
         // Load categories from shopping list
-        return this.categoryProvider.getCategoriesByShoppingListUid(shoppingLists[0].uid)
+        return this.categoryProvider.getCategoriesWithItemsByShoppingListUid(shoppingLists[0].uid)
           .map(categories => {
+            // Check for user location sorted categories
+            if (this.$locationSortedCategories) {
+              this.$locationSortedCategories
+                .map(locationSortedCategories => {
+                  // Get title of first in list
+                  // TODO ALH: Get last selected!
+                  this.locationTitle = locationSortedCategories[0].title;
+                  // Create new sorted categories array
+                  const sortedCategoriesArray: ShoppingCategory[] = [];
+                  // For each sorted category
+                  locationSortedCategories[0].sortedCategories.forEach(sortedCategory => {
+                    // Find category by id in unsorted list
+                    const categoryFromUnsortedList = categories.find(unsortedCategory => unsortedCategory.uid === sortedCategory);
+                    // Push in order to sorted array
+                    sortedCategoriesArray.push(categoryFromUnsortedList);
+                  });
+                  // Assign sorted array
+                  categories = sortedCategoriesArray;
+                });
+            }
             // Set categories in shopping list
             shoppingLists[0].categories = categories as ShoppingCategory[];
             // Set title of Shopping List for Header dropdown
@@ -43,6 +68,13 @@ export class ShoppingListPage {
             return shoppingLists[0];
           });
       });
+  }
+
+  presentPopover(myEvent) {
+    let popover = this.popoverCtrl.create(ShoppingListOptionsPage);
+    popover.present({
+      ev: myEvent
+    });
   }
 
   /**
@@ -56,7 +88,7 @@ export class ShoppingListPage {
       quantity: 1,
     };
     shoppingList.categories[0].items.push(newItem);
-    this.categoryProvider.updateCategory(shoppingList.categories[0]);
+    this.categoryProvider.updateCategoryWithItems(shoppingList.categories[0]);
     // Reset newItemTitle
     this.newItemTitle = null;
   }
@@ -91,7 +123,7 @@ export class ShoppingListPage {
     // Remove item
     category.items.splice(indexOfItemToRemove, 1);
     // Send updated shopping list to update in firestore
-    this.categoryProvider.updateCategory(category);
+    this.categoryProvider.updateCategoryWithItems(category);
     // Close slider for nice UX!
     slidingItem.close();
   }
@@ -103,7 +135,7 @@ export class ShoppingListPage {
    */
   changeChecked(categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
     item.checked = !item.checked;
-    this.categoryProvider.updateCategory(categoryWithCheckedItem);
+    this.categoryProvider.updateCategoryWithItems(categoryWithCheckedItem);
   }
 
   /**
@@ -126,7 +158,7 @@ export class ShoppingListPage {
       indexes.to, 0, // Index we're moving to
       category.items.splice(indexes.from, 1)[0]); // Item we are moving (splice returns array of removed items!)
     // Send updated list to firestore!
-    this.categoryProvider.updateCategory(category);
+    this.categoryProvider.updateCategoryWithItems(category);
   }
 
   /**
@@ -139,7 +171,7 @@ export class ShoppingListPage {
       this.shoppingListProvider.getShoppingListByUid(shoppingList.uid)
         // Switch to loading categories in shopping list
       .switchMap(shoppingList => {
-        return this.categoryProvider.getCategoriesByShoppingListUid(shoppingList.uid)
+        return this.categoryProvider.getCategoriesWithItemsByShoppingListUid(shoppingList.uid)
           .map(categories => {
             // Assign categories to list
             shoppingList.categories = categories;

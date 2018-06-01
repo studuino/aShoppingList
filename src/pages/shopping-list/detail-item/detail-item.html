@@ -99,22 +99,15 @@
           <ion-col>
             <ion-list>
               <ion-item *ngIf="$categories | async as categories">
-                <ion-select class="category-select" (ionChange)="moveItemToCategory(categories)"
+                <ion-select style="color: black" class="category-select" (ionChange)="moveItemToCategory()"
                             [(ngModel)]="selectorCategoryTitle">
                   <ion-option *ngFor="let category of categories"
+                              (ionSelect)="selectorCategoryId = category.uid"
                               [value]="category.title">{{category.title}}
                   </ion-option>
                 </ion-select>
               </ion-item>
             </ion-list>
-          </ion-col>
-        </ion-row>
-        <!--CREATE NEW CATEGORY-->
-        <ion-row>
-          <ion-col>
-            <button text-center ion-button color="secondary" (click)="promptForNewCategory()">
-              <ion-icon name="add"></ion-icon>
-            </button>
           </ion-col>
         </ion-row>
       </div>

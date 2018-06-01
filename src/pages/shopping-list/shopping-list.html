@@ -1,17 +1,37 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <div *ngIf="$shoppingLists | async as shoppingLists;">
-      <ion-select [(ngModel)]="shoppingListTitle"
-                  interface="popover">
-        <ion-option *ngFor="let shoppingList of shoppingLists"
-                    [value]="shoppingList.title"
-                    (ionSelect)="loadSelectedShoppingList(shoppingList)">{{shoppingList.title}}
-        </ion-option>
-      </ion-select>
-    </div>
+  <ion-navbar color="primary">
+    <ion-grid>
+      <ion-row align-items-center>
+        <ion-col col-2>
+          <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+          </button>
+        </ion-col>
+        <ion-col *ngIf="$shoppingLists | async as shoppingLists">
+          <ion-select style="color: white" [(ngModel)]="shoppingListTitle"
+                      interface="popover">
+            <ion-option *ngFor="let shoppingList of shoppingLists"
+                        [value]="shoppingList.title"
+                        (ionSelect)="loadSelectedShoppingList(shoppingList)">{{shoppingList.title}}
+            </ion-option>
+          </ion-select>
+        </ion-col>
+        <ion-col *ngIf="$locationSortedCategories | async as locationSortedCategories">
+          <ion-select style="color: white" [(ngModel)]="locationTitle"
+                      interface="popover">
+            <ion-option *ngFor="let locationSortedCategory of locationSortedCategories"
+                        [value]="locationSortedCategory.title"
+                        >{{locationSortedCategory.title}}
+            </ion-option>
+          </ion-select>
+        </ion-col>
+        <ion-col text-end col-2>
+          <button ion-button icon-only (click)="presentPopover($event)">
+            <ion-icon name="more"></ion-icon>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-navbar>
 </ion-header>
 
@@ -19,6 +39,7 @@
   <div *ngIf="$currentShoppingList | async as shoppingList">
     <ion-item>
       <ion-input type="text"
+                 (keyup.enter)="addItem(shoppingList)"
                  placeholder="Type Name Of Item To Add"
                  [(ngModel)]="newItemTitle"></ion-input>
       <button ion-button round

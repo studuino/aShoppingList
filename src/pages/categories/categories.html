@@ -1,15 +1,35 @@
 <ion-header>
 
-  <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Categories</ion-title>
+  <ion-navbar color="primary">
+    <ion-grid>
+      <ion-row align-items-center>
+        <ion-col col-2>
+          <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+          </button>
+        </ion-col>
+        <ion-col text-start>
+          <ion-title>Categories</ion-title>
+        </ion-col>
+        <ion-col col-2>
+          <button text-center ion-button color="secondary" (click)="promptForNewCategory()">
+            <ion-icon name="add"></ion-icon>
+          </button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-
+  <div *ngIf="$categories | async as categories">
+    <ion-list>
+      <ion-item *ngFor="let category of categories">
+        {{category.title}}
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>
