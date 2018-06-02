@@ -48,35 +48,57 @@ export class ShoppingListPage {
    */
   private setupCurrentShoppingList() {
     this.$currentShoppingList = this.$shoppingLists
+    // Grab shopping lists
       .switchMap(shoppingLists => {
         // Load categories from shopping list
         return this.categoryProvider.getCategoriesWithItemsByShoppingListUid(shoppingLists[0].uid)
-          .map(categoriesWithItems => {
-            // ensure typesafe categories
-            let categoriesWithItemsTypesafe = categoriesWithItems as ShoppingCategory[];
-            // TODO ALH: Make observable!
-            // Check for user location set
-            if (this.locationWithSortedCategories) {
-              // create new array for sorted categories
-              const sortedCategories: ShoppingCategory[] = [];
-              // For each sorted category
-              this.locationWithSortedCategories.sortedCategories.forEach(sortedCategory => {
-                // Find the same category (with items) in old array
-                const categoryForCurrentIndexInSortedArray = categoriesWithItemsTypesafe.find(unsortedCategory => unsortedCategory.title === sortedCategory.title);
-                // And assign it to the sorted array
-                sortedCategories.push(categoryForCurrentIndexInSortedArray);
-              });
-              // Assign sorted categories
-              categoriesWithItemsTypesafe = sortedCategories;
-            }
-            // Set categories in shopping list
-            shoppingLists[0].categories = categoriesWithItemsTypesafe;
-            // Set title of Shopping List for Header dropdown
-            this.shoppingListTitle = shoppingLists[0].title;
+          .map(categories => {
+            // Map categories to shopping list
+            shoppingLists[0].categories = categories;
+            // Return shopping list with categories
             return shoppingLists[0];
           });
+      })
+      // Grab shopping list with categories
+      .switchMap(shoppingListWithCategories => {
+        const currentShoppingList = shoppingListWithCategories as ShoppingList;
+        // Set title of Shopping List for Header dropdown
+        this.shoppingListTitle = currentShoppingList.title;
+
+        return this.categoryProvider.getLocationWithSortedCategoriesByName(this.locationWithSortedCategories.title)
+          .map(locationWithSortedCategories => {
+            // Check for user location set
+            if (locationWithSortedCategories) {
+              const locationWithSortedCategoriesTypeSafe = locationWithSortedCategories as {
+                title: string,
+                sortedCategories: any[]
+              };
+              this.locationWithSortedCategories = locationWithSortedCategoriesTypeSafe;
+              // create new array for sorted categories
+              const sortedCategories: ShoppingCategory[] = [];
+              // Make sure to add uncategorized as first category
+              const uncategorizedCategory = currentShoppingList.categories
+                .find(unsortedCategory => unsortedCategory.title === 'Uncategorized');
+              sortedCategories.push(uncategorizedCategory);
+              // For each sorted category
+              locationWithSortedCategoriesTypeSafe.sortedCategories.forEach(sortedCategory => {
+                // Find the same category (with items) in old array
+                const categoryForCurrentIndexInSortedArray = currentShoppingList.categories
+                  .find(unsortedCategory => unsortedCategory.title === sortedCategory.title);
+                // Check if category is used in current list
+                if (categoryForCurrentIndexInSortedArray) {
+                  // And assign it to the sorted array
+                  sortedCategories.push(categoryForCurrentIndexInSortedArray);
+                }
+              });
+              // Assign sorted categories
+              currentShoppingList.categories = sortedCategories;
+            }
+            // Return the shopping list
+            return currentShoppingList;
+          });
       });
-  }
+  };
 
   /**
    * Get list of locations
@@ -195,14 +217,14 @@ export class ShoppingListPage {
     this.$currentShoppingList =
       // Get shopping list
       this.shoppingListProvider.getShoppingListByUid(shoppingList.uid)
-        // Switch to loading categories in shopping list
-      .switchMap(shoppingList => {
-        return this.categoryProvider.getCategoriesWithItemsByShoppingListUid(shoppingList.uid)
-          .map(categories => {
-            // Assign categories to list
-            shoppingList.categories = categories;
-            return shoppingList;
-          })
-      });
+      // Switch to loading categories in shopping list
+        .switchMap(shoppingList => {
+          return this.categoryProvider.getCategoriesWithItemsByShoppingListUid(shoppingList.uid)
+            .map(categories => {
+              // Assign categories to list
+              shoppingList.categories = categories;
+              return shoppingList;
+            })
+        });
   }
 }
