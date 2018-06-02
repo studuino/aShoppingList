@@ -112,4 +112,29 @@ export class CategoryProvider {
         title: nameOfNewCategory
       })
   }
+
+  /**
+   * Get location with sorted categories by location name
+   * @param {string} title
+   * @return {Observable<any>}
+   */
+  getLocationWithSortedCategoriesByName(title: string) {
+    return this.afs.collection(this.LOCATION_SORTED_CATEGORIES_COLLECTION,
+      ref =>
+    ref.where('title', '==', title)).valueChanges()
+      .map(locationSortedCategories => {
+        return locationSortedCategories[0];
+      });
+  }
+
+  /**
+   * Update location with sorted categories
+   * @param category
+   * @return {Promise<void>}
+   */
+  updatelocationSortedCategory(category: any) {
+    return this.afs.collection(this.LOCATION_SORTED_CATEGORIES_COLLECTION)
+      .doc(category.uid)
+      .set(category, {merge: true});
+  }
 }

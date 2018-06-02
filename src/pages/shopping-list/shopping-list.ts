@@ -22,7 +22,10 @@ export class ShoppingListPage {
   $currentShoppingList: Observable<ShoppingList>;
   $locationSortedCategories: Observable<any[]>;
   shoppingListTitle: string;
-  locationTitle: string;
+  locationWithSortedCategories: {
+    title: string,
+    sortedCategories: any[]
+  };
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -32,37 +35,42 @@ export class ShoppingListPage {
   }
 
   ionViewDidLoad() {
-    this.$locationSortedCategories = this.categoryProvider.getLocationSortedCategoriesByUserUid('fprXH7XZKsWEa0T5TrAv');
+    this.setupLocations();
+
     // Load all shopping lists
     this.$shoppingLists = this.shoppingListProvider.getShoppingLists();
     // Set current shopping list as first from list
+    this.setupCurrentShoppingList();
+  }
+
+  /**
+   * From shopping list observable, assign first from array
+   */
+  private setupCurrentShoppingList() {
     this.$currentShoppingList = this.$shoppingLists
       .switchMap(shoppingLists => {
         // Load categories from shopping list
         return this.categoryProvider.getCategoriesWithItemsByShoppingListUid(shoppingLists[0].uid)
-          .map(categories => {
-            // Check for user location sorted categories
-            if (this.$locationSortedCategories) {
-              this.$locationSortedCategories
-                .map(locationSortedCategories => {
-                  // Get title of first in list
-                  // TODO ALH: Get last selected!
-                  this.locationTitle = locationSortedCategories[0].title;
-                  // Create new sorted categories array
-                  const sortedCategoriesArray: ShoppingCategory[] = [];
-                  // For each sorted category
-                  locationSortedCategories[0].sortedCategories.forEach(sortedCategory => {
-                    // Find category by id in unsorted list
-                    const categoryFromUnsortedList = categories.find(unsortedCategory => unsortedCategory.uid === sortedCategory);
-                    // Push in order to sorted array
-                    sortedCategoriesArray.push(categoryFromUnsortedList);
-                  });
-                  // Assign sorted array
-                  categories = sortedCategoriesArray;
-                });
+          .map(categoriesWithItems => {
+            // ensure typesafe categories
+            let categoriesWithItemsTypesafe = categoriesWithItems as ShoppingCategory[];
+            // TODO ALH: Make observable!
+            // Check for user location set
+            if (this.locationWithSortedCategories) {
+              // create new array for sorted categories
+              const sortedCategories: ShoppingCategory[] = [];
+              // For each sorted category
+              this.locationWithSortedCategories.sortedCategories.forEach(sortedCategory => {
+                // Find the same category (with items) in old array
+                const categoryForCurrentIndexInSortedArray = categoriesWithItemsTypesafe.find(unsortedCategory => unsortedCategory.title === sortedCategory.title);
+                // And assign it to the sorted array
+                sortedCategories.push(categoryForCurrentIndexInSortedArray);
+              });
+              // Assign sorted categories
+              categoriesWithItemsTypesafe = sortedCategories;
             }
             // Set categories in shopping list
-            shoppingLists[0].categories = categories as ShoppingCategory[];
+            shoppingLists[0].categories = categoriesWithItemsTypesafe;
             // Set title of Shopping List for Header dropdown
             this.shoppingListTitle = shoppingLists[0].title;
             return shoppingLists[0];
@@ -70,8 +78,26 @@ export class ShoppingListPage {
       });
   }
 
+  /**
+   * Get list of locations
+   */
+  private setupLocations() {
+    this.$locationSortedCategories = this.categoryProvider.getLocationSortedCategoriesByUserUid('fprXH7XZKsWEa0T5TrAv')
+      .map(locationSortedCategories => {
+        const firstLocation = locationSortedCategories[0] as {
+          title: string,
+          sortedCategories: any[]
+        };
+        this.locationWithSortedCategories = firstLocation;
+        return locationSortedCategories;
+      });
+  }
+
   presentPopover(myEvent) {
-    let popover = this.popoverCtrl.create(ShoppingListOptionsPage);
+    let popover = this.popoverCtrl.create(ShoppingListOptionsPage,
+      {
+        location: this.locationWithSortedCategories
+      });
     popover.present({
       ev: myEvent
     });

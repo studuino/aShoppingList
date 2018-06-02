@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {NavController, NavParams, ViewController} from 'ionic-angular';
-import {CategoriesPage} from '../../categories/categories';
+import {LocationSortedCategoriesPage} from '../location-sorted-categories/location-sorted-categories';
 
 /**
  * Generated class for the ShoppingListOptionsPage page.
@@ -15,20 +15,25 @@ import {CategoriesPage} from '../../categories/categories';
 })
 export class ShoppingListOptionsPage {
 
+  locationTitle: string;
+
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private viewCtrl: ViewController) {
+    this.locationTitle = navParams.get('location');
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ShoppingListOptionsPage');
   }
 
   /**
    * Navigate user to manage categories
    */
-  navigateToManageCategories() {
-    this.navCtrl.push(CategoriesPage)
+  navigateToManageLocationSortedCategories() {
+    this.navCtrl.push(LocationSortedCategoriesPage,
+      {
+        location: this.locationTitle
+      })
       .then(() => this.viewCtrl.dismiss());
   }
 }

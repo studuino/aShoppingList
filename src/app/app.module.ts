@@ -16,6 +16,7 @@ import {ScreenOrientation} from '@ionic-native/screen-orientation';
 import {AlertProvider} from '../providers/alert/alert';
 import {CategoriesPage} from '../pages/categories/categories';
 import {ShoppingListOptionsPage} from '../pages/shopping-list/shopping-list-options/shopping-list-options';
+import {LocationSortedCategoriesPage} from '../pages/shopping-list/location-sorted-categories/location-sorted-categories';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -33,7 +34,8 @@ export const firebaseConfig = {
     ShoppingListPage,
     DetailItemPage,
     CategoriesPage,
-    ShoppingListOptionsPage
+    ShoppingListOptionsPage,
+    LocationSortedCategoriesPage
   ],
   imports: [
     BrowserModule,
@@ -47,7 +49,9 @@ export const firebaseConfig = {
     ShoppingListPage,
     DetailItemPage,
     CategoriesPage,
-    ShoppingListOptionsPage
+    ShoppingListOptionsPage,
+    LocationSortedCategoriesPage
+
   ],
   providers: [
     StatusBar,

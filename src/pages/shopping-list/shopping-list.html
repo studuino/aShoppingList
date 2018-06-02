@@ -17,7 +17,7 @@
           </ion-select>
         </ion-col>
         <ion-col *ngIf="$locationSortedCategories | async as locationSortedCategories">
-          <ion-select style="color: white" [(ngModel)]="locationTitle"
+          <ion-select style="color: white" [(ngModel)]="locationWithSortedCategories.title"
                       interface="popover">
             <ion-option *ngFor="let locationSortedCategory of locationSortedCategories"
                         [value]="locationSortedCategory.title"

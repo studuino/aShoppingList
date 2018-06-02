@@ -80,7 +80,8 @@ export class DetailItemPage {
       .take(1)
       .switchMap(category => {
         // Remove item from original category
-        category.items = category.items.filter(item => item.uid !== this.selectedItem.uid);
+        const indexOfItemToRemove = category.items.indexOf(this.selectedItem);
+        category.items.splice(indexOfItemToRemove, 1);
         return this.categoryProvider.updateCategoryWithItems(category);
       })
       .take(1)
