@@ -135,7 +135,9 @@ export class ShoppingListPage {
       checked: false,
       quantity: 1,
     };
-    shoppingList.categories[0].items.push(newItem);
+    const uncategorized = shoppingList.categories
+      .find(category => category.title === 'Uncategorized');
+    uncategorized.items.push(newItem);
     this.categoryProvider.updateCategoryWithItems(shoppingList.categories[0]);
     // Reset newItemTitle
     this.newItemTitle = null;
