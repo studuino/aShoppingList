@@ -71,12 +71,12 @@ export class CategoryProvider {
 
   /**
    * Update location with sorted categories
-   * @param category
+   * @param locationWithSortedCategories
    * @return {Promise<void>}
    */
-  updatelocationSortedCategory(category: any) {
+  updateLocationWithSortedCategories(locationWithSortedCategories: LocationWithSortedCategories) {
     return this.afs.collection(this.LOCATION_SORTED_CATEGORIES_COLLECTION)
-      .doc(category.uid)
-      .set(category, {merge: true});
+      .doc(locationWithSortedCategories.uid)
+      .set(locationWithSortedCategories, {merge: true});
   }
 }

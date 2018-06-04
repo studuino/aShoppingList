@@ -1,5 +1,6 @@
 export interface LocationWithSortedCategories {
-  currentLocation: boolean,
+  isCurrentLocation: boolean,
   title: string,
+  uid: string,
   sortedCategories: any[]
 }

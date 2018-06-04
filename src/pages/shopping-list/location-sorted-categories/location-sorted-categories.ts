@@ -48,7 +48,7 @@ export class LocationSortedCategoriesPage {
       indexes.to, 0, // Index we're moving to
       locationWithSortedCategories.sortedCategories.splice(indexes.from, 1)[0]); // Item we are moving (splice returns array of removed items!)
     // Send updated list to firestore!
-    this.categoryProvider.updatelocationSortedCategory(locationWithSortedCategories)
+    this.categoryProvider.updateLocationWithSortedCategories(locationWithSortedCategories)
       .then(() => {
         // Rearrange the shopping list
         this.shoppingListProvider.rearrangeShoppingListCategories(this.currentShoppingList, locationWithSortedCategories);
