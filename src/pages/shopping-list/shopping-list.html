@@ -8,20 +8,23 @@
           </button>
         </ion-col>
         <ion-col *ngIf="$shoppingLists | async as shoppingLists">
-          <ion-select style="color: white" [(ngModel)]="shoppingListTitle"
+          <ion-select style="color: white"
+                      [(ngModel)]="currentShoppingList.title"
                       interface="popover">
             <ion-option *ngFor="let shoppingList of shoppingLists"
                         [value]="shoppingList.title"
-                        (ionSelect)="loadSelectedShoppingList(shoppingList)">{{shoppingList.title}}
+            >{{shoppingList.title}}
             </ion-option>
           </ion-select>
         </ion-col>
-        <ion-col *ngIf="$locationSortedCategories | async as locationSortedCategories">
-          <ion-select style="color: white" [(ngModel)]="locationWithSortedCategories.title"
+        <ion-col *ngIf="$locationsWithSortedCategories | async as locationsWithSortedCategories">
+          <ion-select style="color: white"
+                      [(ngModel)]="currentLocation.title"
                       interface="popover">
-            <ion-option *ngFor="let locationSortedCategory of locationSortedCategories"
-                        [value]="locationSortedCategory.title"
-                        >{{locationSortedCategory.title}}
+            <ion-option *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
+                        (ionSelect)="updatecategoriesOrderByLocation(locationWithSortedCategories)"
+                        [value]="locationWithSortedCategories.title">
+              {{locationWithSortedCategories.title}}
             </ion-option>
           </ion-select>
         </ion-col>
@@ -54,10 +57,10 @@
         <ion-list-header>
           {{category.title}}
         </ion-list-header>
-        <ion-item-group (ionItemReorder)="updateListOrder($event, category)" reorder="true">
+        <ion-item-group (ionItemReorder)="updateListOrder($event, shoppingList, category)" reorder="true">
           <ion-item-sliding #slidingItem *ngFor="let item of category.items">
             <ion-item>
-              <ion-checkbox item-start (ionChange)="changeChecked(category, item)"
+              <ion-checkbox item-start (ionChange)="changeChecked(shoppingList, category, item)"
                             [checked]="item.checked"></ion-checkbox>
               <ion-label *ngIf="item.quantity === 1">
                 <h2>{{item.title}}</h2>
@@ -72,13 +75,13 @@
             </ion-item>
             <ion-item-options side="right">
               <button ion-button
-                      (click)="editItem(shoppingList.uid, category, item, slidingItem)">
+                      (click)="editItem(shoppingList, category, item, slidingItem)">
                 <ion-icon name="create"></ion-icon>
                 Edit
               </button>
               <button ion-button
                       color="danger"
-                      (click)="removeItem(category, item, slidingItem)">
+                      (click)="removeItem(shoppingList, category, item, slidingItem)">
                 <ion-icon name="trash"></ion-icon>
                 Remove
               </button>
@@ -92,15 +95,15 @@
 
 // TODO ALH: Commented out for GUI room, fix later!
 <!--<ion-footer>-->
-  <!--<div *ngIf="$currentShoppingList | async as shoppingList">-->
-    <!--<ion-toolbar>-->
-      <!--<h3 text-center>Shopping List Total {{computeTotalOfItemsInList(shoppingList)}} Kr.</h3>-->
-      <!--&lt;!&ndash;<ion-buttons end>&ndash;&gt;-->
-      <!--&lt;!&ndash;<button ion-button icon-right color="royal">&ndash;&gt;-->
-      <!--&lt;!&ndash;Send&ndash;&gt;-->
-      <!--&lt;!&ndash;<ion-icon name="send"></ion-icon>&ndash;&gt;-->
-      <!--&lt;!&ndash;</button>&ndash;&gt;-->
-      <!--&lt;!&ndash;</ion-buttons>&ndash;&gt;-->
-    <!--</ion-toolbar>-->
-  <!--</div>-->
+<!--<div *ngIf="$currentShoppingList | async as shoppingList">-->
+<!--<ion-toolbar>-->
+<!--<h3 text-center>Shopping List Total {{computeTotalOfItemsInList(shoppingList)}} Kr.</h3>-->
+<!--&lt;!&ndash;<ion-buttons end>&ndash;&gt;-->
+<!--&lt;!&ndash;<button ion-button icon-right color="royal">&ndash;&gt;-->
+<!--&lt;!&ndash;Send&ndash;&gt;-->
+<!--&lt;!&ndash;<ion-icon name="send"></ion-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;</button>&ndash;&gt;-->
+<!--&lt;!&ndash;</ion-buttons>&ndash;&gt;-->
+<!--</ion-toolbar>-->
+<!--</div>-->
 <!--</ion-footer>-->

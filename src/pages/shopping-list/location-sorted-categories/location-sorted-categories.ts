@@ -3,6 +3,9 @@ import {NavController, NavParams} from 'ionic-angular';
 import {CategoryProvider} from '../../../providers/categories/category';
 import {ShoppingCategory} from '../../../entities/ShoppingCategory';
 import {ReorderIndexes} from 'ionic-angular/umd/components/item/item-reorder';
+import {LocationWithSortedCategories} from '../../../entities/LocationWithSortedCategories';
+import {ShoppingList} from '../../../entities/ShoppingList';
+import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
 
 /**
  * Generated class for the LocationSortedCategoriesPage page.
@@ -17,13 +20,17 @@ import {ReorderIndexes} from 'ionic-angular/umd/components/item/item-reorder';
 })
 export class LocationSortedCategoriesPage {
 
-  currentLocation;
+  currentLocation: LocationWithSortedCategories;
+  currentShoppingList: ShoppingList;
+
   $locationWithSortedCategories;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
-              private categoryProvider: CategoryProvider) {
+              private categoryProvider: CategoryProvider,
+              private shoppingListProvider: ShoppingListProvider) {
     this.currentLocation = navParams.get('location');
+    this.currentShoppingList = navParams.get('shoppingList');
   }
 
   ionViewDidLoad() {
@@ -41,8 +48,11 @@ export class LocationSortedCategoriesPage {
       indexes.to, 0, // Index we're moving to
       locationWithSortedCategories.sortedCategories.splice(indexes.from, 1)[0]); // Item we are moving (splice returns array of removed items!)
     // Send updated list to firestore!
-    this.categoryProvider.updatelocationSortedCategory(locationWithSortedCategories);
+    this.categoryProvider.updatelocationSortedCategory(locationWithSortedCategories)
+      .then(() => {
+        // Rearrange the shopping list
+        this.shoppingListProvider.rearrangeShoppingListCategories(this.currentShoppingList, locationWithSortedCategories);
+      });
   }
-
 
 }

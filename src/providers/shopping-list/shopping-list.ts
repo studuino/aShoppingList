@@ -1,6 +1,9 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {ShoppingList} from '../../entities/ShoppingList';
+import {Observable} from 'rxjs/Observable';
+import {ShoppingCategory} from '../../entities/ShoppingCategory';
+import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
 
 /*
   Generated class for the ShoppingListProvider provider.
@@ -26,13 +29,14 @@ export class ShoppingListProvider {
   }
 
   /**
-   * Get all shopping lists
+   * Get all shopping lists with just title and uid
+   * for later specific querying
    * @returns {Observable<ShoppingList[]>}
    */
-  getShoppingLists() {
+  getPartialshoppingLists(): Observable<ShoppingList[]> {
     return this.afs.collection<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}`,
       ref =>
-        ref.orderBy('title')).valueChanges();
+        ref.orderBy('title', 'asc')).valueChanges();
   }
 
   /**
@@ -66,5 +70,33 @@ export class ShoppingListProvider {
   updateShoppingList(shoppingList: ShoppingList) {
     return this.afs.doc(`${this.SHOPPING_LISTS_COLLECTION}/${shoppingList.uid}`)
       .set(shoppingList, {merge: true});
+  }
+
+  /**
+   * Rearrange list of categories in provided list, by order from location with sorted categories
+   * @param {ShoppingList} currentShoppingList
+   * @param {LocationWithSortedCategories} locationWithSortedCategories
+   */
+  rearrangeShoppingListCategories(currentShoppingList: ShoppingList, locationWithSortedCategories: LocationWithSortedCategories) {
+    // Instantiate new sorted array
+    const sortedArray: ShoppingCategory[] = [];
+    const uncategorized = currentShoppingList.categories
+      .find(category => category.title === 'Uncategorized');
+    sortedArray.push(uncategorized);
+    locationWithSortedCategories.sortedCategories
+    // For each category in sorted array
+      .forEach(sortedCategory => {
+        // Check for category for current index
+        const categoryInCurrentList = currentShoppingList.categories
+          .find(category => category.title === sortedCategory.title);
+        // If the category is in the shopping list
+        if (categoryInCurrentList) {
+          // Add to the sorted array
+          sortedArray.push(categoryInCurrentList);
+        }
+      });
+    currentShoppingList.categories = sortedArray;
+    // Update shopping list on firestore
+    this.updateShoppingList(currentShoppingList);
   }
 }

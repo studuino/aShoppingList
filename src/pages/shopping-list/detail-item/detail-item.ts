@@ -5,6 +5,7 @@ import {ShoppingCategory} from '../../../entities/ShoppingCategory';
 import {CategoryProvider} from '../../../providers/categories/category';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
 import 'rxjs-compat/add/operator/take';
+import {ShoppingList} from '../../../entities/ShoppingList';
 
 /**
  * Generated class for the ShoppingListDetailItemPage page.
@@ -22,10 +23,10 @@ export class DetailItemPage {
   // Category Selected item origins from
   selectedCategory: ShoppingCategory;
   // Current shopping list uid
-  selectedShoppingListUid: string;
+  selectedShoppingList: ShoppingList;
   // User selected category, that selectedItem should be placed in
   selectorCategoryTitle: string;
-  selectorCategoryId: string;
+  selectorCategory: ShoppingCategory;
 
   $categories;
 
@@ -36,7 +37,7 @@ export class DetailItemPage {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
     this.selectedCategory = navParams.get('category');
-    this.selectedShoppingListUid = navParams.get('shoppingListUid');
+    this.selectedShoppingList = navParams.get('shoppingList');
     // Set title for the popup selector
     this.selectorCategoryTitle = this.selectedCategory.title;
   }
@@ -57,7 +58,7 @@ export class DetailItemPage {
    * Update the currently selected item
    */
   updateSelectedItemInCategory() {
-    this.categoryProvider.updateCategoryWithItems(this.selectedCategory);
+    this.shoppingListProvider.updateShoppingList(this.selectedShoppingList);
   }
 
   /**
@@ -75,39 +76,31 @@ export class DetailItemPage {
    * @param categories
    */
   moveItemToCategory() {
-    // Get original category with item
-    this.categoryProvider.getCategoryWithItemsByUid(this.selectedCategory.uid)
-      .take(1)
-      .switchMap(category => {
-        // Remove item from original category
-        const indexOfItemToRemove = category.items.indexOf(this.selectedItem);
-        category.items.splice(indexOfItemToRemove, 1);
-        return this.categoryProvider.updateCategoryWithItems(category);
-      })
-      .take(1)
-      .switchMap(() => {
-        // Get new category to put item in
-        return this.categoryProvider.getCategoryWithItemsByShoppingListUidAndCategoryTitle(this.selectedShoppingListUid, this.selectorCategoryTitle)
-          .map(queriedCategories => {
-            return queriedCategories[0];
-          })
-      })
-      .take(1)
-      .switchMap(newCategory => {
-        if (newCategory) {
-          // Add item to category
-          newCategory.items.push(this.selectedItem);
-          return this.categoryProvider.updateCategoryWithItems(newCategory);
-        } else {
-          // Create new category with selected item
-          const newCategoryWithItems: ShoppingCategory = {
-            items: [this.selectedItem],
-            title: this.selectorCategoryTitle,
-            shoppingListUid: this.selectedShoppingListUid,
-          };
-          // Add new category to firestore
-          return this.categoryProvider.createCategoryWithItems(newCategoryWithItems);
+    // Find index of item to remove from old category
+    const indexOfItemToRemove = this.selectedCategory.items.indexOf(this.selectedItem);
+    // Remove item from category
+    this.selectedCategory.items.splice(indexOfItemToRemove, 1);
+
+    let categoryInList = false;
+    // Check if selector category is in the list
+    this.selectedShoppingList.categories
+      .forEach(category => {
+        if (this.selectorCategory.uid === category.uid) {
+          categoryInList = true;
+          // Assign selectorcategory to found category
+          this.selectorCategory = category;
         }
-      }).subscribe();
+      });
+    // If not
+    if (!categoryInList) {
+      // Instantiate items
+      this.selectorCategory.items = [];
+      // And add category
+      this.selectedShoppingList.categories.push(this.selectorCategory);
+    }
+    // Push selected item to new category
+    this.selectorCategory.items.push(this.selectedItem);
+    // Update the shopping list
+    this.shoppingListProvider.updateShoppingList(this.selectedShoppingList);
   }
 }

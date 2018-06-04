@@ -102,7 +102,7 @@
                 <ion-select style="color: black" class="category-select" (ionChange)="moveItemToCategory()"
                             [(ngModel)]="selectorCategoryTitle">
                   <ion-option *ngFor="let category of categories"
-                              (ionSelect)="selectorCategoryId = category.uid"
+                              (ionSelect)="selectorCategory = category"
                               [value]="category.title">{{category.title}}
                   </ion-option>
                 </ion-select>
