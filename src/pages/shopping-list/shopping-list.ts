@@ -25,6 +25,7 @@ export class ShoppingListPage {
   $locationsWithSortedCategories: Observable<LocationWithSortedCategories[]>;
 
   currentShoppingList;
+  currentShoppingListTitle;
   currentLocation;
   newItemTitle: string;
 
@@ -58,12 +59,17 @@ export class ShoppingListPage {
     this.$shoppingLists = this.shoppingListProvider.getPartialshoppingLists()
     // Map shopping lists
       .map(shoppingLists => {
+        // Check for selected shopping list
+        if (!this.currentShoppingList) {
         // Get first list
-        const firstShoppingList = shoppingLists[0];
-        // Assign current list
-        this.currentShoppingList = firstShoppingList;
+          const firstShoppingList = shoppingLists[0];
+          // Assign current list
+          this.currentShoppingList = firstShoppingList;
+          // Update current shopping list title
+          this.currentShoppingListTitle = firstShoppingList.title;
         // Assign current shopping list
-        this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(firstShoppingList.uid);
+          this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(firstShoppingList.uid);
+        }
         return shoppingLists;
       });
   }
@@ -156,7 +162,7 @@ export class ShoppingListPage {
    * @param shoppingList
    * @param {ShoppingCategory} category
    */
-  updateListOrder(indexes: ReorderIndexes, shoppingList: ShoppingList,  category: ShoppingCategory) {
+  updateListOrder(indexes: ReorderIndexes, shoppingList: ShoppingList, category: ShoppingCategory) {
     // Use splicing to reorder items (https://stackoverflow.com/questions/2440700/reordering-arrays/2440723)
     category.items.splice(
       indexes.to, 0, // Index we're moving to
@@ -171,5 +177,20 @@ export class ShoppingListPage {
    */
   updatecategoriesOrderByLocation(locationWithSortedCategories) {
     this.shoppingListProvider.rearrangeShoppingListCategories(this.currentShoppingList, locationWithSortedCategories);
+  }
+
+  /**
+   * Update current shopping list
+   * @param {ShoppingList} shoppingList
+   */
+  loadShoppingList(shoppingList: ShoppingList) {
+    this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(shoppingList.uid)
+    // Map shopping lists
+      .map(shoppingList => {
+        this.currentShoppingList = shoppingList;
+        // Update current shopping list title
+        this.currentShoppingListTitle = shoppingList.title;
+        return shoppingList;
+      });
   }
 }
