@@ -1,6 +1,6 @@
 export interface ShoppingItem {
   uid?: string;
-  category?: string;
+  categoryUid?: string;
   title?: string;
   note?: string;
   checked?: boolean;

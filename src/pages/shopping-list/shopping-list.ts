@@ -36,11 +36,12 @@ export class ShoppingListPage {
               private popoverCtrl: PopoverController,
               private shoppingListProvider: ShoppingListProvider,
               private categoryProvider: CategoryProvider) {
+
+    this.instantiateCurrentShoppingList();
+    this.instantiateLocationsWithCategories();
   }
 
   ionViewDidLoad() {
-    this.instantiateCurrentShoppingList();
-    this.instantiateLocationsWithCategories();
   }
 
   /***** INSTANTIATION *****/
@@ -212,13 +213,22 @@ export class ShoppingListPage {
   }
 
   /**
-   * Mark item as checked
+   * Mark item as checked and move to shopping cart
    * @param shoppingList
    * @param categoryWithCheckedItem
    * @param {ShoppingItem} item
    */
-  changeChecked(shoppingList: ShoppingList, categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
-    item.checked = !item.checked;
+  checkItemToCart(shoppingList: ShoppingList, categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
+    // Check off item
+    item.checked = true;
+    // Assign categoryUid to item, to support unchecking of item
+    // TODO ALH: Rethink this implementation!
+    item.categoryUid = categoryWithCheckedItem.uid;
+    //Find item to remove from current category
+    const indexOfItemToMove = categoryWithCheckedItem.items.indexOf(item);
+    categoryWithCheckedItem.items.splice(indexOfItemToMove, 1);
+
+    shoppingList.cart.items.push(item);
     this.shoppingListProvider.updateShoppingList(shoppingList);
   }
 
@@ -234,5 +244,25 @@ export class ShoppingListPage {
     this.content.resize();
     // Return calculated shopping list total
     return this.shoppingListProvider.calculateShoppingListTotal(shoppingList)
+  }
+
+  /**
+   * Uncheck item and move from shopping cart to original category
+   * @param shoppingList
+   * @param {ShoppingItem} item
+   */
+  uncheckItemFromCart(shoppingList: ShoppingList, item: ShoppingItem) {
+    // Uncheck item
+    item.checked = false;
+    // Locate original category for item
+    const originalCategory = shoppingList.categories.find(category => category.uid === item.categoryUid);
+    // Add item back to category
+    originalCategory.items.push(item);
+    // Locate index of item in cart
+    const indexOfItemInCart = shoppingList.cart.items.indexOf(item);
+    // Remove item from cart
+    shoppingList.cart.items.splice(indexOfItemInCart, 1);
+    // Update shopping list on firestore
+    this.shoppingListProvider.updateShoppingList(shoppingList);
   }
 }
