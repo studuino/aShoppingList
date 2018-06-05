@@ -254,15 +254,43 @@ export class ShoppingListPage {
   uncheckItemFromCart(shoppingList: ShoppingList, item: ShoppingItem) {
     // Uncheck item
     item.checked = false;
-    // Locate original category for item
-    const originalCategory = shoppingList.categories.find(category => category.uid === item.categoryUid);
-    // Add item back to category
-    originalCategory.items.push(item);
+    this.moveItemFromCartToOriginalCategory(shoppingList, item);
+
     // Locate index of item in cart
     const indexOfItemInCart = shoppingList.cart.items.indexOf(item);
     // Remove item from cart
     shoppingList.cart.items.splice(indexOfItemInCart, 1);
     // Update shopping list on firestore
+    this.shoppingListProvider.updateShoppingList(shoppingList);
+  }
+
+  /**
+   * Move provided item from shopping list cart to original category
+   * @param {ShoppingList} shoppingList
+   * @param {ShoppingItem} item
+   */
+  private moveItemFromCartToOriginalCategory(shoppingList: ShoppingList, item: ShoppingItem) {
+    // Locate original category for item
+    const originalCategory = shoppingList.categories.find(category => category.uid === item.categoryUid);
+    // Add item back to category
+    originalCategory.items.push(item);
+  }
+
+  /**
+   * Uncheck every item and move from shopping cart to original category
+   * @param {ShoppingList} shoppingList
+   */
+  uncheckAllItemsFromCart(shoppingList: ShoppingList) {
+    shoppingList.cart.items
+    // For every item in the cart
+      .forEach(itemInList => {
+        // Uncheck item
+        itemInList.checked = false;
+        this.moveItemFromCartToOriginalCategory(shoppingList, itemInList);
+      });
+    // Empty shopping cart
+    shoppingList.cart.items = [];
+    // Update firestore
     this.shoppingListProvider.updateShoppingList(shoppingList);
   }
 }
