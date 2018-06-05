@@ -29,8 +29,8 @@ export class ShoppingListPage {
 
   currentShoppingList: ShoppingList;
   currentShoppingListTitle;
-  currentLocation: LocationWithSortedCategories;
   currentLocationTitle;
+  currentLocation: LocationWithSortedCategories;
   newItemTitle: string;
 
   constructor(public navCtrl: NavController,
@@ -52,19 +52,7 @@ export class ShoppingListPage {
    * Load list of locations with sorted categories
    */
   private instantiateLocationsWithCategories() {
-    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid('fprXH7XZKsWEa0T5TrAv')
-      .map(locationsWithSortedCategories => {
-        locationsWithSortedCategories
-        // For each user location
-          .forEach(locationWithSortedCategories => {
-            // Check if the location is the current one
-            if (locationWithSortedCategories.isCurrentLocation) {
-              this.currentLocation = locationWithSortedCategories;
-              this.currentLocationTitle = locationWithSortedCategories.title;
-            }
-          });
-        return locationsWithSortedCategories;
-      });
+    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid('fprXH7XZKsWEa0T5TrAv');
   }
 
   /**
@@ -86,9 +74,10 @@ export class ShoppingListPage {
   loadShoppingList(shoppingList: ShoppingList) {
     this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(shoppingList.uid)
     // Map shopping lists
-      .map(shoppingList => {
-        this.currentShoppingList = shoppingList;
-        return shoppingList;
+      .switchMap(shoppingList => {
+        const currentShoppingList = shoppingList as ShoppingList;
+        // Get default location
+        return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
       });
   }
 
@@ -105,8 +94,34 @@ export class ShoppingListPage {
       // Update current shopping list title
       this.currentShoppingListTitle = firstShoppingList.title;
       // Assign current shopping list
-      this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(firstShoppingList.uid);
+      this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(firstShoppingList.uid)
+        .switchMap(shoppingList => {
+          const currentShoppingList = shoppingList as ShoppingList;
+          // Get default location
+          return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
+        });
     }
+  }
+
+  /**
+   * Check shopping list for default location
+   * @param currentShoppingList
+   * @param shoppingList
+   * @return {Observable<any>}
+   */
+  private instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList) {
+    return this.categoryProvider.getLocationWithSortedCategoriesByUid(currentShoppingList.defaultLocationUid)
+    // Map to return location
+      .map(locationWithSortedCategoriesByUid => {
+        // Check for default location
+        if (locationWithSortedCategoriesByUid) {
+          // Assign current location
+          this.currentLocation = locationWithSortedCategoriesByUid;
+          this.currentLocationTitle = locationWithSortedCategoriesByUid.title;
+        }
+        // Return current shopping list
+        return shoppingList;
+      });
   }
 
   /**
@@ -116,7 +131,7 @@ export class ShoppingListPage {
   presentPopover(myEvent) {
     let popover = this.popoverCtrl.create(ShoppingListOptionsPage,
       {
-        location: this.currentLocation,
+        locationTitle: this.currentLocationTitle,
         shoppingList: this.currentShoppingList
       });
     popover.present({
@@ -198,20 +213,14 @@ export class ShoppingListPage {
    * Rearrange shopping list by current location
    * @param locationWithSortedCategories
    */
-  updateCategoriesOrderByLocation(locationWithSortedCategories) {
+  updateCategoriesOrderByLocation(locationWithSortedCategories: LocationWithSortedCategories) {
     // Set current location boolean to false
-    this.currentLocation.isCurrentLocation = false;
+    this.currentShoppingList.defaultLocationUid = locationWithSortedCategories.uid;
     // update currrent location on firestore
-    this.categoryProvider.updateLocationWithSortedCategories(this.currentLocation)
+    this.shoppingListProvider.updateShoppingList(this.currentShoppingList)
       .then(() => {
-        // Switch current location
-        this.currentLocation = locationWithSortedCategories;
-        // Set new location boolean to true
-        locationWithSortedCategories.isCurrentLocation = true;
-        // Update new location on firestore
-        this.categoryProvider.updateLocationWithSortedCategories(locationWithSortedCategories)
+        this.shoppingListProvider.rearrangeShoppingListCategories(this.currentShoppingList, locationWithSortedCategories);
       });
-    this.shoppingListProvider.rearrangeShoppingListCategories(this.currentShoppingList, locationWithSortedCategories);
   }
 
   /***** SHOPPING CART *****/
@@ -240,7 +249,7 @@ export class ShoppingListPage {
     // Check for category
     // TODO ALH: Rethink this implementation!
     if (categoryWithCheckedItem.title !== this.UNCATEGORIZED_TITLE) {
-    // Assign categoryUid to item, to support unchecking of item
+      // Assign categoryUid to item, to support unchecking of item
       item.categoryUid = categoryWithCheckedItem.uid;
     } else {
       item.categoryUid = this.UNCATEGORIZED_TITLE;

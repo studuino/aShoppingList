@@ -24,7 +24,7 @@ export class ShoppingListOptionsPage {
               public navParams: NavParams,
               private viewCtrl: ViewController,
               private shoppingListProvider: ShoppingListProvider) {
-    this.locationTitle = navParams.get('location');
+    this.locationTitle = navParams.get('locationTitle');
     this.currentShoppingList = navParams.get('shoppingList');
   }
 
@@ -37,7 +37,7 @@ export class ShoppingListOptionsPage {
   navigateToManageLocationSortedCategories() {
     this.navCtrl.push(LocationSortedCategoriesPage,
       {
-        location: this.locationTitle,
+        locationTitle: this.locationTitle,
         shoppingList: this.currentShoppingList
       })
       .then(() => this.viewCtrl.dismiss());

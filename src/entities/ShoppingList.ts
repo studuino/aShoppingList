@@ -6,4 +6,5 @@ export interface ShoppingList {
   title?: string;
   categories?: ShoppingCategory[];
   cart?: ShoppingCart;
+  defaultLocationUid?: string;
 }

@@ -70,6 +70,16 @@ export class CategoryProvider {
   }
 
   /**
+   * Get location with sorted categories by location name
+   * @return {Observable<any>}
+   * @param defaultLocationUid
+   */
+  getLocationWithSortedCategoriesByUid(defaultLocationUid: string) {
+    return this.afs.collection(this.LOCATION_SORTED_CATEGORIES_COLLECTION)
+      .doc<LocationWithSortedCategories>(defaultLocationUid).valueChanges();
+  }
+
+  /**
    * Update location with sorted categories
    * @param locationWithSortedCategories
    * @return {Promise<void>}

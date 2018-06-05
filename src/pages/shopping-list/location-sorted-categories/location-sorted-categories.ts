@@ -20,7 +20,7 @@ import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-li
 })
 export class LocationSortedCategoriesPage {
 
-  currentLocation: LocationWithSortedCategories;
+  currentLocationTitle: string;
   currentShoppingList: ShoppingList;
 
   $locationWithSortedCategories;
@@ -29,12 +29,12 @@ export class LocationSortedCategoriesPage {
               public navParams: NavParams,
               private categoryProvider: CategoryProvider,
               private shoppingListProvider: ShoppingListProvider) {
-    this.currentLocation = navParams.get('location');
+    this.currentLocationTitle = navParams.get('locationTitle');
     this.currentShoppingList = navParams.get('shoppingList');
   }
 
   ionViewDidLoad() {
-    this.$locationWithSortedCategories = this.categoryProvider.getLocationWithSortedCategoriesByName(this.currentLocation.title);
+    this.$locationWithSortedCategories = this.categoryProvider.getLocationWithSortedCategoriesByName(this.currentLocationTitle);
   }
 
   /**
