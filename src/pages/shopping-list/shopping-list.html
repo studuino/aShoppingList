@@ -22,7 +22,7 @@
                       [(ngModel)]="currentLocationTitle"
                       interface="popover">
             <ion-option *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
-                        (ionSelect)="updatecategoriesOrderByLocation(locationWithSortedCategories)"
+                        (ionSelect)="updateCategoriesOrderByLocation(locationWithSortedCategories)"
                         [value]="locationWithSortedCategories.title">
               {{locationWithSortedCategories.title}}
             </ion-option>
@@ -40,6 +40,7 @@
 
 <ion-content>
   <div *ngIf="$currentShoppingList | async as shoppingList">
+    <!--ADD ITEM-->
     <ion-item>
       <ion-input type="text"
                  (keyup.enter)="addItem(shoppingList)"
@@ -52,12 +53,15 @@
         Add Item
       </button>
     </ion-item>
+    <!--SHOPPING LIST CATEGORIES WITH ITEMS-->
     <ion-list *ngFor="let category of shoppingList.categories">
       <div *ngIf="category.items.length > 0">
+        <!--CATEGORY TITLE-->
         <ion-list-header>
           {{category.title}}
         </ion-list-header>
-        <ion-item-group (ionItemReorder)="updateListOrder($event, shoppingList, category)" reorder="true">
+        <ion-item-group (ionItemReorder)="updateOrderOfItems($event, shoppingList, category)" reorder="true">
+          <!--SLIDABLE ITEMS-->
           <ion-item-sliding #slidingItem *ngFor="let item of category.items">
             <ion-item>
               <ion-checkbox item-start (ionChange)="changeChecked(shoppingList, category, item)"
@@ -73,12 +77,15 @@
                 <h3 *ngIf="item.price">{{item.price * item.quantity}} Kr.</h3>
               </ion-label>
             </ion-item>
+            <!--SLIDE FROM RIGHT TO LEFT-->
             <ion-item-options side="right">
+              <!--EDIT ITEM-->
               <button ion-button
                       (click)="editItem(shoppingList, category, item, slidingItem)">
                 <ion-icon name="create"></ion-icon>
                 Edit
               </button>
+              <!--REMOVE ITEM-->
               <button ion-button
                       color="danger"
                       (click)="removeItem(shoppingList, category, item, slidingItem)">
@@ -89,6 +96,21 @@
           </ion-item-sliding>
         </ion-item-group>
       </div>
+    </ion-list>
+    <!--SHOPPING CART-->
+    <ion-list>
+      <ion-list-header text-center>
+        Your Cart
+      </ion-list-header>
+      <!--CART ACTIONS-->
+      <ion-item>
+        <button>
+          Uncheck All
+        </button>
+        <button item-end>
+          Checkout
+        </button>
+      </ion-item>
     </ion-list>
   </div>
 </ion-content>

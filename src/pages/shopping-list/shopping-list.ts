@@ -43,6 +43,8 @@ export class ShoppingListPage {
     this.instantiateLocationsWithCategories();
   }
 
+  /***** INSTANTIATION *****/
+
   /**
    * Load list of locations with sorted categories
    */
@@ -71,6 +73,19 @@ export class ShoppingListPage {
       .map(shoppingLists => {
         this.checkForSelectedList(shoppingLists);
         return shoppingLists;
+      });
+  }
+
+  /**
+   * Update current shopping list
+   * @param {ShoppingList} shoppingList
+   */
+  loadShoppingList(shoppingList: ShoppingList) {
+    this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(shoppingList.uid)
+    // Map shopping lists
+      .map(shoppingList => {
+        this.currentShoppingList = shoppingList;
+        return shoppingList;
       });
   }
 
@@ -105,6 +120,8 @@ export class ShoppingListPage {
       ev: myEvent
     });
   }
+
+  /***** CRUD *****/
 
   /**
    * React on user adding item to list
@@ -160,33 +177,12 @@ export class ShoppingListPage {
   }
 
   /**
-   * Mark item as checked
-   * @param shoppingList
-   * @param categoryWithCheckedItem
-   * @param {ShoppingItem} item
-   */
-  changeChecked(shoppingList: ShoppingList, categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
-    item.checked = !item.checked;
-    this.shoppingListProvider.updateShoppingList(shoppingList);
-  }
-
-  /**
-   * Compute shopping list total
-   * @param {ShoppingList} shoppingList
-   * @returns {number}
-   */
-  computeTotalOfItemsInList(shoppingList: ShoppingList): number {
-    this.content.resize();
-    return this.shoppingListProvider.calculateShoppingListTotal(shoppingList)
-  }
-
-  /**
    * Update order of items in in category
    * @param {ReorderIndexes} indexes
    * @param shoppingList
    * @param {ShoppingCategory} category
    */
-  updateListOrder(indexes: ReorderIndexes, shoppingList: ShoppingList, category: ShoppingCategory) {
+  updateOrderOfItems(indexes: ReorderIndexes, shoppingList: ShoppingList, category: ShoppingCategory) {
     // Use splicing to reorder items (https://stackoverflow.com/questions/2440700/reordering-arrays/2440723)
     category.items.splice(
       indexes.to, 0, // Index we're moving to
@@ -199,7 +195,7 @@ export class ShoppingListPage {
    * Rearrange shopping list by current location
    * @param locationWithSortedCategories
    */
-  updatecategoriesOrderByLocation(locationWithSortedCategories) {
+  updateCategoriesOrderByLocation(locationWithSortedCategories) {
     // Set current location boolean to false
     this.currentLocation.isCurrentLocation = false;
     // update currrent location on firestore
@@ -216,15 +212,27 @@ export class ShoppingListPage {
   }
 
   /**
-   * Update current shopping list
-   * @param {ShoppingList} shoppingList
+   * Mark item as checked
+   * @param shoppingList
+   * @param categoryWithCheckedItem
+   * @param {ShoppingItem} item
    */
-  loadShoppingList(shoppingList: ShoppingList) {
-    this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(shoppingList.uid)
-    // Map shopping lists
-      .map(shoppingList => {
-        this.currentShoppingList = shoppingList;
-        return shoppingList;
-      });
+  changeChecked(shoppingList: ShoppingList, categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
+    item.checked = !item.checked;
+    this.shoppingListProvider.updateShoppingList(shoppingList);
+  }
+
+  /***** COMPUTATION *****/
+
+  /**
+   * Compute shopping list total
+   * @param {ShoppingList} shoppingList
+   * @returns {number}
+   */
+  computeTotalOfItemsInList(shoppingList: ShoppingList): number {
+    // Make sure to resize the view to ensure right dimensions
+    this.content.resize();
+    // Return calculated shopping list total
+    return this.shoppingListProvider.calculateShoppingListTotal(shoppingList)
   }
 }
