@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {ItemSliding, NavController, NavParams, PopoverController} from 'ionic-angular';
+import {Component, ViewChild} from '@angular/core';
+import {Content, ItemSliding, NavController, NavParams, PopoverController} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
 import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
@@ -19,6 +19,7 @@ import 'rxjs-compat/add/operator/do';
   templateUrl: 'shopping-list.html'
 })
 export class ShoppingListPage {
+  @ViewChild(Content) content: Content;
 
   $shoppingLists: Observable<ShoppingList[]>;
   $currentShoppingList: Observable<ShoppingList>;
@@ -175,6 +176,7 @@ export class ShoppingListPage {
    * @returns {number}
    */
   computeTotalOfItemsInList(shoppingList: ShoppingList): number {
+    this.content.resize();
     return this.shoppingListProvider.calculateShoppingListTotal(shoppingList)
   }
 
