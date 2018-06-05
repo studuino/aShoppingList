@@ -25,6 +25,8 @@ export class ShoppingListPage {
   $currentShoppingList: Observable<ShoppingList>;
   $locationsWithSortedCategories: Observable<LocationWithSortedCategories[]>;
 
+  private UNCATEGORIZED_TITLE = 'Uncategorized';
+
   currentShoppingList: ShoppingList;
   currentShoppingListTitle;
   currentLocation: LocationWithSortedCategories;
@@ -135,7 +137,7 @@ export class ShoppingListPage {
       quantity: 1,
     };
     const uncategorized = shoppingList.categories
-      .find(category => category.title === 'Uncategorized');
+      .find(category => category.title === this.UNCATEGORIZED_TITLE);
     uncategorized.items.push(newItem);
     this.shoppingListProvider.updateShoppingList(shoppingList);
     // Reset newItemTitle
@@ -212,27 +214,7 @@ export class ShoppingListPage {
     this.shoppingListProvider.rearrangeShoppingListCategories(this.currentShoppingList, locationWithSortedCategories);
   }
 
-  /**
-   * Mark item as checked and move to shopping cart
-   * @param shoppingList
-   * @param categoryWithCheckedItem
-   * @param {ShoppingItem} item
-   */
-  checkItemToCart(shoppingList: ShoppingList, categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
-    // Check off item
-    item.checked = true;
-    // Assign categoryUid to item, to support unchecking of item
-    // TODO ALH: Rethink this implementation!
-    item.categoryUid = categoryWithCheckedItem.uid;
-    //Find item to remove from current category
-    const indexOfItemToMove = categoryWithCheckedItem.items.indexOf(item);
-    categoryWithCheckedItem.items.splice(indexOfItemToMove, 1);
-
-    shoppingList.cart.items.push(item);
-    this.shoppingListProvider.updateShoppingList(shoppingList);
-  }
-
-  /***** COMPUTATION *****/
+  /***** SHOPPING CART *****/
 
   /**
    * Compute shopping list total
@@ -247,6 +229,31 @@ export class ShoppingListPage {
   }
 
   /**
+   * Mark item as checked and move to shopping cart
+   * @param shoppingList
+   * @param categoryWithCheckedItem
+   * @param {ShoppingItem} item
+   */
+  checkItemToCart(shoppingList: ShoppingList, categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
+    // Check off item
+    item.checked = true;
+    // Check for category
+    // TODO ALH: Rethink this implementation!
+    if (categoryWithCheckedItem.title !== this.UNCATEGORIZED_TITLE) {
+    // Assign categoryUid to item, to support unchecking of item
+      item.categoryUid = categoryWithCheckedItem.uid;
+    } else {
+      item.categoryUid = this.UNCATEGORIZED_TITLE;
+    }
+    //Find item to remove from current category
+    const indexOfItemToMove = categoryWithCheckedItem.items.indexOf(item);
+    categoryWithCheckedItem.items.splice(indexOfItemToMove, 1);
+
+    shoppingList.cart.items.push(item);
+    this.shoppingListProvider.updateShoppingList(shoppingList);
+  }
+
+  /**
    * Uncheck item and move from shopping cart to original category
    * @param shoppingList
    * @param {ShoppingItem} item
@@ -255,7 +262,6 @@ export class ShoppingListPage {
     // Uncheck item
     item.checked = false;
     this.moveItemFromCartToOriginalCategory(shoppingList, item);
-
     // Locate index of item in cart
     const indexOfItemInCart = shoppingList.cart.items.indexOf(item);
     // Remove item from cart
@@ -270,10 +276,19 @@ export class ShoppingListPage {
    * @param {ShoppingItem} item
    */
   private moveItemFromCartToOriginalCategory(shoppingList: ShoppingList, item: ShoppingItem) {
-    // Locate original category for item
-    const originalCategory = shoppingList.categories.find(category => category.uid === item.categoryUid);
-    // Add item back to category
-    originalCategory.items.push(item);
+    // If category is not uncategorized
+    if (item.categoryUid !== this.UNCATEGORIZED_TITLE) {
+      // Locate original category for item
+      const originalCategory = shoppingList.categories.find(category => category.uid === item.categoryUid);
+      // Add item back to category
+      originalCategory.items.push(item);
+      // If uncategorized
+    } else {
+      // Locate in array
+      const uncategorized = shoppingList.categories.find(category => category.title === this.UNCATEGORIZED_TITLE);
+      // Push item to uncategorized
+      uncategorized.items.push(item);
+    }
   }
 
   /**
@@ -288,6 +303,18 @@ export class ShoppingListPage {
         itemInList.checked = false;
         this.moveItemFromCartToOriginalCategory(shoppingList, itemInList);
       });
+    // Empty shopping cart
+    shoppingList.cart.items = [];
+    // Update firestore
+    this.shoppingListProvider.updateShoppingList(shoppingList);
+  }
+
+  /**
+   * Checkout all items from cart
+   * @param {ShoppingList} shoppingList
+   */
+  checkoutCart(shoppingList: ShoppingList) {
+    // TODO ALH: Consider purchase history logic!
     // Empty shopping cart
     shoppingList.cart.items = [];
     // Update firestore
