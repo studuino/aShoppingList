@@ -1,6 +1,13 @@
 # aShoppingList
 Ionic Live Shopping List App
 
+## Before starting the project
+The project is configured to use [Google Firebase](https://firebase.google.com/).
+
+To use this app, you have to setup your own firebase backend and override the configuration file in this project.
+
+You can find the firebase configuration under `src/app/app.module.ts`
+
 ## Start the project
 The project is started with the regular ionic commands.
 
