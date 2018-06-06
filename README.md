@@ -8,21 +8,24 @@ To use this app, you have to setup your own firebase backend and override the co
 
 You can find the firebase configuration under `src/app/app.module.ts`
 
-## Start the project
-The project is started with the regular ionic commands.
+## Running the project
+The project is started with the regular [Ionic Commands](https://ionicframework.com/docs/cli/commands.html).
 
 1. Run `npm install` to install all dependencies.
+
+## Developing in browser
 2. Running the app in your browser:
     - Browser: `ionic serve`
     - Browser with lab: `ionic serve --lab`
     - To enable console logging append at end: `-c`
-   - To avoid opening browser append at end: `--no-open`
-3. Running the app on your phone: (In order for you to build an iOS app, you need to run on MacOS.)
+    - To avoid opening browser append at end: `--no-open`
+## Developing on mobile
+1. Running the app on your phone: (In order for you to build an iOS app, you need to run on MacOS.)
     - Android: `ionic cordova build android`
     - iOS: `ionic cordova build ios`
     - to run with live reload append at the end: `--livereload`  
-4.  To build resources for app run `ionic cordova resources`
-5. Building and deploying app to your phone:
+2.  To build resources for app run `ionic cordova resources`
+3. Building and deploying app to your phone:
     - Android: `ionic cordova build android --device`
     - iOS: `ionic cordova build ios --device`
 
