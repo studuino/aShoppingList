@@ -25,8 +25,6 @@ export class ShoppingListPage {
   $currentShoppingList: Observable<ShoppingList>;
   $locationsWithSortedCategories: Observable<LocationWithSortedCategories[]>;
 
-  private UNCATEGORIZED_TITLE = 'Uncategorized';
-
   currentShoppingList: ShoppingList;
   currentShoppingListTitle;
   currentLocationTitle;
@@ -143,8 +141,7 @@ export class ShoppingListPage {
       checked: false,
       quantity: 1,
     };
-    const uncategorized = shoppingList.categories
-      .find(category => category.title === this.UNCATEGORIZED_TITLE);
+    const uncategorized = this.categoryProvider.getUncategorizedCategoryFromShoppingList(shoppingList);
     uncategorized.items.push(newItem);
     this.shoppingListProvider.updateShoppingList(shoppingList);
     // Reset newItemTitle
@@ -244,11 +241,11 @@ export class ShoppingListPage {
     item.checked = true;
     // Check for category
     // TODO ALH: Rethink this implementation!
-    if (categoryInCurrentShoppingList.title !== this.UNCATEGORIZED_TITLE) {
+    if (categoryInCurrentShoppingList.title !== this.categoryProvider.UNCATEGORIZED_TITLE) {
       // Assign categoryUid to item, to support unchecking of item
       item.categoryUid = categoryInCurrentShoppingList.uid;
     } else {
-      item.categoryUid = this.UNCATEGORIZED_TITLE;
+      item.categoryUid = this.categoryProvider.UNCATEGORIZED_TITLE;
     }
     //Find item to remove from current category
     const indexOfItemToMove = categoryInCurrentShoppingList.items.indexOf(item);
@@ -282,7 +279,7 @@ export class ShoppingListPage {
    */
   private moveItemFromCartToOriginalCategory(item: ShoppingItem) {
     // If category is not uncategorized
-    if (item.categoryUid !== this.UNCATEGORIZED_TITLE) {
+    if (item.categoryUid !== this.categoryProvider.UNCATEGORIZED_TITLE) {
       // Locate original category for item
       const originalCategory = this.currentShoppingList.categories
         .find(category => category.uid === item.categoryUid);
@@ -292,7 +289,7 @@ export class ShoppingListPage {
     } else {
       // Locate in array
       const uncategorized = this.currentShoppingList.categories
-        .find(category => category.title === this.UNCATEGORIZED_TITLE);
+        .find(category => category.title === this.categoryProvider.UNCATEGORIZED_TITLE);
       // Push item to uncategorized
       uncategorized.items.push(item);
     }

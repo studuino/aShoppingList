@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {Observable} from 'rxjs/Observable';
 import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
-import {ShoppingCart} from '../../entities/ShoppingCart';
 import {ShoppingCategory} from '../../entities/ShoppingCategory';
+import {ShoppingList} from '../../entities/ShoppingList';
 
 /*
   Generated class for the CategoryProvider provider.
@@ -16,6 +16,8 @@ export class CategoryProvider {
 
   private CATEGORIES_COLLECTION = 'categories';
   private LOCATION_SORTED_CATEGORIES_COLLECTION = 'locationSortedCategories';
+  public UNCATEGORIZED_TITLE = 'Uncategorized';
+
 
   constructor(private afs: AngularFirestore) {
   }
@@ -76,6 +78,16 @@ export class CategoryProvider {
   }
 
   /**
+   * Find and return the category UNCATEGORIZED
+   * @param {ShoppingList} shoppingList
+   * @return {ShoppingCategory}
+   */
+  getUncategorizedCategoryFromShoppingList(shoppingList: ShoppingList): ShoppingCategory {
+    return shoppingList.categories
+      .find(category => category.title === this.UNCATEGORIZED_TITLE);
+  }
+
+  /**
    * Get location with sorted categories by location name
    * @return {Observable<any>}
    * @param defaultLocationUid
@@ -94,5 +106,15 @@ export class CategoryProvider {
     return this.afs.collection(this.LOCATION_SORTED_CATEGORIES_COLLECTION)
       .doc(locationWithSortedCategories.uid)
       .set(locationWithSortedCategories, {merge: true});
+  }
+
+  /**
+   * Delete user category from firestore
+   * @param categoryUid
+   */
+  deleteCategoryByUid(categoryUid: string) {
+    return this.afs.collection(this.CATEGORIES_COLLECTION)
+      .doc(categoryUid)
+      .delete();
   }
 }
