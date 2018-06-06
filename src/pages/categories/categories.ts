@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {CategoryProvider} from '../../providers/categories/category';
 import {AlertProvider} from '../../providers/alert/alert';
+import {ShoppingCategory} from '../../entities/ShoppingCategory';
 
 @Component({
   selector: 'page-categories',
@@ -45,7 +46,28 @@ export class CategoriesPage {
    * @param {string} nameOfNewCategory
    */
   createCategory(nameOfNewCategory: string) {
-    this.categoryProvider.createCategoryForUserUid(this.userUid, nameOfNewCategory);
+    this.categoryProvider.createCategoryForUserUid(this.userUid, nameOfNewCategory)
+      .then((newCategory: ShoppingCategory) => {
+        // TODO ALH: Consider moving to cloud functions!
+        this.categoryProvider.getlocationsWithSortedCategoriesByUserUid(this.userUid)
+          .take(1)
+          // Map to locations
+          .map(locationsWithSortedCategories => {
+            locationsWithSortedCategories
+              // For each location
+              .forEach(location => {
+                // Create new sortedCategory with partial information
+                const sortedCategory = {
+                  categoryUid: newCategory.uid,
+                  title: newCategory.title
+                };
+                // Push new category
+                location.sortedCategories.push(sortedCategory);
+                // Update location on firestore
+                this.categoryProvider.updateLocationWithSortedCategories(location);
+              });
+          }).subscribe()
+      });
   }
 
 }

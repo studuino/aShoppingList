@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {Observable} from 'rxjs/Observable';
 import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
+import {ShoppingCart} from '../../entities/ShoppingCart';
+import {ShoppingCategory} from '../../entities/ShoppingCategory';
 
 /*
   Generated class for the CategoryProvider provider.
@@ -47,12 +49,16 @@ export class CategoryProvider {
    */
   createCategoryForUserUid(userUid: string, nameOfNewCategory: string) {
     const newUid = this.afs.createId();
+    const newCategory: ShoppingCategory = {
+      uid: newUid,
+      userUid: userUid,
+      title: nameOfNewCategory
+    };
     return this.afs.doc(`${this.CATEGORIES_COLLECTION}/${newUid}`)
-      .set({
-        uid: newUid,
-        userUid: userUid,
-        title: nameOfNewCategory
-      })
+      .set(newCategory)
+      .then(() => {
+        return newCategory;
+      });
   }
 
   /**
