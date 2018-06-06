@@ -64,7 +64,9 @@
           <!--SLIDABLE ITEMS-->
           <ion-item-sliding #slidingItem *ngFor="let item of category.items">
             <ion-item>
-              <ion-checkbox item-start (ionChange)="checkItemToCart(category, item)"
+              <ion-checkbox item-start
+                            (ionChange)="checkItemToCart(shoppingList, category, item)"
+                            [disabled]="item.checked"
                             [checked]="item.checked"></ion-checkbox>
               <ion-label *ngIf="item.quantity === 1">
                 <h2>{{item.title}}</h2>
@@ -108,7 +110,7 @@
           <ion-col>
             <button ion-button
                     item-start
-                    (click)="uncheckAllItemsFromCart()">
+                    (click)="uncheckAllItemsFromCart(shoppingList)">
               Uncheck All
             </button>
           </ion-col>
@@ -116,7 +118,7 @@
           <ion-col>
             <button ion-button
                     item-end
-                    (click)="checkoutCart()">
+                    (click)="checkoutCart(shoppingList)">
               Checkout
             </button>
           </ion-col>
@@ -124,7 +126,7 @@
       </ion-grid>
       <!--CHECKED ITEMS-->
       <ion-item *ngFor="let checkedItem of shoppingList.cart.items">
-        <ion-checkbox item-start (ionChange)="uncheckItemFromCart(checkedItem)"
+        <ion-checkbox item-start (ionChange)="uncheckItemFromCart(shoppingList, checkedItem)"
                       [checked]="checkedItem.checked"></ion-checkbox>
         <ion-label>
           <h2>{{checkedItem.title}}</h2>
