@@ -62,7 +62,21 @@ export class ShoppingListPage {
     this.$shoppingLists = this.shoppingListProvider.getPartialshoppingLists()
     // Map shopping lists
       .map(shoppingLists => {
-        this.checkForSelectedList(shoppingLists);
+        if (!this.currentShoppingList) {
+          // Get first list
+          const firstShoppingList = shoppingLists[0];
+          // Assign current shopping list
+          this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(firstShoppingList.uid)
+            .switchMap(shoppingList => {
+              // Assign current list
+              const currentShoppingList = shoppingList as ShoppingList;
+              this.currentShoppingList = currentShoppingList;
+              // Update current shopping list title
+              this.currentShoppingListTitle = currentShoppingList.title;
+              // Get default location
+              return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
+            });
+        }
         return shoppingLists;
       });
   }
@@ -79,28 +93,6 @@ export class ShoppingListPage {
         // Get default location
         return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
       });
-  }
-
-  /**
-   * Check for a currently selected list
-   * @param shoppingLists
-   */
-  private checkForSelectedList(shoppingLists) {
-    if (!this.currentShoppingList) {
-      // Get first list
-      const firstShoppingList = shoppingLists[0];
-      // Assign current list
-      this.currentShoppingList = firstShoppingList;
-      // Update current shopping list title
-      this.currentShoppingListTitle = firstShoppingList.title;
-      // Assign current shopping list
-      this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(firstShoppingList.uid)
-        .switchMap(shoppingList => {
-          const currentShoppingList = shoppingList as ShoppingList;
-          // Get default location
-          return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
-        });
-    }
   }
 
   /**
@@ -211,10 +203,11 @@ export class ShoppingListPage {
 
   /**
    * Rearrange shopping list by current location
+   * @param shoppingList
    * @param locationWithSortedCategories
    */
   updateCategoriesOrderByLocation(locationWithSortedCategories: LocationWithSortedCategories) {
-    // Set current location boolean to false
+    // Update default location
     this.currentShoppingList.defaultLocationUid = locationWithSortedCategories.uid;
     // update currrent location on firestore
     this.shoppingListProvider.updateShoppingList(this.currentShoppingList)
@@ -230,11 +223,11 @@ export class ShoppingListPage {
    * @param {ShoppingList} shoppingList
    * @returns {number}
    */
-  computeTotalOfItemsInList(shoppingList: ShoppingList): number {
+  computeTotalOfItemsInList(): number {
     // Make sure to resize the view to ensure right dimensions
     this.content.resize();
     // Return calculated shopping list total
-    return this.shoppingListProvider.calculateShoppingListTotal(shoppingList)
+    return this.shoppingListProvider.calculateShoppingListTotal(this.currentShoppingList)
   }
 
   /**
@@ -243,23 +236,26 @@ export class ShoppingListPage {
    * @param categoryWithCheckedItem
    * @param {ShoppingItem} item
    */
-  checkItemToCart(shoppingList: ShoppingList, categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
+  checkItemToCart(categoryWithCheckedItem: ShoppingCategory, item: ShoppingItem) {
+    // Find category in current shopping list
+    const categoryInCurrentShoppingList = this.currentShoppingList.categories
+      .find(category => category.uid === categoryWithCheckedItem.uid);
     // Check off item
     item.checked = true;
     // Check for category
     // TODO ALH: Rethink this implementation!
-    if (categoryWithCheckedItem.title !== this.UNCATEGORIZED_TITLE) {
+    if (categoryInCurrentShoppingList.title !== this.UNCATEGORIZED_TITLE) {
       // Assign categoryUid to item, to support unchecking of item
-      item.categoryUid = categoryWithCheckedItem.uid;
+      item.categoryUid = categoryInCurrentShoppingList.uid;
     } else {
       item.categoryUid = this.UNCATEGORIZED_TITLE;
     }
     //Find item to remove from current category
-    const indexOfItemToMove = categoryWithCheckedItem.items.indexOf(item);
-    categoryWithCheckedItem.items.splice(indexOfItemToMove, 1);
+    const indexOfItemToMove = categoryInCurrentShoppingList.items.indexOf(item);
+    categoryInCurrentShoppingList.items.splice(indexOfItemToMove, 1);
 
-    shoppingList.cart.items.push(item);
-    this.shoppingListProvider.updateShoppingList(shoppingList);
+    this.currentShoppingList.cart.items.push(item);
+    this.shoppingListProvider.updateShoppingList(this.currentShoppingList);
   }
 
   /**
@@ -267,16 +263,16 @@ export class ShoppingListPage {
    * @param shoppingList
    * @param {ShoppingItem} item
    */
-  uncheckItemFromCart(shoppingList: ShoppingList, item: ShoppingItem) {
+  uncheckItemFromCart(item: ShoppingItem) {
     // Uncheck item
     item.checked = false;
-    this.moveItemFromCartToOriginalCategory(shoppingList, item);
+    this.moveItemFromCartToOriginalCategory(item);
     // Locate index of item in cart
-    const indexOfItemInCart = shoppingList.cart.items.indexOf(item);
+    const indexOfItemInCart = this.currentShoppingList.cart.items.indexOf(item);
     // Remove item from cart
-    shoppingList.cart.items.splice(indexOfItemInCart, 1);
+    this.currentShoppingList.cart.items.splice(indexOfItemInCart, 1);
     // Update shopping list on firestore
-    this.shoppingListProvider.updateShoppingList(shoppingList);
+    this.shoppingListProvider.updateShoppingList(this.currentShoppingList);
   }
 
   /**
@@ -284,17 +280,19 @@ export class ShoppingListPage {
    * @param {ShoppingList} shoppingList
    * @param {ShoppingItem} item
    */
-  private moveItemFromCartToOriginalCategory(shoppingList: ShoppingList, item: ShoppingItem) {
+  private moveItemFromCartToOriginalCategory(item: ShoppingItem) {
     // If category is not uncategorized
     if (item.categoryUid !== this.UNCATEGORIZED_TITLE) {
       // Locate original category for item
-      const originalCategory = shoppingList.categories.find(category => category.uid === item.categoryUid);
+      const originalCategory = this.currentShoppingList.categories
+        .find(category => category.uid === item.categoryUid);
       // Add item back to category
       originalCategory.items.push(item);
       // If uncategorized
     } else {
       // Locate in array
-      const uncategorized = shoppingList.categories.find(category => category.title === this.UNCATEGORIZED_TITLE);
+      const uncategorized = this.currentShoppingList.categories
+        .find(category => category.title === this.UNCATEGORIZED_TITLE);
       // Push item to uncategorized
       uncategorized.items.push(item);
     }
@@ -304,29 +302,28 @@ export class ShoppingListPage {
    * Uncheck every item and move from shopping cart to original category
    * @param {ShoppingList} shoppingList
    */
-  uncheckAllItemsFromCart(shoppingList: ShoppingList) {
-    shoppingList.cart.items
+  uncheckAllItemsFromCart() {
+    this.currentShoppingList.cart.items
     // For every item in the cart
       .forEach(itemInList => {
         // Uncheck item
         itemInList.checked = false;
-        this.moveItemFromCartToOriginalCategory(shoppingList, itemInList);
+        this.moveItemFromCartToOriginalCategory(itemInList);
       });
     // Empty shopping cart
-    shoppingList.cart.items = [];
+    this.currentShoppingList.cart.items = [];
     // Update firestore
-    this.shoppingListProvider.updateShoppingList(shoppingList);
+    this.shoppingListProvider.updateShoppingList(this.currentShoppingList);
   }
 
   /**
    * Checkout all items from cart
    * @param {ShoppingList} shoppingList
    */
-  checkoutCart(shoppingList: ShoppingList) {
-    // TODO ALH: Consider purchase history logic!
+  checkoutCart() {
     // Empty shopping cart
-    shoppingList.cart.items = [];
+    this.currentShoppingList.cart.items = [];
     // Update firestore
-    this.shoppingListProvider.updateShoppingList(shoppingList);
+    this.shoppingListProvider.updateShoppingList(this.currentShoppingList);
   }
 }

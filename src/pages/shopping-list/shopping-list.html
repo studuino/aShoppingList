@@ -64,7 +64,7 @@
           <!--SLIDABLE ITEMS-->
           <ion-item-sliding #slidingItem *ngFor="let item of category.items">
             <ion-item>
-              <ion-checkbox item-start (ionChange)="checkItemToCart(shoppingList, category, item)"
+              <ion-checkbox item-start (ionChange)="checkItemToCart(category, item)"
                             [checked]="item.checked"></ion-checkbox>
               <ion-label *ngIf="item.quantity === 1">
                 <h2>{{item.title}}</h2>
@@ -98,7 +98,7 @@
       </div>
     </ion-list>
     <!--SHOPPING CART-->
-    <ion-list  *ngIf="shoppingList.cart.items.length > 0">
+    <ion-list *ngIf="shoppingList.cart.items.length > 0">
       <ion-list-header text-center>
         Your Cart
       </ion-list-header>
@@ -108,7 +108,7 @@
           <ion-col>
             <button ion-button
                     item-start
-            (click)="uncheckAllItemsFromCart(shoppingList)">
+                    (click)="uncheckAllItemsFromCart()">
               Uncheck All
             </button>
           </ion-col>
@@ -116,15 +116,15 @@
           <ion-col>
             <button ion-button
                     item-end
-            (click)="checkoutCart(shoppingList)">
+                    (click)="checkoutCart()">
               Checkout
             </button>
           </ion-col>
         </ion-row>
       </ion-grid>
-      <!--CHECK ITEMS-->
+      <!--CHECKED ITEMS-->
       <ion-item *ngFor="let checkedItem of shoppingList.cart.items">
-        <ion-checkbox item-start (ionChange)="uncheckItemFromCart(shoppingList, checkedItem)"
+        <ion-checkbox item-start (ionChange)="uncheckItemFromCart(checkedItem)"
                       [checked]="checkedItem.checked"></ion-checkbox>
         <ion-label>
           <h2>{{checkedItem.title}}</h2>
@@ -137,7 +137,7 @@
 <ion-footer>
   <div *ngIf="$currentShoppingList | async as shoppingList">
     <ion-toolbar>
-      <p text-center>Shopping List Total {{computeTotalOfItemsInList(shoppingList)}} Kr.</p>
+      <p text-center>Shopping List Total {{computeTotalOfItemsInList()}} Kr.</p>
       <!--<ion-buttons end>-->
       <!--<button ion-button icon-right color="royal">-->
       <!--Send-->

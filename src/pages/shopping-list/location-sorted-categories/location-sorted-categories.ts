@@ -1,9 +1,7 @@
 import {Component} from '@angular/core';
 import {NavController, NavParams} from 'ionic-angular';
 import {CategoryProvider} from '../../../providers/categories/category';
-import {ShoppingCategory} from '../../../entities/ShoppingCategory';
 import {ReorderIndexes} from 'ionic-angular/umd/components/item/item-reorder';
-import {LocationWithSortedCategories} from '../../../entities/LocationWithSortedCategories';
 import {ShoppingList} from '../../../entities/ShoppingList';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
 
