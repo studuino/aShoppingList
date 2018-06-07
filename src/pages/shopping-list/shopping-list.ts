@@ -27,6 +27,7 @@ export class ShoppingListPage {
 
   currentShoppingList: ShoppingList;
   currentShoppingListTitle;
+  currentShoppingListTotal = 0;
   currentLocationTitle;
   currentLocation: LocationWithSortedCategories;
   newItemTitle: string;
@@ -66,17 +67,28 @@ export class ShoppingListPage {
           // Assign current shopping list
           this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(firstShoppingList.uid)
             .switchMap(shoppingList => {
-              // Assign current list
-              const currentShoppingList = shoppingList as ShoppingList;
-              this.currentShoppingList = currentShoppingList;
-              // Update current shopping list title
-              this.currentShoppingListTitle = currentShoppingList.title;
+              const currentShoppingList = this.extractCurrentShoppingList(shoppingList);
               // Get default location
               return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
             });
         }
         return shoppingLists;
       });
+  }
+
+  /**
+   * Extract shopping list to assign fields
+   * @param shoppingList
+   * @return {ShoppingList}
+   */
+  private extractCurrentShoppingList(shoppingList) {
+    // Assign current list
+    const currentShoppingList = shoppingList as ShoppingList;
+    this.currentShoppingList = currentShoppingList;
+    // Update current shopping list title
+    this.currentShoppingListTitle = currentShoppingList.title;
+    this.computeTotalOfItemsInList();
+    return currentShoppingList;
   }
 
   /**
@@ -87,7 +99,7 @@ export class ShoppingListPage {
     this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(shoppingList.uid)
     // Map shopping lists
       .switchMap(shoppingList => {
-        const currentShoppingList = shoppingList as ShoppingList;
+        const currentShoppingList = this.extractCurrentShoppingList(shoppingList);
         // Get default location
         return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
       });
@@ -221,11 +233,9 @@ export class ShoppingListPage {
    * @param {ShoppingList} shoppingList
    * @returns {number}
    */
-  computeTotalOfItemsInList(): number {
-    // Make sure to resize the view to ensure right dimensions
-    this.content.resize();
-    // Return calculated shopping list total
-    return this.shoppingListProvider.calculateShoppingListTotal(this.currentShoppingList)
+  computeTotalOfItemsInList() {
+    // Set calculated shopping list total
+    this.currentShoppingListTotal = this.shoppingListProvider.calculateShoppingListTotal(this.currentShoppingList)
   }
 
   /**
