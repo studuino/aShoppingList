@@ -105,7 +105,7 @@ export class CategoryProvider {
   updateLocationWithSortedCategories(locationWithSortedCategories: LocationWithSortedCategories) {
     return this.afs.collection(this.LOCATION_SORTED_CATEGORIES_COLLECTION)
       .doc(locationWithSortedCategories.uid)
-      .set(locationWithSortedCategories, {merge: true});
+      .update(locationWithSortedCategories);
   }
 
   /**
@@ -116,5 +116,18 @@ export class CategoryProvider {
     return this.afs.collection(this.CATEGORIES_COLLECTION)
       .doc(categoryUid)
       .delete();
+  }
+
+  /**
+   * Update category
+   * @param categoryUid
+   * @param {string} newTitleForCategory
+   */
+  renameCategory(categoryUid: string, newTitleForCategory: string) {
+    return this.afs.collection(this.CATEGORIES_COLLECTION)
+      .doc(categoryUid)
+      .update({
+        title: newTitleForCategory
+      });
   }
 }

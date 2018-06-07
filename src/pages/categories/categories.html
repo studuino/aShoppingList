@@ -35,6 +35,12 @@
           </ion-item>
           <ion-item-options side="right">
             <button ion-button
+                    color="primary"
+                    (click)="promptForCategoryRename(category)">
+              <ion-icon name="create"></ion-icon>
+              Rename
+            </button>
+            <button ion-button
                     color="danger"
                     (click)="removeCategory(category)">
               <ion-icon name="trash"></ion-icon>

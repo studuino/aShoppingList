@@ -38,7 +38,7 @@ export class ShoppingListPage {
               private shoppingListProvider: ShoppingListProvider,
               private categoryProvider: CategoryProvider) {
 
-    this.instantiateCurrentShoppingList();
+    this.instantiateShoppingLists();
     this.instantiateLocationsWithCategories();
   }
 
@@ -57,7 +57,7 @@ export class ShoppingListPage {
   /**
    * Load current shopping list
    */
-  private instantiateCurrentShoppingList() {
+  private instantiateShoppingLists() {
     this.$shoppingLists = this.shoppingListProvider.getPartialshoppingLists()
     // Map shopping lists
       .map(shoppingLists => {
