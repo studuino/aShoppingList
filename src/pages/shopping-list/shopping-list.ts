@@ -28,6 +28,7 @@ export class ShoppingListPage {
   currentShoppingList: ShoppingList;
   currentShoppingListTitle;
   currentShoppingListTotal = 0;
+  currentCartTotal = 0;
   currentLocationTitle;
   currentLocation: LocationWithSortedCategories;
   newItemTitle: string;
@@ -87,7 +88,9 @@ export class ShoppingListPage {
     this.currentShoppingList = currentShoppingList;
     // Update current shopping list title
     this.currentShoppingListTitle = currentShoppingList.title;
+    // Update totals
     this.computeTotalOfItemsInList();
+    this.computeTotalOfCart();
     return currentShoppingList;
   }
 
@@ -236,6 +239,14 @@ export class ShoppingListPage {
   computeTotalOfItemsInList() {
     // Set calculated shopping list total
     this.currentShoppingListTotal = this.shoppingListProvider.calculateShoppingListTotal(this.currentShoppingList)
+  }
+
+  /**
+   * Compute cart total
+   */
+  computeTotalOfCart() {
+    // Set calculated cart total
+    this.currentCartTotal = this.shoppingListProvider.calculateCartTotal(this.currentShoppingList.cart);
   }
 
   /**

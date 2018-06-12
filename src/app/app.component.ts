@@ -6,7 +6,6 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {ShoppingListPage} from '../pages/shopping-list/shopping-list';
 import {ScreenOrientation} from '@ionic-native/screen-orientation';
 import {CategoriesPage} from '../pages/categories/categories';
-import {Pro} from '@ionic/pro';
 
 @Component({
   templateUrl: 'app.html'

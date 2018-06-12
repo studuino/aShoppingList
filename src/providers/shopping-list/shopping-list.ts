@@ -4,6 +4,7 @@ import {ShoppingList} from '../../entities/ShoppingList';
 import {Observable} from 'rxjs/Observable';
 import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
+import {ShoppingCart} from '../../entities/ShoppingCart';
 
 /*
   Generated class for the ShoppingListProvider provider.
@@ -59,6 +60,21 @@ export class ShoppingListProvider {
         }
       });
     }
+    return total;
+  }
+
+  /**
+   * Calculate and return total of shopping cart
+   * @param {ShoppingCart} shoppingCart
+   */
+  calculateCartTotal(shoppingCart: ShoppingCart) {
+    // Defensive programming
+    if(!Array.isArray(shoppingCart.items)) return;
+    let total: number = 0;
+    // Sum up total
+    shoppingCart.items
+      .forEach(item =>
+        total += (item.price * item.quantity));
     return total;
   }
 
