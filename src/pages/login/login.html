@@ -6,20 +6,22 @@
     </ion-col>
     <ion-col></ion-col>
   </ion-row>
+  <!--LOGIN BOX-->
   <div class="login-box">
     <form (ngSubmit)="login()" #registerForm="ngForm">
+      <!--LOGIN-->
       <ion-row>
         <ion-col>
           <ion-list inset>
-
+            <!--EMAIL-->
             <ion-item>
-              <ion-input type="text"
+              <ion-input type="email"
                          placeholder="Email"
                          name="email"
                          [(ngModel)]="registerCredentials.email"
                          required></ion-input>
             </ion-item>
-
+            <!--PASSWORD-->
             <ion-item>
               <ion-input type="password"
                          placeholder="Password"
@@ -31,20 +33,22 @@
           </ion-list>
         </ion-col>
       </ion-row>
-
+      <!--SIGNUP-->
       <ion-row>
         <ion-col class="signup-col">
           <button ion-button
                   class="submit-btn"
                   full
                   type="submit"
-                  [disabled]="!registerForm.form.valid">Login</button>
+                  [disabled]="!registerForm.form.valid">Login
+          </button>
           <button ion-button
                   class="register-btn"
                   type="button"
                   block
                   clear
-                  (click)="createAccount()">Create New Account</button>
+                  (click)="createAccount()">Create New Account
+          </button>
         </ion-col>
       </ion-row>
 

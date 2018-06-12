@@ -44,6 +44,8 @@ export class LoginPage {
    */
   login() {
     this.showLoading();
+    // Ensure no space at end!
+    this.registerCredentials.email.trim();
     // Handle login
     this.authProvider.login(this.registerCredentials)
       .then(() => this.nav.setRoot(ShoppingListPage))
