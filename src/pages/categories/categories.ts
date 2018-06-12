@@ -15,8 +15,8 @@ export class CategoriesPage {
   $categories;
   userUid;
 
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
+  constructor(private navCtrl: NavController,
+              private navParams: NavParams,
               private categoryProvider: CategoryProvider,
               private authProvider: AuthProvider,
               private shoppingListProvider: ShoppingListProvider,
