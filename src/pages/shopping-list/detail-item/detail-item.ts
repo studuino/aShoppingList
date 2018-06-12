@@ -43,7 +43,7 @@ export class DetailItemPage {
   }
 
   ionViewDidLoad() {
-    this.$categories = this.categoryProvider.getCategoriesByUserUid('fprXH7XZKsWEa0T5TrAv');
+    this.$categories = this.categoryProvider.getCategoriesByUserUid('QnII1BHbVHMdXKTjYAYToOk1kyG3');
   }
 
   /**

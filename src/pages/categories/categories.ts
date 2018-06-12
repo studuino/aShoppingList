@@ -12,7 +12,7 @@ import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list'
 export class CategoriesPage {
 
   $categories;
-  userUid = 'fprXH7XZKsWEa0T5TrAv';
+  userUid = 'QnII1BHbVHMdXKTjYAYToOk1kyG3';
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,

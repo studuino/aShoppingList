@@ -52,7 +52,7 @@ export class ShoppingListPage {
    * Load list of locations with sorted categories
    */
   private instantiateLocationsWithCategories() {
-    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid('fprXH7XZKsWEa0T5TrAv');
+    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid('QnII1BHbVHMdXKTjYAYToOk1kyG3');
   }
 
   /**
