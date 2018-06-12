@@ -17,6 +17,8 @@ import {AlertProvider} from '../providers/alert/alert';
 import {CategoriesPage} from '../pages/categories/categories';
 import {ShoppingListOptionsPage} from '../pages/shopping-list/shopping-list-options/shopping-list-options';
 import {LocationSortedCategoriesPage} from '../pages/shopping-list/location-sorted-categories/location-sorted-categories';
+import { AuthProvider } from '../providers/auth/auth';
+import {AngularFireAuthModule} from 'angularfire2/auth';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -41,7 +43,8 @@ export const firebaseConfig = {
     BrowserModule,
     IonicModule.forRoot(MyApp),
     AngularFireModule.initializeApp(firebaseConfig),
-    AngularFirestoreModule.enablePersistence()
+    AngularFirestoreModule.enablePersistence(),
+    AngularFireAuthModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -60,7 +63,8 @@ export const firebaseConfig = {
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     ShoppingListProvider,
     CategoryProvider,
-    AlertProvider
+    AlertProvider,
+    AuthProvider
   ]
 })
 export class AppModule {

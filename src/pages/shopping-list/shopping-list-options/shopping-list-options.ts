@@ -3,6 +3,7 @@ import {NavController, NavParams, ViewController} from 'ionic-angular';
 import {LocationSortedCategoriesPage} from '../location-sorted-categories/location-sorted-categories';
 import {ShoppingList} from '../../../entities/ShoppingList';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
+import {AuthProvider} from '../../../providers/auth/auth';
 
 /**
  * Generated class for the ShoppingListOptionsPage page.
@@ -23,12 +24,25 @@ export class ShoppingListOptionsPage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private viewCtrl: ViewController,
+              private authProvider: AuthProvider,
               private shoppingListProvider: ShoppingListProvider) {
     this.locationTitle = navParams.get('locationTitle');
     this.currentShoppingList = navParams.get('shoppingList');
   }
 
   ionViewDidLoad() {
+  }
+
+  /**
+   * Logout user
+   */
+  logout() {
+    this.authProvider.logout()
+      .then(loggedOut => {
+        if (loggedOut) {
+          this.navCtrl.push('LoginPage')
+        }
+      })
   }
 
   /**

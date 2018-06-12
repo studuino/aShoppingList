@@ -13,6 +13,7 @@ import {ReorderIndexes} from 'ionic-angular/umd/components/item/item-reorder';
 import {ShoppingListOptionsPage} from './shopping-list-options/shopping-list-options';
 import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
 import 'rxjs-compat/add/operator/do';
+import {AuthProvider} from '../../providers/auth/auth';
 
 @Component({
   selector: 'page-shopping-list',
@@ -33,8 +34,8 @@ export class ShoppingListPage {
   currentLocation: LocationWithSortedCategories;
   newItemTitle: string;
 
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
+  constructor(private navCtrl: NavController,
+              private navParams: NavParams,
               private popoverCtrl: PopoverController,
               private shoppingListProvider: ShoppingListProvider,
               private categoryProvider: CategoryProvider) {
