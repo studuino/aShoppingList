@@ -12,7 +12,6 @@ import {AngularFireAuth} from 'angularfire2/auth';
 export class AuthProvider {
 
   constructor(private fireAuth: AngularFireAuth) {
-    console.log('Hello AuthProvider Provider');
   }
 
   /**
@@ -26,10 +25,18 @@ export class AuthProvider {
 
   /**
    * Logout user
-   * @return {Promise<boolean>}
+   * @return {Promise<any>}
    */
-  logout(): Promise<boolean> {
-    // TODO ALH: Fix
-    return Promise.resolve(true);
+  logout(): Promise<any> {
+    return this.fireAuth.auth.signOut();
+  }
+
+  /**
+   * Register new user
+   * @param {LoginCredentials} registerCredentials
+   * @return {Promise<any>}
+   */
+  registerWithEmailAndPassword(registerCredentials: LoginCredentials): Promise<any> {
+    return this.fireAuth.auth.createUserWithEmailAndPassword(registerCredentials.email, registerCredentials.password);
   }
 }

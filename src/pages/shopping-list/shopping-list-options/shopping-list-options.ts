@@ -38,11 +38,9 @@ export class ShoppingListOptionsPage {
    */
   logout() {
     this.authProvider.logout()
-      .then(loggedOut => {
-        if (loggedOut) {
-          this.navCtrl.push('LoginPage')
-        }
-      })
+      .then(() => {
+        this.navCtrl.push('LoginPage')
+      });
   }
 
   /**

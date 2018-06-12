@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {AlertController, IonicPage, NavController, NavParams} from 'ionic-angular';
+import {AuthProvider} from '../../../providers/auth/auth';
 
 /**
  * Generated class for the RegisterPage page.
@@ -19,25 +20,22 @@ export class RegisterPage {
   registerCredentials = { email: '', password: '' };
 
   constructor(private nav: NavController,
-              private alertCtrl: AlertController) { }
+              private alertCtrl: AlertController,
+              private authProvider: AuthProvider) { }
 
   /**
    * Register user
     */
   public register() {
     // Handle registration
-    console.log(this.registerCredentials)
-    // this.auth.register(this.registerCredentials).subscribe(success => {
-    //     if (success) {
-    //       this.createSuccess = true;
-    //       this.showPopup("Success", "Account created.");
-    //     } else {
-    //       this.showPopup("Error", "Problem creating account.");
-    //     }
-    //   },
-    //   error => {
-    //     this.showPopup("Error", error);
-    //   });
+    this.authProvider.registerWithEmailAndPassword(this.registerCredentials)
+      .then(() => {
+        this.createSuccess = true;
+        this.showPopup("Success", "Account created.")
+      })
+      .catch(err => {
+        this.showPopup("Error", "Problem creating account.");
+      });
   }
 
   /**
