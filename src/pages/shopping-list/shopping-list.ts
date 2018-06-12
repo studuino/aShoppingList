@@ -26,6 +26,7 @@ export class ShoppingListPage {
   $currentShoppingList: Observable<ShoppingList>;
   $locationsWithSortedCategories: Observable<LocationWithSortedCategories[]>;
 
+  currentUserUid: string;
   currentShoppingList: ShoppingList;
   currentShoppingListTitle;
   currentShoppingListTotal = 0;
@@ -37,11 +38,15 @@ export class ShoppingListPage {
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
               private popoverCtrl: PopoverController,
+              private authProvider: AuthProvider,
               private shoppingListProvider: ShoppingListProvider,
               private categoryProvider: CategoryProvider) {
 
-    this.instantiateShoppingLists();
-    this.instantiateLocationsWithCategories();
+    if (this.authProvider.userIsLoggedIn()) {
+      this.currentUserUid = this.authProvider.getCurrentAuthUid();
+      this.instantiateShoppingLists();
+      this.instantiateLocationsWithCategories();
+    }
   }
 
   ionViewDidLoad() {
@@ -53,7 +58,7 @@ export class ShoppingListPage {
    * Load list of locations with sorted categories
    */
   private instantiateLocationsWithCategories() {
-    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid('fprXH7XZKsWEa0T5TrAv');
+    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid(this.currentUserUid);
   }
 
   /**

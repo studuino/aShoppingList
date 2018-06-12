@@ -39,4 +39,20 @@ export class AuthProvider {
   registerWithEmailAndPassword(registerCredentials: LoginCredentials): Promise<any> {
     return this.fireAuth.auth.createUserWithEmailAndPassword(registerCredentials.email, registerCredentials.password);
   }
+
+  /**
+   * Check if user is logged in
+   * @return {boolean}
+   */
+  userIsLoggedIn() {
+    return this.fireAuth.auth.currentUser !== null;
+  }
+
+  /**
+   * Return current user uid
+   * @return {string}
+   */
+  getCurrentAuthUid() {
+    return this.fireAuth.auth.currentUser.uid;
+  }
 }

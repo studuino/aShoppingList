@@ -6,6 +6,7 @@ import {CategoryProvider} from '../../../providers/categories/category';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
 import 'rxjs-compat/add/operator/take';
 import {ShoppingList} from '../../../entities/ShoppingList';
+import {AuthProvider} from '../../../providers/auth/auth';
 
 /**
  * Generated class for the ShoppingListDetailItemPage page.
@@ -33,6 +34,7 @@ export class DetailItemPage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private categoryProvider: CategoryProvider,
+              private authProvider: AuthProvider,
               private shoppingListProvider: ShoppingListProvider) {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
@@ -43,7 +45,8 @@ export class DetailItemPage {
   }
 
   ionViewDidLoad() {
-    this.$categories = this.categoryProvider.getCategoriesByUserUid('fprXH7XZKsWEa0T5TrAv');
+    const currentUserUid = this.authProvider.getCurrentAuthUid();
+    this.$categories = this.categoryProvider.getCategoriesByUserUid(currentUserUid);
   }
 
   /**

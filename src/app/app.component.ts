@@ -6,6 +6,7 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {ShoppingListPage} from '../pages/shopping-list/shopping-list';
 import {ScreenOrientation} from '@ionic-native/screen-orientation';
 import {CategoriesPage} from '../pages/categories/categories';
+import {AuthProvider} from '../providers/auth/auth';
 
 @Component({
   templateUrl: 'app.html'
@@ -20,6 +21,7 @@ export class MyApp {
   constructor(public platform: Platform,
               public statusBar: StatusBar,
               public splashScreen: SplashScreen,
+              private authProvider: AuthProvider,
               private screenOrientation: ScreenOrientation) {
     this.initializeApp();
 
@@ -42,6 +44,11 @@ export class MyApp {
       if (this.platform.is('cordova')) {
         // set to portrait
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT)
+      }
+
+      // Check for logged in user
+      if (this.authProvider.userIsLoggedIn()) {
+        this.rootPage = ShoppingListPage;
       }
     });
   }

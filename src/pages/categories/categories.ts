@@ -4,6 +4,7 @@ import {CategoryProvider} from '../../providers/categories/category';
 import {AlertProvider} from '../../providers/alert/alert';
 import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
+import {AuthProvider} from '../../providers/auth/auth';
 
 @Component({
   selector: 'page-categories',
@@ -12,16 +13,18 @@ import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list'
 export class CategoriesPage {
 
   $categories;
-  userUid = 'fprXH7XZKsWEa0T5TrAv';
+  userUid;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private categoryProvider: CategoryProvider,
+              private authProvider: AuthProvider,
               private shoppingListProvider: ShoppingListProvider,
               private alertProvider: AlertProvider) {
   }
 
   ionViewDidLoad() {
+    this.userUid = this.authProvider.getCurrentAuthUid();
     this.$categories = this.categoryProvider.getCategoriesByUserUid(this.userUid);
   }
 
