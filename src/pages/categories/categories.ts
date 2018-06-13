@@ -32,7 +32,7 @@ export class CategoriesPage {
    * Prompt user for new category name
    */
   promptForNewCategory() {
-    let prompt = this.alertProvider.getAlert(
+    let prompt = this.alertProvider.getInputAlert(
       'New Category',
       'Enter a name for this new category',
       {
@@ -108,7 +108,7 @@ export class CategoriesPage {
           })
           // Remove category from all user shopping lists (if items in category, place in uncategorized!)
           .switchMap(() => {
-            return this.shoppingListProvider.getPartialshoppingListsByUserUid(this.userUid)
+            return this.shoppingListProvider.getPartialShoppingListsByUserUid(this.userUid)
               .take(1)
               // Map to shopping lists
               .map(shoppingLists => {
@@ -139,7 +139,7 @@ export class CategoriesPage {
    * @param {ShoppingCategory} category
    */
   promptForCategoryRename(category: ShoppingCategory) {
-    let prompt = this.alertProvider.getAlert(
+    let prompt = this.alertProvider.getInputAlert(
       'Change Category Title',
       'Enter a new name for this new category',
       {
@@ -187,7 +187,7 @@ export class CategoriesPage {
           })
           // Remove category from all user shopping lists (if items in category, place in uncategorized!)
           .switchMap(() => {
-            return this.shoppingListProvider.getPartialshoppingListsByUserUid(this.userUid)
+            return this.shoppingListProvider.getPartialShoppingListsByUserUid(this.userUid)
               .take(1)
               // Map to shopping lists
               .map(shoppingLists => {

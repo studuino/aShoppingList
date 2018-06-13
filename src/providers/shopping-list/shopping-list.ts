@@ -34,11 +34,26 @@ export class ShoppingListProvider {
    * for later specific querying
    * @returns {Observable<ShoppingList[]>}
    */
-  getPartialshoppingListsByUserUid(userUid: string): Observable<ShoppingList[]> {
-    return this.afs.collection<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}`,
+  getPartialShoppingListsByUserUid(userUid: string): Observable<ShoppingList[]> {
+    return this.afs.collection<ShoppingList>(this.SHOPPING_LISTS_COLLECTION,
       ref =>
         ref.where('userUid', '==', userUid)
           .orderBy('title', 'asc')).valueChanges();
+  }
+
+  /**
+   * Get amount of shopping lists
+   * @param {string} userUid
+   * @return {Observable<number>}
+   */
+  getAmountOfShoppingListsByUserUid(userUid: string): Observable<number> {
+    return this.afs.collection<ShoppingList>(this.SHOPPING_LISTS_COLLECTION,
+      ref =>
+        ref.where('userUid', '==', userUid)
+          .orderBy('title', 'asc')).valueChanges()
+      .map(shoppingLists => {
+        return shoppingLists.length;
+      });
   }
 
   /**
@@ -146,5 +161,14 @@ export class ShoppingListProvider {
     return this.afs.firestore.collection(this.SHOPPING_LISTS_COLLECTION)
       .doc(newUid)
       .set(newShoppingList);
+  }
+
+  /**
+   * Delete shopping list, by provided uid from firestore
+   * @param {string} uid
+   */
+  deleteShoppingListByUid(uid: string) {
+    return this.afs.firestore.collection(this.SHOPPING_LISTS_COLLECTION).doc(uid)
+      .delete();
   }
 }

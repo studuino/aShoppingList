@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {AlertController, IonicPage, NavController} from 'ionic-angular';
 import {AuthProvider} from '../../../providers/auth/auth';
+import {AlertProvider} from '../../../providers/alert/alert';
 
 /**
  * Generated class for the RegisterPage page.
@@ -20,7 +21,7 @@ export class RegisterPage {
   registerCredentials = { email: '', password: '' };
 
   constructor(private nav: NavController,
-              private alertCtrl: AlertController,
+              private alertProvider: AlertProvider,
               private authProvider: AuthProvider) { }
 
   /**
@@ -46,19 +47,13 @@ export class RegisterPage {
    * @param text
    */
   private showPopup(title, text) {
-    let alert = this.alertCtrl.create({
-      title: title,
-      subTitle: text,
-      buttons: [
-        {
-          text: 'OK',
-          handler: data => {
-            if (this.createSuccess) {
-              this.nav.popToRoot();
-            }
-          }
+    let alert = this.alertProvider.getConfirmAlert(title, text, {
+      text: 'OK',
+      handler: data => {
+        if (this.createSuccess) {
+          this.nav.popToRoot();
         }
-      ]
+      }
     });
     alert.present();
   }

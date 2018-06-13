@@ -5,6 +5,7 @@ import {ShoppingList} from '../../../entities/ShoppingList';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
 import {AuthProvider} from '../../../providers/auth/auth';
 import {AlertProvider} from '../../../providers/alert/alert';
+import {Observable} from 'rxjs/Observable';
 
 /**
  * Generated class for the ShoppingListOptionsPage page.
@@ -20,7 +21,9 @@ import {AlertProvider} from '../../../providers/alert/alert';
 export class ShoppingListOptionsPage {
 
   locationTitle: string;
+  userUid: string;
   currentShoppingList: ShoppingList;
+  $userHasMoreThanOneShoppingList: Observable<boolean>;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -30,6 +33,9 @@ export class ShoppingListOptionsPage {
               private shoppingListProvider: ShoppingListProvider) {
     this.locationTitle = navParams.get('locationTitle');
     this.currentShoppingList = navParams.get('shoppingList');
+    this.userUid = this.authProvider.getCurrentAuthUid();
+    this.$userHasMoreThanOneShoppingList = this.shoppingListProvider.getAmountOfShoppingListsByUserUid(this.userUid)
+      .map(amount => amount > 1);
   }
 
   ionViewDidLoad() {
@@ -70,7 +76,7 @@ export class ShoppingListOptionsPage {
    * Prompt user for name of new Shopping List
    */
   promptUserForNewShoppingList() {
-    let prompt = this.alertProvider.getAlert(
+    let prompt = this.alertProvider.getInputAlert(
       'New Shopping List',
       'Enter a new name for this new Shopping List',
       {
@@ -90,7 +96,34 @@ export class ShoppingListOptionsPage {
    * @param {string} newTitle
    */
   private createShoppingList(newTitle: string) {
-    const userUid = this.authProvider.getCurrentAuthUid();
-    this.shoppingListProvider.createShoppingList(userUid, newTitle, this.currentShoppingList.defaultLocationUid);
+    this.shoppingListProvider.createShoppingList(this.userUid, newTitle, this.currentShoppingList.defaultLocationUid);
+  }
+
+  /**
+   * Prompt user to delete current shopping list
+   */
+  promptUserToDeleteShoppingList() {
+    let prompt = this.alertProvider.getConfirmAlert(
+      'Delete Shopping List',
+      'Please confirm that you want to delete the Shopping List',
+      {
+        text: 'Delete',
+        handler: data => {
+          // On user confirmation, delete!
+          // TODO ALH: Verify that this isn't the only shopping list!
+          // TODO ALH: Switch to another shopping list!
+          this.deleteShoppingList(this.currentShoppingList.uid);
+        }
+      }
+    );
+    prompt.present();
+  }
+
+  /**
+   * Delete current shopping list
+   * @param {string} uid
+   */
+  private deleteShoppingList(uid: string) {
+    this.shoppingListProvider.deleteShoppingListByUid(uid);
   }
 }
