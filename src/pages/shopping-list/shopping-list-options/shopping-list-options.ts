@@ -91,17 +91,6 @@ export class ShoppingListOptionsPage {
    */
   private createShoppingList(newTitle: string) {
     const userUid = this.authProvider.getCurrentAuthUid();
-    this.shoppingListProvider.createShoppingList(userUid, newTitle)
-      .then(() => {
-        let prompt = this.alertProvider.getAlert(
-          'Success!',
-          'New Shopping List Created',
-          {
-            text: 'OK',
-            handler: data => {
-            }
-          });
-        prompt.present();
-      });
+    this.shoppingListProvider.createShoppingList(userUid, newTitle, this.currentShoppingList.defaultLocationUid);
   }
 }

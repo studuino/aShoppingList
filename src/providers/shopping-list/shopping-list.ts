@@ -121,14 +121,16 @@ export class ShoppingListProvider {
    * Create new shopping list in firestore
    * @param {string} userUid
    * @param {string} newTitle
+   * @param defaultLocationUid
    */
-  createShoppingList(userUid: string, newTitle: string) {
+  createShoppingList(userUid: string, newTitle: string, defaultLocationUid: string) {
     // Create UUID for document
     const newUid = this.afs.createId();
     // Create new shopping list
     const newShoppingList: ShoppingList = {
       uid: newUid,
-      defaultLocationUid: '',
+      userUid: userUid,
+      defaultLocationUid: defaultLocationUid,
       title: newTitle,
       cart: {
         items: []
