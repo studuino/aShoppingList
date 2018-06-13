@@ -70,7 +70,7 @@ export class ShoppingListProvider {
    */
   calculateCartTotal(shoppingCart: ShoppingCart) {
     // Defensive programming
-    if(!Array.isArray(shoppingCart.items)) return;
+    if (!Array.isArray(shoppingCart.items)) return;
     let total: number = 0;
     // Sum up total
     shoppingCart.items
@@ -115,5 +115,34 @@ export class ShoppingListProvider {
     currentShoppingList.categories = sortedArray;
     // Update shopping list on firestore
     this.updateShoppingList(currentShoppingList);
+  }
+
+  /**
+   * Create new shopping list in firestore
+   * @param {string} userUid
+   * @param {string} newTitle
+   */
+  createShoppingList(userUid: string, newTitle: string) {
+    // Create UUID for document
+    const newUid = this.afs.createId();
+    // Create new shopping list
+    const newShoppingList: ShoppingList = {
+      uid: newUid,
+      defaultLocationUid: '',
+      title: newTitle,
+      cart: {
+        items: []
+      },
+      categories: [
+        {
+          title: 'Uncategorized',
+          items: []
+        }
+      ]
+    };
+    // Add new shopping list to firestore
+    return this.afs.firestore.collection(this.SHOPPING_LISTS_COLLECTION)
+      .doc(newUid)
+      .set(newShoppingList);
   }
 }

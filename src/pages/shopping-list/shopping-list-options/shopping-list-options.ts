@@ -4,6 +4,7 @@ import {LocationSortedCategoriesPage} from '../location-sorted-categories/locati
 import {ShoppingList} from '../../../entities/ShoppingList';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
 import {AuthProvider} from '../../../providers/auth/auth';
+import {AlertProvider} from '../../../providers/alert/alert';
 
 /**
  * Generated class for the ShoppingListOptionsPage page.
@@ -25,6 +26,7 @@ export class ShoppingListOptionsPage {
               public navParams: NavParams,
               private viewCtrl: ViewController,
               private authProvider: AuthProvider,
+              private alertProvider: AlertProvider,
               private shoppingListProvider: ShoppingListProvider) {
     this.locationTitle = navParams.get('locationTitle');
     this.currentShoppingList = navParams.get('shoppingList');
@@ -62,5 +64,44 @@ export class ShoppingListOptionsPage {
       });
     this.shoppingListProvider.updateShoppingList(this.currentShoppingList)
       .then(() => this.viewCtrl.dismiss());
+  }
+
+  /**
+   * Prompt user for name of new Shopping List
+   */
+  promptUserForNewShoppingList() {
+    let prompt = this.alertProvider.getAlert(
+      'New Shopping List',
+      'Enter a new name for this new Shopping List',
+      {
+        text: 'Create',
+        handler: data => {
+          // Get new category name from user input data
+          const newTitle = data.title;
+          this.createShoppingList(newTitle)
+        }
+      });
+    prompt.present();
+  }
+
+  /***
+   * Create new shoping list
+   * @param {string} userUid
+   * @param {string} newTitle
+   */
+  private createShoppingList(newTitle: string) {
+    const userUid = this.authProvider.getCurrentAuthUid();
+    this.shoppingListProvider.createShoppingList(userUid, newTitle)
+      .then(() => {
+        let prompt = this.alertProvider.getAlert(
+          'Success!',
+          'New Shopping List Created',
+          {
+            text: 'OK',
+            handler: data => {
+            }
+          });
+        prompt.present();
+      });
   }
 }
