@@ -108,7 +108,7 @@ export class CategoriesPage {
           })
           // Remove category from all user shopping lists (if items in category, place in uncategorized!)
           .switchMap(() => {
-            return this.shoppingListProvider.getPartialshoppingLists()
+            return this.shoppingListProvider.getPartialshoppingListsByUserUid(this.userUid)
               .take(1)
               // Map to shopping lists
               .map(shoppingLists => {
@@ -187,9 +187,9 @@ export class CategoriesPage {
           })
           // Remove category from all user shopping lists (if items in category, place in uncategorized!)
           .switchMap(() => {
-            return this.shoppingListProvider.getPartialshoppingLists()
+            return this.shoppingListProvider.getPartialshoppingListsByUserUid(this.userUid)
               .take(1)
-            // Map to shopping lists
+              // Map to shopping lists
               .map(shoppingLists => {
                 shoppingLists
                 // For each shopping list

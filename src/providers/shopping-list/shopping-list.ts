@@ -34,10 +34,11 @@ export class ShoppingListProvider {
    * for later specific querying
    * @returns {Observable<ShoppingList[]>}
    */
-  getPartialshoppingLists(): Observable<ShoppingList[]> {
+  getPartialshoppingListsByUserUid(userUid: string): Observable<ShoppingList[]> {
     return this.afs.collection<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}`,
       ref =>
-        ref.orderBy('title', 'asc')).valueChanges();
+        ref.where('userUid', '==', userUid)
+          .orderBy('title', 'asc')).valueChanges();
   }
 
   /**

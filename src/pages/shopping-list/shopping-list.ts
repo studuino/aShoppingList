@@ -65,7 +65,7 @@ export class ShoppingListPage {
    * Load current shopping list
    */
   private instantiateShoppingLists() {
-    this.$shoppingLists = this.shoppingListProvider.getPartialshoppingLists()
+    this.$shoppingLists = this.shoppingListProvider.getPartialshoppingListsByUserUid(this.currentUserUid)
     // Map shopping lists
       .map(shoppingLists => {
         if (!this.currentShoppingList) {

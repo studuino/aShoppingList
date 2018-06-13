@@ -27,6 +27,8 @@ export class RegisterPage {
    * Register user
     */
   public register() {
+    // Ensure no space at end!
+    this.registerCredentials.email.trim();
     // Handle registration
     this.authProvider.registerWithEmailAndPassword(this.registerCredentials)
       .then(() => {
@@ -34,7 +36,7 @@ export class RegisterPage {
         this.showPopup("Success", "Account created.")
       })
       .catch(err => {
-        this.showPopup("Error", "Problem creating account.");
+        this.showPopup("Error", err.message);
       });
   }
 
