@@ -33,10 +33,13 @@ export class ShoppingListOptionsPage {
               private alertProvider: AlertProvider,
               private loadingController: LoadingController,
               private shoppingListProvider: ShoppingListProvider) {
+    // Get parsed data
     this.shoppingListCallBack = this.navParams.get('callback');
     this.locationTitle = navParams.get('locationTitle');
     this.currentShoppingList = navParams.get('shoppingList');
+    // Get current userid
     this.userUid = this.authProvider.getCurrentAuthUid();
+    // Set observable value, to decide if user should be able to delete current shopping list
     this.$userHasMoreThanOneShoppingList = this.shoppingListProvider.getAmountOfShoppingListsByUserUid(this.userUid)
       .map(amount => amount > 1);
   }

@@ -24,10 +24,12 @@ import {AlertProvider} from '../../providers/alert/alert';
 export class ShoppingListPage implements ShoppingListCallback{
   @ViewChild(Content) content: Content;
 
+  // Observable values
   $shoppingLists: Observable<ShoppingList[]>;
   $currentShoppingList: Observable<ShoppingList>;
   $locationsWithSortedCategories: Observable<LocationWithSortedCategories[]>;
 
+  // Fields
   currentUserUid: string;
   currentShoppingList: ShoppingList;
   currentShoppingListTitle;
@@ -45,6 +47,8 @@ export class ShoppingListPage implements ShoppingListCallback{
               private shoppingListProvider: ShoppingListProvider,
               private categoryProvider: CategoryProvider) {
 
+    // TODO ALH: This should only be necessary in dev, consider removing for release!
+    // Check for current user
     if (this.authProvider.userIsLoggedIn()) {
       this.currentUserUid = this.authProvider.getCurrentAuthUid();
       this.instantiateShoppingLists();
@@ -148,6 +152,8 @@ export class ShoppingListPage implements ShoppingListCallback{
         return shoppingList;
       });
   }
+
+  /***** OPTIONS MENU *****/
 
   /**
    * Display menu items
@@ -345,7 +351,7 @@ export class ShoppingListPage implements ShoppingListCallback{
   }
 
   /**
-   * Move provided item from shopping list cart to original category
+   * Helper method to move provided item from shopping list cart to original category
    * @param {ShoppingList} shoppingList
    * @param {ShoppingItem} item
    */
