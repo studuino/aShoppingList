@@ -166,6 +166,17 @@ export class ShoppingListPage implements ShoppingListCallback{
     });
   }
 
+  /***** CALLBACKS *****/
+
+  /**
+   * When user creates a shopping list, select the new list by uid
+   * @param {string} newListUid
+   */
+  onListCreated(newListUid: string) {
+    this.shoppingListProvider.setCurrentShoppingListByUid(newListUid);
+    this.setCurrentShoppingList();
+  }
+
   /**
    * When user deleted shopping list, Reset default first shopping list
    */

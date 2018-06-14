@@ -155,13 +155,14 @@ export class ShoppingListProvider {
     this.updateShoppingList(currentShoppingList);
   }
 
-  /**
+  /***
    * Create new shopping list in firestore
    * @param {string} userUid
    * @param {string} newTitle
-   * @param defaultLocationUid
+   * @param {string} defaultLocationUid
+   * @return Uid of new list as {Promise<string>}
    */
-  createShoppingList(userUid: string, newTitle: string, defaultLocationUid: string) {
+  createShoppingList(userUid: string, newTitle: string, defaultLocationUid: string): Promise<string> {
     // Create UUID for document
     const newUid = this.afs.createId();
     // Create new shopping list
@@ -183,7 +184,11 @@ export class ShoppingListProvider {
     // Add new shopping list to firestore
     return this.afs.firestore.collection(this.SHOPPING_LISTS_COLLECTION)
       .doc(newUid)
-      .set(newShoppingList);
+      .set(newShoppingList)
+      .then(() => {
+        // Return uid of new list
+        return newUid;
+      });
   }
 
   /**

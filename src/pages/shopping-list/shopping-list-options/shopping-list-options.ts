@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams, ViewController} from 'ionic-angular';
+import {LoadingController, NavController, NavParams, ViewController} from 'ionic-angular';
 import {LocationSortedCategoriesPage} from '../location-sorted-categories/location-sorted-categories';
 import {ShoppingList} from '../../../entities/ShoppingList';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
@@ -31,6 +31,7 @@ export class ShoppingListOptionsPage {
               private viewCtrl: ViewController,
               private authProvider: AuthProvider,
               private alertProvider: AlertProvider,
+              private loadingController: LoadingController,
               private shoppingListProvider: ShoppingListProvider) {
     this.shoppingListCallBack = this.navParams.get('callback');
     this.locationTitle = navParams.get('locationTitle');
@@ -99,7 +100,17 @@ export class ShoppingListOptionsPage {
    * @param {string} newTitle
    */
   private createShoppingList(newTitle: string) {
-    this.shoppingListProvider.createShoppingList(this.userUid, newTitle, this.currentShoppingList.defaultLocationUid);
+    const loading = this.loadingController.create({
+      content: 'Loading new Shopping List..',
+      dismissOnPageChange: true
+    });
+    loading.present();
+    this.shoppingListProvider.createShoppingList(this.userUid, newTitle, this.currentShoppingList.defaultLocationUid)
+      .then(uid => {
+        // Notify about creation
+        this.shoppingListCallBack.onListCreated(uid);
+        loading.dismissAll();
+      });
   }
 
   /**
