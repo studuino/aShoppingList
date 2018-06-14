@@ -139,4 +139,32 @@ export class ShoppingListOptionsPage {
   private deleteShoppingList(uid: string) {
     this.shoppingListProvider.deleteShoppingListByUid(uid);
   }
+
+  /**
+   * Prompt user for new name of current shopping list
+   */
+  promptUserToRenameShoppingList() {
+    let prompt = this.alertProvider.getInputAlert(
+      'Rename Shopping List',
+      'Enter a new name for the Shopping List',
+      {
+        text: 'Rename',
+        handler: data => {
+          // Get new category name from user input data
+          const newTitle = data.title;
+          this.viewCtrl.dismiss();
+          this.renameShoppingList(newTitle);
+        }
+      });
+    prompt.present();
+  }
+
+  /**
+   * Update shopping list with new title in firestore
+   * @param {string} newTitle
+   */
+  private renameShoppingList(newTitle: string) {
+    this.currentShoppingList.title = newTitle;
+    this.shoppingListProvider.updateShoppingList(this.currentShoppingList);
+  }
 }
