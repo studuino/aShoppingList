@@ -66,6 +66,9 @@ export class ShoppingListOptionsPage {
       .then(() => this.viewCtrl.dismiss());
   }
 
+  /**
+   * Clear out the items in current shopping list
+   */
   emptyShoppingList() {
     this.currentShoppingList.categories
       .forEach(category => {
@@ -130,14 +133,6 @@ export class ShoppingListOptionsPage {
       }
     );
     prompt.present();
-  }
-
-  /**
-   * Delete current shopping list
-   * @param {string} uid
-   */
-  private deleteShoppingList(uid: string) {
-    this.shoppingListProvider.deleteShoppingListByUid(uid);
   }
 
   /**
