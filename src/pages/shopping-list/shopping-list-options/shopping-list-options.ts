@@ -22,6 +22,7 @@ export class ShoppingListOptionsPage {
 
   locationTitle: string;
   userUid: string;
+  shoppingListCallBack: ShoppingListCallback;
   currentShoppingList: ShoppingList;
   $userHasMoreThanOneShoppingList: Observable<boolean>;
 
@@ -31,6 +32,7 @@ export class ShoppingListOptionsPage {
               private authProvider: AuthProvider,
               private alertProvider: AlertProvider,
               private shoppingListProvider: ShoppingListProvider) {
+    this.shoppingListCallBack = this.navParams.get('callback');
     this.locationTitle = navParams.get('locationTitle');
     this.currentShoppingList = navParams.get('shoppingList');
     this.userUid = this.authProvider.getCurrentAuthUid();
@@ -84,7 +86,8 @@ export class ShoppingListOptionsPage {
         handler: data => {
           // Get new category name from user input data
           const newTitle = data.title;
-          this.createShoppingList(newTitle)
+          this.viewCtrl.dismiss();
+          this.createShoppingList(newTitle);
         }
       });
     prompt.present();
@@ -110,9 +113,8 @@ export class ShoppingListOptionsPage {
         text: 'Delete',
         handler: data => {
           // On user confirmation, delete!
-          // TODO ALH: Verify that this isn't the only shopping list!
-          // TODO ALH: Switch to another shopping list!
-          this.deleteShoppingList(this.currentShoppingList.uid);
+          this.viewCtrl.dismiss();
+          this.shoppingListCallBack.onListDeleted();
         }
       }
     );
