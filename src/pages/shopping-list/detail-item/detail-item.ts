@@ -8,13 +8,6 @@ import 'rxjs-compat/add/operator/take';
 import {ShoppingList} from '../../../entities/ShoppingList';
 import {AuthProvider} from '../../../providers/auth/auth';
 
-/**
- * Generated class for the ShoppingListDetailItemPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
-
 @Component({
   selector: 'page-detail-item',
   templateUrl: 'detail-item.html',
