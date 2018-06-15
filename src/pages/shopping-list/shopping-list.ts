@@ -115,13 +115,6 @@ export class ShoppingListPage implements ShoppingListCallback {
   }
 
   /**
-   * Set current shared shopping list
-   */
-  setCurrentShoppingListAsShared() {
-
-  }
-
-  /**
    * Set current owned shopping list from user
    */
   setCurrentShoppingList(observableShoppingList: Observable<ShoppingList>) {
