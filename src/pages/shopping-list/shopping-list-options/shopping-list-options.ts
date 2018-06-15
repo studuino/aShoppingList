@@ -7,6 +7,7 @@ import {AuthProvider} from '../../../providers/auth/auth';
 import {AlertProvider} from '../../../providers/alert/alert';
 import {Observable} from 'rxjs/Observable';
 import {ManageShoppingListPage} from '../manage-shopping-list/manage-shopping-list';
+import {AngularFirestore} from 'angularfire2/firestore';
 
 /**
  * Generated class for the ShoppingListOptionsPage page.
@@ -57,7 +58,7 @@ export class ShoppingListOptionsPage {
   logout() {
     this.authProvider.logout()
       .then(() => {
-        this.navCtrl.push('LoginPage')
+        this.navCtrl.push('LoginPage');
       });
   }
 

@@ -17,26 +17,7 @@ export class ShoppingListProvider {
 
   private SHOPPING_LISTS_COLLECTION = 'shoppingLists';
 
-  $observableShoppingList: Observable<ShoppingList>;
-
   constructor(private afs: AngularFirestore) {
-  }
-
-  public setCurrentShoppingListToFirstShoppingListFromUser(userUid: string) {
-    this.$observableShoppingList = this.getFirstShoppingListByUserUid(userUid);
-  }
-
-  public setCurrentShoppingListByUid(shoppingListUid: string) {
-    this.$observableShoppingList = this.getShoppingListByUid(shoppingListUid);
-  }
-
-  /**
-   * Load shopping list from firestore by uid
-   * @param {string} uid
-   * @returns {Observable<ShoppingList | undefined>}
-   */
-  getShoppingListByUid(uid: string) {
-    return this.afs.doc<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}/${uid}`).valueChanges();
   }
 
   /**
@@ -49,6 +30,15 @@ export class ShoppingListProvider {
       ref =>
         ref.where('userUid', '==', userUid)
           .orderBy('title', 'asc')).valueChanges();
+  }
+
+  /**
+   * Load shopping list from firestore by uid
+   * @param {string} uid
+   * @returns {Observable<ShoppingList | undefined>}
+   */
+  getShoppingListByUid(uid: string) {
+    return this.afs.doc<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}/${uid}`).valueChanges();
   }
 
   /**
