@@ -1,3 +1,10 @@
+@import "../../../theme/variables";
+
 page-manage-shopping-list {
+
+  .ion-md-send {
+    color: color($colors, success);
+    cursor: pointer;
+  }
 
 }

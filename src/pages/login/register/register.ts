@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AlertController, IonicPage, NavController} from 'ionic-angular';
+import {IonicPage, NavController} from 'ionic-angular';
 import {AuthProvider} from '../../../providers/auth/auth';
 import {AlertProvider} from '../../../providers/alert/alert';
 
@@ -18,15 +18,16 @@ import {AlertProvider} from '../../../providers/alert/alert';
 export class RegisterPage {
 
   createSuccess = false;
-  registerCredentials = { email: '', password: '' };
+  registerCredentials = {email: '', password: ''};
 
   constructor(private nav: NavController,
               private alertProvider: AlertProvider,
-              private authProvider: AuthProvider) { }
+              private authProvider: AuthProvider) {
+  }
 
   /**
    * Register user
-    */
+   */
   public register() {
     // Ensure no space at end!
     this.registerCredentials.email.trim();

@@ -25,5 +25,45 @@
     </ion-row>
 
     <br>
+
+    <!--SHARED WITH-->
+    <div *ngIf="$shoppingListSharedWith | async as sharedLists">
+      <ion-row>
+        <ion-col>
+          <h5 text-center>Shared With</h5>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <p text-center *ngFor="let sharedList of sharedLists">{{sharedList.sharedUserEmail}}</p>
+        </ion-col>
+      </ion-row>
+    </div>
+
+    <br>
+
+    <!--INVITE USERS-->
+    <ion-row>
+      <ion-col>
+        <h5 text-center>Invite User To List</h5>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input text-center
+                     type="email"
+                     [(ngModel)]="inviteEmail"></ion-input>
+          <button item-end
+                  ion-button
+                  icon-only
+                  clear
+                  [hidden]="inviteEmail.length === 0"
+                  (click)="inviteUser()">
+            <ion-icon name="send"></ion-icon>
+          </button>
+        </ion-item>
+      </ion-col>
+    </ion-row>
   </ion-grid>
 </ion-content>
