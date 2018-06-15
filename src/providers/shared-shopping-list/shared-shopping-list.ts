@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {SharedShoppingList} from '../../entities/SharedShoppingList';
 import {ShoppingList} from '../../entities/ShoppingList';
+import {ShoppingUser} from '../../entities/auth/ShoppingUser';
 
 @Injectable()
 export class SharedShoppingListProvider {
@@ -35,17 +36,16 @@ export class SharedShoppingListProvider {
 
   /**
    * Create shared shopping list
-   * @param {string} inviteEmail
+   * @param shoppingUser
    * @param shoppingListToShare
    */
-  createSharedShoppingList(inviteEmail: string, shoppingListToShare: ShoppingList) {
+  createSharedShoppingList(shoppingUser: ShoppingUser, shoppingListToShare: ShoppingList) {
     const newSharedList: SharedShoppingList = {
       uid: shoppingListToShare.uid,
       title: shoppingListToShare.title,
       userUid: shoppingListToShare.userUid,
-      sharedUserEmail: inviteEmail,
-      // TODO ALH: FIX!
-      sharedUserUid: 'UdHdIZIGLNMoqNUmqF6lNOXcNtD2'
+      sharedUserEmail: shoppingUser.email,
+      sharedUserUid: shoppingUser.uid
     };
     return this.afs.collection(this.SHARED_SHOPPING_LIST_COLLECTION)
       .add(newSharedList);

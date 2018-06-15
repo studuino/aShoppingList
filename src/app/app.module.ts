@@ -21,6 +21,7 @@ import { AuthProvider } from '../providers/auth/auth';
 import {AngularFireAuthModule} from 'angularfire2/auth';
 import { SharedShoppingListProvider } from '../providers/shared-shopping-list/shared-shopping-list';
 import {ManageShoppingListPage} from '../pages/shopping-list/manage-shopping-list/manage-shopping-list';
+import { UserProvider } from '../providers/user/user';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -69,7 +70,8 @@ export const firebaseConfig = {
     CategoryProvider,
     AlertProvider,
     AuthProvider,
-    SharedShoppingListProvider
+    SharedShoppingListProvider,
+    UserProvider
   ]
 })
 export class AppModule {

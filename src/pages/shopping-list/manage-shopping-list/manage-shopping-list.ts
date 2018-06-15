@@ -5,13 +5,8 @@ import {ShoppingList} from '../../../entities/ShoppingList';
 import {SharedShoppingListProvider} from '../../../providers/shared-shopping-list/shared-shopping-list';
 import {Observable} from 'rxjs/Observable';
 import {SharedShoppingList} from '../../../entities/SharedShoppingList';
-
-/**
- * Generated class for the ManageShoppingListPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import {UserProvider} from '../../../providers/user/user';
+import {AlertProvider} from '../../../providers/alert/alert';
 
 @Component({
   selector: 'page-manage-shopping-list',
@@ -26,8 +21,10 @@ export class ManageShoppingListPage {
 
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
+              private alertProvider: AlertProvider,
               private shoppingListProvider: ShoppingListProvider,
-              private sharedShoppingListProvider: SharedShoppingListProvider) {
+              private sharedShoppingListProvider: SharedShoppingListProvider,
+              private userProvider: UserProvider) {
     this.shoppingList = navParams.get('shoppingList');
     this.$shoppingListSharedWith = this.sharedShoppingListProvider.getSharedShoppingListsByShoppingListUid(this.shoppingList.uid);
   }
@@ -46,8 +43,24 @@ export class ManageShoppingListPage {
    * Invite user to list
    */
   inviteUser() {
-    this.sharedShoppingListProvider.createSharedShoppingList(this.inviteEmail, this.shoppingList)
-      .then(() => this.inviteEmail = '');
+    // Check if email is a registered user
+    this.userProvider.checkForRegisteredUserByEmail(this.inviteEmail)
+      .subscribe(registeredUser => {
+        console.log(registeredUser)
+        if (registeredUser) {
+          this.sharedShoppingListProvider.createSharedShoppingList(registeredUser, this.shoppingList);
+        } else {
+          const userNotRegistered = this.alertProvider.getConfirmAlert(
+            'User not registered :(',
+            'Sorry we do not have a user with this email, but we suggest you ask them to download our app!',
+            {
+              text: 'Will do!'
+            });
+          userNotRegistered.present();
+        }
+      });
+    // Reset field
+    this.inviteEmail = '';
   }
 
 }
