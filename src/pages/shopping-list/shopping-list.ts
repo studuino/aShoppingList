@@ -1,4 +1,4 @@
-import {Component, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Content, ItemSliding, NavController, NavParams, PopoverController} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
@@ -15,13 +15,15 @@ import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCat
 import 'rxjs-compat/add/operator/do';
 import {AuthProvider} from '../../providers/auth/auth';
 import {AlertProvider} from '../../providers/alert/alert';
+import {SharedShoppingListProvider} from '../../providers/shared-shopping-list/shared-shopping-list';
+import {SharedShoppingList} from '../../entities/SharedShoppingList';
 
 @Component({
   selector: 'page-shopping-list',
   templateUrl: 'shopping-list.html'
 })
 
-export class ShoppingListPage implements ShoppingListCallback{
+export class ShoppingListPage implements ShoppingListCallback {
   @ViewChild(Content) content: Content;
 
   // Observable values
@@ -45,6 +47,7 @@ export class ShoppingListPage implements ShoppingListCallback{
               private authProvider: AuthProvider,
               private alertProvider: AlertProvider,
               private shoppingListProvider: ShoppingListProvider,
+              private sharedShoppingListProvider: SharedShoppingListProvider,
               private categoryProvider: CategoryProvider) {
 
     // TODO ALH: This should only be necessary in dev, consider removing for release!
@@ -52,7 +55,7 @@ export class ShoppingListPage implements ShoppingListCallback{
     if (this.authProvider.userIsLoggedIn()) {
       this.currentUserUid = this.authProvider.getCurrentAuthUid();
       this.instantiateShoppingLists();
-      this.instantiateLocationsWithCategories();
+      this.instantiateLocationsWithCategoriesByUserUid(this.currentUserUid);
     }
   }
 
@@ -64,15 +67,30 @@ export class ShoppingListPage implements ShoppingListCallback{
   /**
    * Load list of locations with sorted categories
    */
-  private instantiateLocationsWithCategories() {
-    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid(this.currentUserUid);
+  private instantiateLocationsWithCategoriesByUserUid(userUid: string) {
+    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid(userUid);
   }
 
   /**
    * Load current shopping list
    */
   private instantiateShoppingLists() {
-    this.$shoppingLists = this.shoppingListProvider.getPartialShoppingListsByUserUid(this.currentUserUid);
+    // Create array to hold all users shopping lists
+    const allLists = [];
+    // Locate users own lists
+    this.$shoppingLists = this.shoppingListProvider.getPartialShoppingListsByUserUid(this.currentUserUid)
+      .switchMap(shoppingLists => {
+        // Add to array
+        shoppingLists.forEach(shoppingList => allLists.push(shoppingList));
+        // switchmap to shared shopping lists
+        return this.sharedShoppingListProvider.getSharedShoppingListForUserUid(this.currentUserUid);
+      })
+      .map(sharedShoppingLists => {
+        // add to array
+        sharedShoppingLists.forEach(sharedList => allLists.push(sharedList));
+        // Return complete list
+        return allLists;
+      });
     // Check for instantiation of current shopping list
     if (!this.currentShoppingList) {
       this.setCurrentShoppingListToFirstShoppingListFromUser();
@@ -89,15 +107,25 @@ export class ShoppingListPage implements ShoppingListCallback{
 
   /**
    * Update current shopping list
-   * @param {ShoppingList} shoppingList
+   * @param shoppingList
    */
-  loadShoppingList(shoppingList: ShoppingList) {
+  loadShoppingList(shoppingList: ShoppingList | SharedShoppingList) {
     this.shoppingListProvider.setCurrentShoppingListByUid(shoppingList.uid);
+    if (shoppingList as SharedShoppingList) {
+      this.instantiateLocationsWithCategoriesByUserUid(shoppingList.userUid);
+    }
     this.setCurrentShoppingList();
   }
 
   /**
-   * Set current shopping list from user
+   * Set current shared shopping list
+   */
+  setCurrentShoppingListAsShared() {
+
+  }
+
+  /**
+   * Set current owned shopping list from user
    */
   setCurrentShoppingList() {
     this.$currentShoppingList = this.shoppingListProvider.$observableShoppingList

@@ -19,6 +19,7 @@ import {ShoppingListOptionsPage} from '../pages/shopping-list/shopping-list-opti
 import {LocationSortedCategoriesPage} from '../pages/shopping-list/location-sorted-categories/location-sorted-categories';
 import { AuthProvider } from '../providers/auth/auth';
 import {AngularFireAuthModule} from 'angularfire2/auth';
+import { SharedShoppingListProvider } from '../providers/shared-shopping-list/shared-shopping-list';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -64,7 +65,8 @@ export const firebaseConfig = {
     ShoppingListProvider,
     CategoryProvider,
     AlertProvider,
-    AuthProvider
+    AuthProvider,
+    SharedShoppingListProvider
   ]
 })
 export class AppModule {
