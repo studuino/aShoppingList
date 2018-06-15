@@ -17,7 +17,6 @@ import {AlertProvider} from '../../../providers/alert/alert';
 })
 export class RegisterPage {
 
-  createSuccess = false;
   registerCredentials = {email: '', password: ''};
 
   constructor(private nav: NavController,
@@ -34,8 +33,7 @@ export class RegisterPage {
     // Handle registration
     this.authProvider.registerWithEmailAndPassword(this.registerCredentials)
       .then(() => {
-        this.createSuccess = true;
-        this.showPopup("Success", "Account created.")
+        this.nav.popToRoot();
       })
       .catch(err => {
         this.showPopup("Error", err.message);
@@ -51,9 +49,7 @@ export class RegisterPage {
     let alert = this.alertProvider.getConfirmAlert(title, text, {
       text: 'OK',
       handler: data => {
-        if (this.createSuccess) {
-          this.nav.popToRoot();
-        }
+        this.nav.popToRoot();
       }
     });
     alert.present();

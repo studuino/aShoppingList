@@ -2,6 +2,9 @@ import {Injectable} from '@angular/core';
 import {LoginCredentials} from '../../entities/auth/LoginCredentials';
 import {AngularFireAuth} from 'angularfire2/auth';
 import {AngularFirestore} from 'angularfire2/firestore';
+import {ShoppingUser} from '../../entities/auth/ShoppingUser';
+import {Observable} from 'rxjs/Observable';
+import {User} from 'firebase';
 
 /*
   Generated class for the AuthProvider provider.
@@ -62,5 +65,17 @@ export class AuthProvider {
    */
   getCurrentAuthUid() {
     return this.fireAuth.auth.currentUser.uid;
+  }
+
+  getCurrentUser(): Observable<User> {
+    return this.fireAuth.authState;
+  }
+
+  /**
+   * Delete current user from firestore
+   * @return {Promise<any>}
+   */
+  deleteAccount() {
+    return this.fireAuth.auth.currentUser.delete();
   }
 }

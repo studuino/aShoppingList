@@ -150,5 +150,6 @@ export class ShoppingListOptionsPage {
     this.navCtrl.push(ManageShoppingListPage, {
       shoppingList: this.currentShoppingList
     });
+    this.viewCtrl.dismiss();
   }
 }
