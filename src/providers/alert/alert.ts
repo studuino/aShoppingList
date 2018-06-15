@@ -14,13 +14,13 @@ export class AlertProvider {
   }
 
   /**
-   * Create standard alert for user
+   * Create standard alert with input for user
    * @param {string} title
    * @param {string} message
    * @param successButton
    * @return {Alert}
    */
-  getAlert(title: string, message: string, successButton: AlertButton) {
+  getInputAlert(title: string, message: string, successButton: AlertButton) {
     return this.alertCtrl.create({
       title: title,
       message: message,
@@ -38,6 +38,29 @@ export class AlertProvider {
           }
         },
         successButton
+      ]
+    });
+  }
+
+  /**
+   * Create standard confirm alert for user
+   * @param {string} title
+   * @param {string} message
+   * @param {AlertButton} confirmButton
+   * @return {Alert}
+   */
+  getConfirmAlert(title: string, message: string, confirmButton: AlertButton) {
+    return this.alertCtrl.create({
+      title: title,
+      subTitle: message,
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        confirmButton
       ]
     });
   }

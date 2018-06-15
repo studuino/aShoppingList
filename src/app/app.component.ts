@@ -6,6 +6,7 @@ import {SplashScreen} from '@ionic-native/splash-screen';
 import {ShoppingListPage} from '../pages/shopping-list/shopping-list';
 import {ScreenOrientation} from '@ionic-native/screen-orientation';
 import {CategoriesPage} from '../pages/categories/categories';
+import {AuthProvider} from '../providers/auth/auth';
 
 @Component({
   templateUrl: 'app.html'
@@ -13,20 +14,22 @@ import {CategoriesPage} from '../pages/categories/categories';
 export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = ShoppingListPage;
+  rootPage: any = 'LoginPage';
 
-  pages: Array<{title: string, component: any}>;
+  pages: Array<{ title: string, component: any }>;
 
   constructor(public platform: Platform,
               public statusBar: StatusBar,
               public splashScreen: SplashScreen,
+              private authProvider: AuthProvider,
               private screenOrientation: ScreenOrientation) {
     this.initializeApp();
 
     // used for an example of ngFor and navigation
     this.pages = [
-      { title: 'Shopping List', component: ShoppingListPage },
-      { title: 'Categories', component: CategoriesPage }
+      {title: 'Shopping List', component: ShoppingListPage},
+      {title: 'Categories', component: CategoriesPage},
+      {title: 'User', component: 'UserPage'}
     ];
 
   }
@@ -42,6 +45,11 @@ export class MyApp {
       if (this.platform.is('cordova')) {
         // set to portrait
         this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT)
+      }
+
+      // Check for logged in user
+      if (this.authProvider.userIsLoggedIn()) {
+        this.rootPage = ShoppingListPage;
       }
     });
   }

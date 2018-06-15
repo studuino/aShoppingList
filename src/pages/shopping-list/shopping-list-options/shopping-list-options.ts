@@ -1,8 +1,13 @@
 import {Component} from '@angular/core';
-import {NavController, NavParams, ViewController} from 'ionic-angular';
+import {LoadingController, NavController, NavParams, ViewController} from 'ionic-angular';
 import {LocationSortedCategoriesPage} from '../location-sorted-categories/location-sorted-categories';
 import {ShoppingList} from '../../../entities/ShoppingList';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
+import {AuthProvider} from '../../../providers/auth/auth';
+import {AlertProvider} from '../../../providers/alert/alert';
+import {Observable} from 'rxjs/Observable';
+import {ManageShoppingListPage} from '../manage-shopping-list/manage-shopping-list';
+import {AngularFirestore} from 'angularfire2/firestore';
 
 /**
  * Generated class for the ShoppingListOptionsPage page.
@@ -18,17 +23,43 @@ import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-li
 export class ShoppingListOptionsPage {
 
   locationTitle: string;
+  userUid: string;
+  shoppingListCallBack: ShoppingListCallback;
   currentShoppingList: ShoppingList;
+  $userHasMoreThanOneShoppingList: Observable<boolean>;
+  userIsOwnerOfShoppingList: boolean;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private viewCtrl: ViewController,
+              private authProvider: AuthProvider,
+              private alertProvider: AlertProvider,
+              private loadingController: LoadingController,
               private shoppingListProvider: ShoppingListProvider) {
+    // Get parsed data
+    this.shoppingListCallBack = this.navParams.get('callback');
     this.locationTitle = navParams.get('locationTitle');
     this.currentShoppingList = navParams.get('shoppingList');
+    // Get current userid
+    this.userUid = this.authProvider.getCurrentAuthUid();
+    // Set observable value, to decide if user should be able to delete current shopping list
+    this.$userHasMoreThanOneShoppingList = this.shoppingListProvider.getAmountOfShoppingListsByUserUid(this.userUid)
+      .map(amount => amount > 1);
+    //Check if user is owner of list
+    this.userIsOwnerOfShoppingList = this.currentShoppingList.userUid === this.userUid;
   }
 
   ionViewDidLoad() {
+  }
+
+  /**
+   * Logout user
+   */
+  logout() {
+    this.authProvider.logout()
+      .then(() => {
+        this.navCtrl.push('LoginPage');
+      });
   }
 
   /**
@@ -43,6 +74,9 @@ export class ShoppingListOptionsPage {
       .then(() => this.viewCtrl.dismiss());
   }
 
+  /**
+   * Clear out the items in current shopping list
+   */
   emptyShoppingList() {
     this.currentShoppingList.categories
       .forEach(category => {
@@ -50,5 +84,72 @@ export class ShoppingListOptionsPage {
       });
     this.shoppingListProvider.updateShoppingList(this.currentShoppingList)
       .then(() => this.viewCtrl.dismiss());
+  }
+
+  /**
+   * Prompt user for name of new Shopping List
+   */
+  promptUserForNewShoppingList() {
+    let prompt = this.alertProvider.getInputAlert(
+      'New Shopping List',
+      'Enter a new name for this new Shopping List',
+      {
+        text: 'Create',
+        handler: data => {
+          // Get new category name from user input data
+          const newTitle = data.title;
+          this.viewCtrl.dismiss();
+          this.createShoppingList(newTitle);
+        }
+      });
+    prompt.present();
+  }
+
+  /***
+   * Create new shoping list
+   * @param {string} userUid
+   * @param {string} newTitle
+   */
+  private createShoppingList(newTitle: string) {
+    const loading = this.loadingController.create({
+      content: 'Loading new Shopping List..',
+      dismissOnPageChange: true
+    });
+    loading.present();
+    this.shoppingListProvider.createShoppingList(this.userUid, newTitle, this.currentShoppingList.defaultLocationUid)
+      .then(uid => {
+        // Notify about creation
+        this.shoppingListCallBack.onListCreated(uid);
+        loading.dismissAll();
+      });
+  }
+
+  /**
+   * Prompt user to delete current shopping list
+   */
+  promptUserToDeleteShoppingList() {
+    let prompt = this.alertProvider.getConfirmAlert(
+      'Delete Shopping List',
+      'Please confirm that you want to delete the Shopping List',
+      {
+        text: 'Delete',
+        handler: data => {
+          // On user confirmation, delete!
+          this.viewCtrl.dismiss();
+          this.shoppingListCallBack.onListDeleted();
+        }
+      }
+    );
+    prompt.present();
+  }
+
+  /**
+   * Navigate to manage shopping list page
+   */
+  manageShoppingList() {
+    this.navCtrl.push(ManageShoppingListPage, {
+      shoppingList: this.currentShoppingList
+    });
+    this.viewCtrl.dismiss();
   }
 }

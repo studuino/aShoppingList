@@ -21,6 +21,18 @@ export class ShoppingListProvider {
   }
 
   /**
+   * Get all shopping lists with just title and uid
+   * for later specific querying
+   * @returns {Observable<ShoppingList[]>}
+   */
+  getPartialShoppingListsByUserUid(userUid: string): Observable<ShoppingList[]> {
+    return this.afs.collection<ShoppingList>(this.SHOPPING_LISTS_COLLECTION,
+      ref =>
+        ref.where('userUid', '==', userUid)
+          .orderBy('title', 'asc')).valueChanges();
+  }
+
+  /**
    * Load shopping list from firestore by uid
    * @param {string} uid
    * @returns {Observable<ShoppingList | undefined>}
@@ -30,14 +42,31 @@ export class ShoppingListProvider {
   }
 
   /**
-   * Get all shopping lists with just title and uid
-   * for later specific querying
-   * @returns {Observable<ShoppingList[]>}
+   * Get first shopping list from user
+   * @param {string} userUid
+   * @return {Observable<ShoppingList>}
    */
-  getPartialshoppingLists(): Observable<ShoppingList[]> {
-    return this.afs.collection<ShoppingList>(`${this.SHOPPING_LISTS_COLLECTION}`,
+  getFirstShoppingListByUserUid(userUid: string): Observable<ShoppingList> {
+    return this.afs.collection<ShoppingList>(this.SHOPPING_LISTS_COLLECTION,
       ref =>
-        ref.orderBy('title', 'asc')).valueChanges();
+        ref.where('userUid', '==', userUid)
+          .orderBy('title', 'asc')).valueChanges()
+      .map(shoppingLists => shoppingLists[0]);
+  }
+
+  /**
+   * Get amount of shopping lists
+   * @param {string} userUid
+   * @return {Observable<number>}
+   */
+  getAmountOfShoppingListsByUserUid(userUid: string): Observable<number> {
+    return this.afs.collection<ShoppingList>(this.SHOPPING_LISTS_COLLECTION,
+      ref =>
+        ref.where('userUid', '==', userUid)
+          .orderBy('title', 'asc')).valueChanges()
+      .map(shoppingLists => {
+        return shoppingLists.length;
+      });
   }
 
   /**
@@ -69,7 +98,7 @@ export class ShoppingListProvider {
    */
   calculateCartTotal(shoppingCart: ShoppingCart) {
     // Defensive programming
-    if(!Array.isArray(shoppingCart.items)) return;
+    if (!Array.isArray(shoppingCart.items)) return;
     let total: number = 0;
     // Sum up total
     shoppingCart.items
@@ -114,5 +143,50 @@ export class ShoppingListProvider {
     currentShoppingList.categories = sortedArray;
     // Update shopping list on firestore
     this.updateShoppingList(currentShoppingList);
+  }
+
+  /***
+   * Create new shopping list in firestore
+   * @param {string} userUid
+   * @param {string} newTitle
+   * @param {string} defaultLocationUid
+   * @return Uid of new list as {Promise<string>}
+   */
+  createShoppingList(userUid: string, newTitle: string, defaultLocationUid: string): Promise<string> {
+    // Create UUID for document
+    const newUid = this.afs.createId();
+    // Create new shopping list
+    const newShoppingList: ShoppingList = {
+      uid: newUid,
+      userUid: userUid,
+      defaultLocationUid: defaultLocationUid,
+      title: newTitle,
+      cart: {
+        items: []
+      },
+      categories: [
+        {
+          title: 'Uncategorized',
+          items: []
+        }
+      ]
+    };
+    // Add new shopping list to firestore
+    return this.afs.firestore.collection(this.SHOPPING_LISTS_COLLECTION)
+      .doc(newUid)
+      .set(newShoppingList)
+      .then(() => {
+        // Return uid of new list
+        return newUid;
+      });
+  }
+
+  /**
+   * Delete shopping list, by provided uid from firestore
+   * @param {string} uid
+   */
+  deleteShoppingListByUid(uid: string) {
+    return this.afs.firestore.collection(this.SHOPPING_LISTS_COLLECTION).doc(uid)
+      .delete();
   }
 }

@@ -6,13 +6,7 @@ import {CategoryProvider} from '../../../providers/categories/category';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
 import 'rxjs-compat/add/operator/take';
 import {ShoppingList} from '../../../entities/ShoppingList';
-
-/**
- * Generated class for the ShoppingListDetailItemPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
+import {AuthProvider} from '../../../providers/auth/auth';
 
 @Component({
   selector: 'page-detail-item',
@@ -33,6 +27,7 @@ export class DetailItemPage {
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
               private categoryProvider: CategoryProvider,
+              private authProvider: AuthProvider,
               private shoppingListProvider: ShoppingListProvider) {
     // If we navigated to this page, we will have an item available as a nav param
     this.selectedItem = navParams.get('item');
@@ -43,7 +38,8 @@ export class DetailItemPage {
   }
 
   ionViewDidLoad() {
-    this.$categories = this.categoryProvider.getCategoriesByUserUid('QnII1BHbVHMdXKTjYAYToOk1kyG3');
+    const currentUserUid = this.authProvider.getCurrentAuthUid();
+    this.$categories = this.categoryProvider.getCategoriesByUserUid(currentUserUid);
   }
 
   /**

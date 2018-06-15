@@ -4,6 +4,7 @@ import {CategoryProvider} from '../../providers/categories/category';
 import {AlertProvider} from '../../providers/alert/alert';
 import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
+import {AuthProvider} from '../../providers/auth/auth';
 
 @Component({
   selector: 'page-categories',
@@ -12,16 +13,18 @@ import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list'
 export class CategoriesPage {
 
   $categories;
-  userUid = 'QnII1BHbVHMdXKTjYAYToOk1kyG3';
+  userUid;
 
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
+  constructor(private navCtrl: NavController,
+              private navParams: NavParams,
               private categoryProvider: CategoryProvider,
+              private authProvider: AuthProvider,
               private shoppingListProvider: ShoppingListProvider,
               private alertProvider: AlertProvider) {
   }
 
   ionViewDidLoad() {
+    this.userUid = this.authProvider.getCurrentAuthUid();
     this.$categories = this.categoryProvider.getCategoriesByUserUid(this.userUid);
   }
 
@@ -29,7 +32,7 @@ export class CategoriesPage {
    * Prompt user for new category name
    */
   promptForNewCategory() {
-    let prompt = this.alertProvider.getAlert(
+    let prompt = this.alertProvider.getInputAlert(
       'New Category',
       'Enter a name for this new category',
       {
@@ -105,7 +108,7 @@ export class CategoriesPage {
           })
           // Remove category from all user shopping lists (if items in category, place in uncategorized!)
           .switchMap(() => {
-            return this.shoppingListProvider.getPartialshoppingLists()
+            return this.shoppingListProvider.getPartialShoppingListsByUserUid(this.userUid)
               .take(1)
               // Map to shopping lists
               .map(shoppingLists => {
@@ -136,7 +139,7 @@ export class CategoriesPage {
    * @param {ShoppingCategory} category
    */
   promptForCategoryRename(category: ShoppingCategory) {
-    let prompt = this.alertProvider.getAlert(
+    let prompt = this.alertProvider.getInputAlert(
       'Change Category Title',
       'Enter a new name for this new category',
       {
@@ -184,9 +187,9 @@ export class CategoriesPage {
           })
           // Remove category from all user shopping lists (if items in category, place in uncategorized!)
           .switchMap(() => {
-            return this.shoppingListProvider.getPartialshoppingLists()
+            return this.shoppingListProvider.getPartialShoppingListsByUserUid(this.userUid)
               .take(1)
-            // Map to shopping lists
+              // Map to shopping lists
               .map(shoppingLists => {
                 shoppingLists
                 // For each shopping list

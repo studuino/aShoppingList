@@ -13,18 +13,26 @@ import {ReorderIndexes} from 'ionic-angular/umd/components/item/item-reorder';
 import {ShoppingListOptionsPage} from './shopping-list-options/shopping-list-options';
 import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
 import 'rxjs-compat/add/operator/do';
+import {AuthProvider} from '../../providers/auth/auth';
+import {AlertProvider} from '../../providers/alert/alert';
+import {SharedShoppingListProvider} from '../../providers/shared-shopping-list/shared-shopping-list';
+import {SharedShoppingList} from '../../entities/SharedShoppingList';
 
 @Component({
   selector: 'page-shopping-list',
   templateUrl: 'shopping-list.html'
 })
-export class ShoppingListPage {
+
+export class ShoppingListPage implements ShoppingListCallback {
   @ViewChild(Content) content: Content;
 
+  // Observable values
   $shoppingLists: Observable<ShoppingList[]>;
   $currentShoppingList: Observable<ShoppingList>;
   $locationsWithSortedCategories: Observable<LocationWithSortedCategories[]>;
 
+  // Fields
+  currentUserUid: string;
   currentShoppingList: ShoppingList;
   currentShoppingListTitle;
   currentShoppingListTotal = 0;
@@ -33,17 +41,23 @@ export class ShoppingListPage {
   currentLocation: LocationWithSortedCategories;
   newItemTitle: string;
 
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
+  constructor(private navCtrl: NavController,
+              private navParams: NavParams,
               private popoverCtrl: PopoverController,
+              private authProvider: AuthProvider,
+              private alertProvider: AlertProvider,
               private shoppingListProvider: ShoppingListProvider,
+              private sharedShoppingListProvider: SharedShoppingListProvider,
               private categoryProvider: CategoryProvider) {
-
+    this.currentUserUid = this.authProvider.getCurrentAuthUid();
     this.instantiateShoppingLists();
-    this.instantiateLocationsWithCategories();
+    this.instantiateLocationsWithCategoriesByUserUid(this.currentUserUid);
   }
 
   ionViewDidLoad() {
+  }
+
+  ionViewDidLeave() {
   }
 
   /***** INSTANTIATION *****/
@@ -51,29 +65,71 @@ export class ShoppingListPage {
   /**
    * Load list of locations with sorted categories
    */
-  private instantiateLocationsWithCategories() {
-    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid('QnII1BHbVHMdXKTjYAYToOk1kyG3');
+  private instantiateLocationsWithCategoriesByUserUid(userUid: string) {
+    this.$locationsWithSortedCategories = this.categoryProvider.getlocationsWithSortedCategoriesByUserUid(userUid);
   }
 
   /**
    * Load current shopping list
    */
   private instantiateShoppingLists() {
-    this.$shoppingLists = this.shoppingListProvider.getPartialshoppingLists()
+    // Create array to hold all users shopping lists
+    let allLists = [];
+    // Locate users own lists
+    this.$shoppingLists = this.shoppingListProvider.getPartialShoppingListsByUserUid(this.currentUserUid)
+      .switchMap(shoppingLists => {
+        allLists = [];
+        // Add to array
+        shoppingLists.forEach(shoppingList => allLists.push(shoppingList));
+        // switchmap to shared shopping lists
+        return this.sharedShoppingListProvider.getSharedShoppingListForUserUid(this.currentUserUid);
+      })
+      .map(sharedShoppingLists => {
+        // add to array
+        sharedShoppingLists.forEach(sharedList => allLists.push(sharedList));
+        // Return complete list
+        return allLists;
+      });
+    // Check for instantiation of current shopping list
+    if (!this.currentShoppingList) {
+      this.setCurrentShoppingListToFirstShoppingListFromUser();
+    }
+  }
+
+  /**
+   * Default to first shopping list from user
+   */
+  private setCurrentShoppingListToFirstShoppingListFromUser() {
+    this.setCurrentShoppingList(this.shoppingListProvider.getFirstShoppingListByUserUid(this.currentUserUid));
+  }
+
+  /**
+   * Update current shopping list
+   * @param shoppingList
+   */
+  loadShoppingList(shoppingList: ShoppingList | SharedShoppingList) {
+    if (shoppingList as SharedShoppingList) {
+      this.instantiateLocationsWithCategoriesByUserUid(shoppingList.userUid);
+    }
+    this.setCurrentShoppingList(this.shoppingListProvider.getShoppingListByUid(shoppingList.uid));
+  }
+
+  /**
+   * Set current owned shopping list from user
+   */
+  setCurrentShoppingList(observableShoppingList: Observable<ShoppingList>) {
+    this.$currentShoppingList = observableShoppingList
     // Map shopping lists
-      .map(shoppingLists => {
-        if (!this.currentShoppingList) {
-          // Get first list
-          const firstShoppingList = shoppingLists[0];
-          // Assign current shopping list
-          this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(firstShoppingList.uid)
-            .switchMap(shoppingList => {
-              const currentShoppingList = this.extractCurrentShoppingList(shoppingList);
-              // Get default location
-              return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
-            });
+      .switchMap(shoppingList => {
+        // Check if shopping list has not been deleted
+        if (shoppingList as ShoppingList && shoppingList.title !== null) {
+          const currentShoppingList = this.extractCurrentShoppingList(shoppingList);
+          // Get default location
+          return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
+        } else {
+          // Set current list to first in array
+          this.setCurrentShoppingListToFirstShoppingListFromUser();
         }
-        return shoppingLists;
       });
   }
 
@@ -92,20 +148,6 @@ export class ShoppingListPage {
     this.computeTotalOfItemsInList();
     this.computeTotalOfCart();
     return currentShoppingList;
-  }
-
-  /**
-   * Update current shopping list
-   * @param {ShoppingList} shoppingList
-   */
-  loadShoppingList(shoppingList: ShoppingList) {
-    this.$currentShoppingList = this.shoppingListProvider.getShoppingListByUid(shoppingList.uid)
-    // Map shopping lists
-      .switchMap(shoppingList => {
-        const currentShoppingList = this.extractCurrentShoppingList(shoppingList);
-        // Get default location
-        return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
-      });
   }
 
   /**
@@ -129,13 +171,17 @@ export class ShoppingListPage {
       });
   }
 
+  /***** OPTIONS MENU *****/
+
   /**
    * Display menu items
    * @param myEvent
    */
   presentPopover(myEvent) {
+    const callback: ShoppingListCallback = this;
     let popover = this.popoverCtrl.create(ShoppingListOptionsPage,
       {
+        callback: callback,
         locationTitle: this.currentLocationTitle,
         shoppingList: this.currentShoppingList
       });
@@ -144,7 +190,35 @@ export class ShoppingListPage {
     });
   }
 
-  /***** CRUD *****/
+  /***** CALLBACKS *****/
+
+  /**
+   * When user creates a shopping list, select the new list by uid
+   * @param {string} newListUid
+   */
+  onListCreated(newListUid: string) {
+    this.setCurrentShoppingList(this.shoppingListProvider.getShoppingListByUid(newListUid));
+  }
+
+  /**
+   * When user deleted shopping list, Reset default first shopping list
+   */
+  onListDeleted() {
+    const idOfListToDelete = this.currentShoppingList.uid;
+    this.setCurrentShoppingListToFirstShoppingListFromUser();
+    this.shoppingListProvider.deleteShoppingListByUid(idOfListToDelete)
+      .then(() => {
+        const confirmMessage = this.alertProvider.getConfirmAlert(
+          'Deleted',
+          'List deleted',
+          {
+            text: 'OK'
+          });
+        confirmMessage.present();
+      })
+  }
+
+  /***** ITEM CRUD *****/
 
   /**
    * React on user adding item to list
@@ -294,7 +368,7 @@ export class ShoppingListPage {
   }
 
   /**
-   * Move provided item from shopping list cart to original category
+   * Helper method to move provided item from shopping list cart to original category
    * @param {ShoppingList} shoppingList
    * @param {ShoppingItem} item
    */
