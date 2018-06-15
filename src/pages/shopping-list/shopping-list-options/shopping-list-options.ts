@@ -6,6 +6,7 @@ import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-li
 import {AuthProvider} from '../../../providers/auth/auth';
 import {AlertProvider} from '../../../providers/alert/alert';
 import {Observable} from 'rxjs/Observable';
+import {ManageShoppingListPage} from '../manage-shopping-list/manage-shopping-list';
 
 /**
  * Generated class for the ShoppingListOptionsPage page.
@@ -139,30 +140,11 @@ export class ShoppingListOptionsPage {
   }
 
   /**
-   * Prompt user for new name of current shopping list
+   * Navigate to manage shopping list page
    */
-  promptUserToRenameShoppingList() {
-    let prompt = this.alertProvider.getInputAlert(
-      'Rename Shopping List',
-      'Enter a new name for the Shopping List',
-      {
-        text: 'Rename',
-        handler: data => {
-          // Get new category name from user input data
-          const newTitle = data.title;
-          this.viewCtrl.dismiss();
-          this.renameShoppingList(newTitle);
-        }
-      });
-    prompt.present();
-  }
-
-  /**
-   * Update shopping list with new title in firestore
-   * @param {string} newTitle
-   */
-  private renameShoppingList(newTitle: string) {
-    this.currentShoppingList.title = newTitle;
-    this.shoppingListProvider.updateShoppingList(this.currentShoppingList);
+  manageShoppingList() {
+    this.navCtrl.push(ManageShoppingListPage, {
+      shoppingList: this.currentShoppingList
+    });
   }
 }

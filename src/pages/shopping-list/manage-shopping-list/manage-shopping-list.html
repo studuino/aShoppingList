@@ -1,0 +1,29 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>{{shoppingList?.title}}</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-grid>
+    <!--EDIT TITLE-->
+    <ion-row>
+      <ion-col>
+        <h5 text-center>Title</h5>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-item>
+        <ion-input text-center
+                   type="text"
+                   (ionChange)="renameShoppingList()"
+                   [(ngModel)]="shoppingList.title"></ion-input>
+      </ion-item>
+    </ion-row>
+
+    <br>
+  </ion-grid>
+</ion-content>
