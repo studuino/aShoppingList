@@ -26,6 +26,7 @@ export class ShoppingListOptionsPage {
   shoppingListCallBack: ShoppingListCallback;
   currentShoppingList: ShoppingList;
   $userHasMoreThanOneShoppingList: Observable<boolean>;
+  userIsOwnerOfShoppingList: boolean;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -43,6 +44,8 @@ export class ShoppingListOptionsPage {
     // Set observable value, to decide if user should be able to delete current shopping list
     this.$userHasMoreThanOneShoppingList = this.shoppingListProvider.getAmountOfShoppingListsByUserUid(this.userUid)
       .map(amount => amount > 1);
+    //Check if user is owner of list
+    this.userIsOwnerOfShoppingList = this.currentShoppingList.userUid === this.userUid;
   }
 
   ionViewDidLoad() {

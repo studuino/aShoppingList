@@ -3,6 +3,9 @@
   <button ion-item (click)="emptyShoppingList()">Empty Shopping List</button>
   <button ion-item (click)="manageShoppingList()">Manage Shopping List</button>
   <button ion-item (click)="promptUserForNewShoppingList()">Create New Shopping List</button>
-  <button *ngIf="$userHasMoreThanOneShoppingList | async" ion-item (click)="promptUserToDeleteShoppingList()">Delete Shopping List</button>
+  <button *ngIf="userIsOwnerOfShoppingList &&
+                 $userHasMoreThanOneShoppingList | async"
+          ion-item 
+          (click)="promptUserToDeleteShoppingList()">Delete Shopping List</button>
   <button ion-item (click)="logout()">Logout</button>
 </ion-list>
