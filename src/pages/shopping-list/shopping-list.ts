@@ -57,9 +57,6 @@ export class ShoppingListPage implements ShoppingListCallback {
   ionViewDidLoad() {
   }
 
-  ionViewDidLeave() {
-  }
-
   /***** INSTANTIATION *****/
 
   /**
@@ -216,6 +213,21 @@ export class ShoppingListPage implements ShoppingListCallback {
           });
         confirmMessage.present();
       })
+  }
+
+  /**
+   * When user leaves shopping list
+   * @param {string} listUid
+   * @param {string} userUid
+   */
+  onListLeft(listUid: string, userUid: string) {
+    this.sharedShoppingListProvider.leaveSharedShoppingList(listUid, userUid)
+      .then(() => {
+        // Reinstantiate shopping lists
+        this.currentShoppingList = null;
+        this.instantiateShoppingLists();
+        this.instantiateLocationsWithCategoriesByUserUid(this.currentUserUid);
+      });
   }
 
   /***** ITEM CRUD *****/

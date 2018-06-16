@@ -7,7 +7,7 @@ import {AuthProvider} from '../../../providers/auth/auth';
 import {AlertProvider} from '../../../providers/alert/alert';
 import {Observable} from 'rxjs/Observable';
 import {ManageShoppingListPage} from '../manage-shopping-list/manage-shopping-list';
-import {AngularFirestore} from 'angularfire2/firestore';
+import {SharedShoppingListProvider} from '../../../providers/shared-shopping-list/shared-shopping-list';
 
 /**
  * Generated class for the ShoppingListOptionsPage page.
@@ -35,7 +35,8 @@ export class ShoppingListOptionsPage {
               private authProvider: AuthProvider,
               private alertProvider: AlertProvider,
               private loadingController: LoadingController,
-              private shoppingListProvider: ShoppingListProvider) {
+              private shoppingListProvider: ShoppingListProvider,
+              private sharedShoppingListProvider: SharedShoppingListProvider) {
     // Get parsed data
     this.shoppingListCallBack = this.navParams.get('callback');
     this.locationTitle = navParams.get('locationTitle');
@@ -151,5 +152,25 @@ export class ShoppingListOptionsPage {
       shoppingList: this.currentShoppingList
     });
     this.viewCtrl.dismiss();
+  }
+
+  /**
+   * Prompt user to leave shared shopping list
+   */
+  promptToLeaveShoppingList() {
+    let prompt = this.alertProvider.getConfirmAlert(
+      'Leave Shared Shopping List',
+      'Are you certain that you want to leave the shopping list?',
+      {
+        text: 'Leave',
+        handler: data => {
+          // On user confirmation, delete!
+          this.viewCtrl.dismiss();
+          // Notify listener
+          this.shoppingListCallBack.onListLeft(this.currentShoppingList.uid, this.userUid);
+        }
+      }
+    );
+    prompt.present();
   }
 }
