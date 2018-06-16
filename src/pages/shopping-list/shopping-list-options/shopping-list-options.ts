@@ -57,10 +57,8 @@ export class ShoppingListOptionsPage {
    * Logout user
    */
   logout() {
-    this.authProvider.logout()
-      .then(() => {
-        this.navCtrl.push('LoginPage');
-      });
+    this.viewCtrl.dismiss();
+    this.shoppingListCallBack.onLogout();
   }
 
   /**

@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {Content, ItemSliding, NavController, NavParams, PopoverController} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
@@ -431,5 +431,12 @@ export class ShoppingListPage implements ShoppingListCallback {
     shoppingList.cart.items = [];
     // Update firestore
     this.shoppingListProvider.updateShoppingList(shoppingList);
+  }
+
+  onLogout() {
+    this.navCtrl.setRoot('LoginPage')
+      .then(() => {
+        this.authProvider.logout();
+      });
   }
 }

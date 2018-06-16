@@ -3,7 +3,6 @@ import {AngularFirestore} from 'angularfire2/firestore';
 import {SharedShoppingList} from '../../entities/SharedShoppingList';
 import {ShoppingList} from '../../entities/ShoppingList';
 import {ShoppingUser} from '../../entities/auth/ShoppingUser';
-import {snapshotChanges} from 'angularfire2/database';
 
 @Injectable()
 export class SharedShoppingListProvider {
@@ -32,7 +31,7 @@ export class SharedShoppingListProvider {
   getSharedShoppingListsByShoppingListUid(shoppingListUid: string) {
     return this.afs.collection<SharedShoppingList>(this.SHARED_SHOPPING_LIST_COLLECTION,
       ref =>
-    ref.where('uid', '==', shoppingListUid)).valueChanges();
+        ref.where('uid', '==', shoppingListUid)).valueChanges();
   }
 
   /**
@@ -51,6 +50,7 @@ export class SharedShoppingListProvider {
     return this.afs.collection(this.SHARED_SHOPPING_LIST_COLLECTION)
       .add(newSharedList);
   }
+
   /**
    * Remove sharedShoppingList from firestore
    * @param sharedShoppingListUid

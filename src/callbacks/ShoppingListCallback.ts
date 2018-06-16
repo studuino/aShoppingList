@@ -1,5 +1,7 @@
 interface ShoppingListCallback {
 
+  onLogout();
+
   /**
    * Notify listener of new list with uid
    * @param {string} newListUid

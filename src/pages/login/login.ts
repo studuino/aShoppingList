@@ -1,8 +1,10 @@
 import {Component} from '@angular/core';
-import {AlertController, IonicPage, Loading, LoadingController, NavController} from 'ionic-angular';
+import {AlertController, IonicErrorHandler, IonicPage, Loading, LoadingController, NavController} from 'ionic-angular';
 import {AuthProvider} from '../../providers/auth/auth';
 import {LoginCredentials} from '../../entities/auth/LoginCredentials';
 import {ShoppingListPage} from '../shopping-list/shopping-list';
+import * as firebase from 'firebase';
+import FirestoreError = firebase.firestore.FirestoreError;
 
 /**
  * Generated class for the LoginPage page.
