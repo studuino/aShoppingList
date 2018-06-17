@@ -25,10 +25,10 @@ export class CategoryProvider {
   /**
    * Get all categories from userUid
    * @param {string} userUid
-   * @return {Observable<any[]>}
+   * @return {Observable<ShoppingCategory[]>}
    */
   getCategoriesByUserUid(userUid: string) {
-    return this.afs.collection(`${this.CATEGORIES_COLLECTION}`,
+    return this.afs.collection<ShoppingCategory>(`${this.CATEGORIES_COLLECTION}`,
       ref => ref.where('userUid', '==', userUid)
         .orderBy('title')).valueChanges();
   }

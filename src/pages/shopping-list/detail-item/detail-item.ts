@@ -7,6 +7,7 @@ import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-li
 import 'rxjs-compat/add/operator/take';
 import {ShoppingList} from '../../../entities/ShoppingList';
 import {AuthProvider} from '../../../providers/auth/auth';
+import {Observable} from 'rxjs/Observable';
 
 @Component({
   selector: 'page-detail-item',
@@ -22,7 +23,7 @@ export class DetailItemPage {
   selectorCategoryTitle: string;
   selectorCategory: ShoppingCategory;
 
-  $categories;
+  $categories: Observable<ShoppingCategory[]>;
 
   constructor(public navCtrl: NavController,
               public navParams: NavParams,
@@ -38,8 +39,8 @@ export class DetailItemPage {
   }
 
   ionViewDidLoad() {
-    const currentUserUid = this.authProvider.getCurrentAuthUid();
-    this.$categories = this.categoryProvider.getCategoriesByUserUid(currentUserUid);
+    // Get categories from owner userUid of current shopping list
+    this.$categories = this.categoryProvider.getCategoriesByUserUid(this.selectedShoppingList.userUid);
   }
 
   /**

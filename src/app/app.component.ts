@@ -48,9 +48,12 @@ export class MyApp {
       }
 
       // Check for logged in user
-      if (this.authProvider.userIsLoggedIn()) {
-        this.rootPage = ShoppingListPage;
-      }
+      this.authProvider.userIsLoggedIn()
+        .subscribe(isAuthenticated => {
+          if (isAuthenticated) {
+            this.rootPage = ShoppingListPage;
+          }
+        })
     });
   }
 

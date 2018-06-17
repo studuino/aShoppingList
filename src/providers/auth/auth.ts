@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {LoginCredentials} from '../../entities/auth/LoginCredentials';
 import {AngularFireAuth} from 'angularfire2/auth';
-import {AngularFirestore} from 'angularfire2/firestore';
 import {Observable} from 'rxjs/Observable';
 import {User} from 'firebase';
 
@@ -47,8 +46,10 @@ export class AuthProvider {
    * Check if user is logged in
    * @return {boolean}
    */
-  userIsLoggedIn() {
-    return this.fireAuth.auth.currentUser !== null;
+  userIsLoggedIn(): Observable<boolean> {
+    return this.fireAuth.authState
+      .take(1)
+      .map(auth => auth !== null);
   }
 
   /**
