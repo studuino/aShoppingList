@@ -242,4 +242,27 @@ export class ShoppingListOptionsPage {
   private renameLocation(title: string) {
     this.shoppingListCallBack.onLocationRename(title);
   }
+
+  /**
+   *
+   */
+  promptToDeleteLocation() {
+    this.viewCtrl.dismiss();
+    this.alertProvider.getConfirmAlert(
+      'Delete Location',
+      'Warning, this cannot be undone!',
+      {
+        text: 'Delete',
+        handler: data => {
+          this.deleteLocation();
+        }
+      }).present();
+  }
+
+  /**
+   * React to user deleting location
+   */
+  private deleteLocation() {
+    this.shoppingListCallBack.onLocationDeleted();
+  }
 }

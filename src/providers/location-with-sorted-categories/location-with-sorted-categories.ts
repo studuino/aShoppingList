@@ -41,4 +41,14 @@ export class LocationWithSortedCategoriesProvider {
       .doc(uid)
       .set({title: newTitle}, {merge: true});
   }
+
+  /**
+   * Remove location from firestore
+   * @param {string} uid
+   */
+  deleteLocation(uid: string) {
+    return this.afs.collection(this.LOCATION_WITH_SORTED_CATEGORIES_COLLECTION)
+      .doc(uid)
+      .delete();
+  }
 }
