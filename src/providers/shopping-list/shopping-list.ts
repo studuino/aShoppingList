@@ -6,12 +6,6 @@ import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
 import {ShoppingCart} from '../../entities/ShoppingCart';
 
-/*
-  Generated class for the ShoppingListProvider provider.
-
-  See https://angular.io/guide/dependency-injection for more info on providers
-  and Angular DI.
-*/
 @Injectable()
 export class ShoppingListProvider {
 

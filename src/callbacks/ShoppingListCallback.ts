@@ -1,5 +1,7 @@
 interface ShoppingListCallback {
 
+  onLogout();
+
   /**
    * Notify listener of new list with uid
    * @param {string} newListUid
@@ -9,4 +11,11 @@ interface ShoppingListCallback {
    * Notify listener that list is deleted
    */
   onListDeleted();
+
+  /**
+   * Notify listener that list is left
+   * @param {string} listUid
+   * @param {string} userUid
+   */
+  onListLeft(listUid: string, userUid: string)
 }

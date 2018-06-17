@@ -6,6 +6,9 @@
   <button *ngIf="userIsOwnerOfShoppingList"
           ion-item
           (click)="manageShoppingList()">Manage Shopping List</button>
+  <button *ngIf="!userIsOwnerOfShoppingList"
+          ion-item
+          (click)="promptToLeaveShoppingList()">Leave Shared Shopping List</button>
   <button ion-item
           (click)="promptUserForNewShoppingList()">Create New Shopping List</button>
   <button *ngIf="userIsOwnerOfShoppingList &&

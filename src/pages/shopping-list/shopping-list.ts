@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnDestroy, ViewChild} from '@angular/core';
 import {Content, ItemSliding, NavController, NavParams, PopoverController} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
@@ -55,9 +55,6 @@ export class ShoppingListPage implements ShoppingListCallback {
   }
 
   ionViewDidLoad() {
-  }
-
-  ionViewDidLeave() {
   }
 
   /***** INSTANTIATION *****/
@@ -216,6 +213,21 @@ export class ShoppingListPage implements ShoppingListCallback {
           });
         confirmMessage.present();
       })
+  }
+
+  /**
+   * When user leaves shopping list
+   * @param {string} listUid
+   * @param {string} userUid
+   */
+  onListLeft(listUid: string, userUid: string) {
+    this.sharedShoppingListProvider.leaveSharedShoppingList(listUid, userUid)
+      .then(() => {
+        // Reinstantiate shopping lists
+        this.currentShoppingList = null;
+        this.instantiateShoppingLists();
+        this.instantiateLocationsWithCategoriesByUserUid(this.currentUserUid);
+      });
   }
 
   /***** ITEM CRUD *****/
@@ -419,5 +431,12 @@ export class ShoppingListPage implements ShoppingListCallback {
     shoppingList.cart.items = [];
     // Update firestore
     this.shoppingListProvider.updateShoppingList(shoppingList);
+  }
+
+  onLogout() {
+    this.navCtrl.setRoot('LoginPage')
+      .then(() => {
+        this.authProvider.logout();
+      });
   }
 }

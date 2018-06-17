@@ -31,7 +31,7 @@ export class SharedShoppingListProvider {
   getSharedShoppingListsByShoppingListUid(shoppingListUid: string) {
     return this.afs.collection<SharedShoppingList>(this.SHARED_SHOPPING_LIST_COLLECTION,
       ref =>
-    ref.where('uid', '==', shoppingListUid)).valueChanges();
+        ref.where('uid', '==', shoppingListUid)).valueChanges();
   }
 
   /**
@@ -49,5 +49,20 @@ export class SharedShoppingListProvider {
     };
     return this.afs.collection(this.SHARED_SHOPPING_LIST_COLLECTION)
       .add(newSharedList);
+  }
+
+  /**
+   * Remove sharedShoppingList from firestore
+   * @param sharedShoppingListUid
+   * @param {string} invitedUserUid
+   */
+  leaveSharedShoppingList(sharedShoppingListUid: string, invitedUserUid: string) {
+    return this.afs.firestore.collection(this.SHARED_SHOPPING_LIST_COLLECTION)
+      .where('uid', '==', sharedShoppingListUid)
+      .where('sharedUserUid', '==', invitedUserUid)
+      .get()
+      .then(querySnapshots => {
+        return querySnapshots.docs[0].ref.delete();
+      })
   }
 }
