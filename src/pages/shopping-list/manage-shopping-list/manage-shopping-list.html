@@ -18,6 +18,7 @@
     <ion-row>
       <ion-item>
         <ion-input text-center
+                   (debounce)="1000"
                    type="text"
                    (ionChange)="renameShoppingList()"
                    [(ngModel)]="shoppingList.title"></ion-input>
