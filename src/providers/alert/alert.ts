@@ -65,4 +65,17 @@ export class AlertProvider {
     });
   }
 
+  /**
+   * Get error alert displaying provided text
+   * @param {string} text
+   * @return {Alert}
+   */
+  getErrorAlert(text: string) {
+    return this.alertCtrl.create({
+      title: 'Houston we have a problem!',
+      subTitle: text,
+      buttons: ['OK']
+    });
+  }
+
 }

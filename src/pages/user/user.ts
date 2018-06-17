@@ -2,7 +2,6 @@ import {Component} from '@angular/core';
 import {IonicPage, NavController, NavParams} from 'ionic-angular';
 import {AuthProvider} from '../../providers/auth/auth';
 import {Observable} from 'rxjs/Observable';
-import {User} from 'firebase';
 import {ShoppingUser} from '../../entities/auth/ShoppingUser';
 import {AlertProvider} from '../../providers/alert/alert';
 import {LoginPage} from '../login/login';

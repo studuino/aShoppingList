@@ -1,10 +1,10 @@
 import {Component} from '@angular/core';
-import {AlertController, IonicErrorHandler, IonicPage, Loading, LoadingController, NavController} from 'ionic-angular';
+import {IonicPage, Loading, NavController} from 'ionic-angular';
 import {AuthProvider} from '../../providers/auth/auth';
 import {LoginCredentials} from '../../entities/auth/LoginCredentials';
 import {ShoppingListPage} from '../shopping-list/shopping-list';
-import * as firebase from 'firebase';
-import FirestoreError = firebase.firestore.FirestoreError;
+import {LoadingProvider} from '../../providers/loading/loading';
+import {AlertProvider} from '../../providers/alert/alert';
 
 /**
  * Generated class for the LoginPage page.
@@ -26,8 +26,8 @@ export class LoginPage {
   };
 
   constructor(private nav: NavController,
-              private alertCtrl: AlertController,
-              private loadingCtrl: LoadingController,
+              private alertProvider: AlertProvider,
+              private loadingProvider: LoadingProvider,
               private authProvider: AuthProvider) {
   }
 
@@ -45,7 +45,6 @@ export class LoginPage {
    * Login user
    */
   login() {
-    this.showLoading();
     // Ensure no space at end!
     this.registerCredentials.email.trim();
     // Handle login
@@ -57,28 +56,13 @@ export class LoginPage {
   }
 
   /**
-   * Display loading screen
-   */
-  private showLoading() {
-    this.loading = this.loadingCtrl.create({
-      content: 'Please stand by..',
-      dismissOnPageChange: true
-    });
-    this.loading.present();
-  }
-
-  /**
    * Handle errors
    * @param text
    */
   private showError(text) {
     this.loading.dismiss();
 
-    let alert = this.alertCtrl.create({
-      title: 'Houston we have a problem!',
-      subTitle: text,
-      buttons: ['OK']
-    });
+    let alert = this.alertProvider.getErrorAlert(text);
     alert.present();
   }
 
