@@ -18,6 +18,7 @@ import {AlertProvider} from '../../providers/alert/alert';
 import {SharedShoppingListProvider} from '../../providers/shared-shopping-list/shared-shopping-list';
 import {SharedShoppingList} from '../../entities/SharedShoppingList';
 import {LoadingProvider} from '../../providers/loading/loading';
+import {LocationWithSortedCategoriesProvider} from '../../providers/location-with-sorted-categories/location-with-sorted-categories';
 
 @Component({
   selector: 'page-shopping-list',
@@ -52,6 +53,7 @@ export class ShoppingListPage implements ShoppingListCallback {
               private shoppingListProvider: ShoppingListProvider,
               private loadingProvider: LoadingProvider,
               private sharedShoppingListProvider: SharedShoppingListProvider,
+              private locationWithSortedCategoriesProvider: LocationWithSortedCategoriesProvider,
               private categoryProvider: CategoryProvider) {
     // Display loading when fetching data
     this.loader = this.loadingProvider.createLoadingDataScreen();
@@ -447,6 +449,23 @@ export class ShoppingListPage implements ShoppingListCallback {
     this.navCtrl.setRoot('LoginPage')
       .then(() => {
         this.authProvider.logout();
+      });
+  }
+
+  /**
+   * React on user renaming location title
+   * @param {string} newTitle
+   */
+  onLocationRename(newTitle: string) {
+    this.locationWithSortedCategoriesProvider.renameLocation(this.currentLocation.uid, newTitle)
+      .then(() => {
+        this.alertProvider.getConfirmAlert(
+          'Location Renamed',
+          'Location is now updated with new title',
+          {
+            text: 'OK'
+          }
+        ).present();
       });
   }
 }

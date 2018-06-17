@@ -177,7 +177,7 @@ export class ShoppingListOptionsPage {
   }
 
   /**
-   *
+   * Prompt user to create new location
    */
   promptToCreateNewLocation() {
     this.viewCtrl.dismiss();
@@ -215,5 +215,31 @@ export class ShoppingListOptionsPage {
         );
         locationConfirm.present();
       });
+  }
+
+  /**
+   * Prompt user for new title for location
+   */
+  promptNewTitleForLocation() {
+    this.viewCtrl.dismiss();
+    const renamePrompt = this.alertProvider.getInputAlert(
+      'Rename Location',
+      'Please provide new title for location',
+      {
+        text: 'Rename',
+        handler: data => {
+          this.renameLocation(data.title);
+        }
+      }
+    );
+    renamePrompt.present();
+  }
+
+  /**
+   * Rename title of location
+   * @param {string} title
+   */
+  private renameLocation(title: string) {
+    this.shoppingListCallBack.onLocationRename(title);
   }
 }

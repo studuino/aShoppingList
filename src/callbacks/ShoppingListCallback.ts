@@ -1,6 +1,14 @@
 interface ShoppingListCallback {
 
+  /**
+   * Notify about user logout
+   */
   onLogout();
+
+  /**
+   * Notify about location rename
+   */
+  onLocationRename(newTitle: string);
 
   /**
    * Notify listener of new list with uid

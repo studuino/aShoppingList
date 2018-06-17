@@ -31,4 +31,14 @@ export class LocationWithSortedCategoriesProvider {
       .set(newLocationWithSortedCategories);
   }
 
+  /**
+   * Rename location on firestore
+   * @param {string} uid
+   * @param {string} newTitle
+   */
+  renameLocation(uid: string, newTitle: string) {
+    return this.afs.collection(this.LOCATION_WITH_SORTED_CATEGORIES_COLLECTION)
+      .doc(uid)
+      .set({title: newTitle}, {merge: true});
+  }
 }
