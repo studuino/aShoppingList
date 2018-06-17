@@ -17,13 +17,13 @@ import {AlertProvider} from '../providers/alert/alert';
 import {CategoriesPage} from '../pages/categories/categories';
 import {ShoppingListOptionsPage} from '../pages/shopping-list/shopping-list-options/shopping-list-options';
 import {LocationSortedCategoriesPage} from '../pages/shopping-list/location-sorted-categories/location-sorted-categories';
-import { AuthProvider } from '../providers/auth/auth';
+import {AuthProvider} from '../providers/auth/auth';
 import {AngularFireAuthModule} from 'angularfire2/auth';
-import { SharedShoppingListProvider } from '../providers/shared-shopping-list/shared-shopping-list';
+import {SharedShoppingListProvider} from '../providers/shared-shopping-list/shared-shopping-list';
 import {ManageShoppingListPage} from '../pages/shopping-list/manage-shopping-list/manage-shopping-list';
-import { UserProvider } from '../providers/user/user';
-import { LoadingProvider } from '../providers/loading/loading';
-import { LocationWithSortedCategoriesProvider } from '../providers/location-with-sorted-categories/location-with-sorted-categories';
+import {UserProvider} from '../providers/user/user';
+import {LoadingProvider} from '../providers/loading/loading';
+import {LocationWithSortedCategoriesProvider} from '../providers/location-with-sorted-categories/location-with-sorted-categories';
 
 // AF2 Settings
 export const firebaseConfig = {
