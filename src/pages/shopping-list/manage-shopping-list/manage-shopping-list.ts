@@ -46,7 +46,6 @@ export class ManageShoppingListPage {
     // Check if email is a registered user
     this.userProvider.checkForRegisteredUserByEmail(this.inviteEmail)
       .subscribe(registeredUser => {
-        console.log(registeredUser);
         if (registeredUser) {
           this.sharedShoppingListProvider.createSharedShoppingList(registeredUser, this.shoppingList);
         } else {

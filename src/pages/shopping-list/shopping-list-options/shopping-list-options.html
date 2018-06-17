@@ -1,6 +1,21 @@
 <ion-list>
+  <!--LOCATION OPTIONS-->
+  <ion-list-header>
+    Location With Sorted Categories
+  </ion-list-header>
   <button ion-item
           (click)="navigateToManageLocationSortedCategories()">Manage Order of Categories</button>
+  <button ion-item
+          (click)="promptNewTitleForLocation()">Rename Location</button>
+  <button ion-item
+          (click)="promptToCreateNewLocation()">Create New Location</button>
+  <button ion-item
+          (click)="promptToDeleteLocation()">Delete Location</button>
+
+  <!--SHOPPING LIST OPTIONS-->
+  <ion-list-header>
+    Shopping List
+  </ion-list-header>
   <button ion-item
           (click)="emptyShoppingList()">Empty Shopping List</button>
   <button *ngIf="userIsOwnerOfShoppingList"

@@ -18,6 +18,7 @@ import {AlertProvider} from '../../providers/alert/alert';
 import {SharedShoppingListProvider} from '../../providers/shared-shopping-list/shared-shopping-list';
 import {SharedShoppingList} from '../../entities/SharedShoppingList';
 import {LoadingProvider} from '../../providers/loading/loading';
+import {LocationWithSortedCategoriesProvider} from '../../providers/location-with-sorted-categories/location-with-sorted-categories';
 
 @Component({
   selector: 'page-shopping-list',
@@ -52,6 +53,7 @@ export class ShoppingListPage implements ShoppingListCallback {
               private shoppingListProvider: ShoppingListProvider,
               private loadingProvider: LoadingProvider,
               private sharedShoppingListProvider: SharedShoppingListProvider,
+              private locationWithSortedCategoriesProvider: LocationWithSortedCategoriesProvider,
               private categoryProvider: CategoryProvider) {
     // Display loading when fetching data
     this.loader = this.loadingProvider.createLoadingDataScreen();
@@ -132,7 +134,7 @@ export class ShoppingListPage implements ShoppingListCallback {
         if (shoppingList as ShoppingList && shoppingList.title !== null) {
           const currentShoppingList = this.extractCurrentShoppingList(shoppingList);
           // Get default location
-          return this.instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList);
+          return this.instantiateShoppingListDefaultLocation(currentShoppingList);
         } else {
           // Set current list to first in array
           this.setCurrentShoppingListToFirstShoppingListFromUser();
@@ -160,10 +162,9 @@ export class ShoppingListPage implements ShoppingListCallback {
   /**
    * Check shopping list for default location
    * @param currentShoppingList
-   * @param shoppingList
    * @return {Observable<any>}
    */
-  private instantiateShoppingListDefaultLocation(currentShoppingList, shoppingList) {
+  private instantiateShoppingListDefaultLocation(currentShoppingList) {
     return this.categoryProvider.getLocationWithSortedCategoriesByUid(currentShoppingList.defaultLocationUid)
     // Map to return location
       .map(locationWithSortedCategoriesByUid => {
@@ -172,9 +173,11 @@ export class ShoppingListPage implements ShoppingListCallback {
           // Assign current location
           this.currentLocation = locationWithSortedCategoriesByUid;
           this.currentLocationTitle = locationWithSortedCategoriesByUid.title;
+          // Make sure categories are sorted
+          this.updateCategoriesOrderByLocation(locationWithSortedCategoriesByUid);
         }
         // Return current shopping list
-        return shoppingList;
+        return currentShoppingList;
       });
   }
 
@@ -447,6 +450,47 @@ export class ShoppingListPage implements ShoppingListCallback {
     this.navCtrl.setRoot('LoginPage')
       .then(() => {
         this.authProvider.logout();
+      });
+  }
+
+  /**
+   * React on user renaming location title
+   * @param {string} newTitle
+   */
+  onLocationRename(newTitle: string) {
+    this.locationWithSortedCategoriesProvider.renameLocation(this.currentLocation.uid, newTitle)
+      .then(() => {
+        this.alertProvider.getConfirmAlert(
+          'Location Renamed',
+          'Location is now updated with new title',
+          {
+            text: 'OK'
+          }
+        ).present();
+      });
+  }
+
+  /**
+   * React on user deleting location
+   */
+  onLocationDeleted() {
+    // Delete current location
+    this.locationWithSortedCategoriesProvider.deleteLocation(this.currentLocation.uid)
+      .then(() => {
+        // From all locations
+        this.categoryProvider.getlocationsWithSortedCategoriesByUserUid(this.currentUserUid)
+          .take(1)
+          .map(locations => {
+            // Grab first location
+            const firstLocation = locations[0];
+            // Update shopping list defaultLocationUid
+            this.currentShoppingList.defaultLocationUid = firstLocation.uid;
+            // Set current location to first in array
+            this.currentLocation = firstLocation;
+            this.currentLocationTitle = firstLocation.title;
+            // Update order of categories
+            this.updateCategoriesOrderByLocation(firstLocation);
+          }).subscribe();
       });
   }
 }
