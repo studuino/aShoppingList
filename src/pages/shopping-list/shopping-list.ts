@@ -1,5 +1,5 @@
-import {Component, OnDestroy, ViewChild} from '@angular/core';
-import {Content, ItemSliding, NavController, NavParams, PopoverController} from 'ionic-angular';
+import {Component, ViewChild} from '@angular/core';
+import {Content, ItemSliding, Loading, NavController, NavParams, PopoverController} from 'ionic-angular';
 import {DetailItemPage} from './detail-item/detail-item';
 import {ShoppingItem} from '../../entities/ShoppingItem';
 import {ShoppingListProvider} from '../../providers/shopping-list/shopping-list';
@@ -17,6 +17,7 @@ import {AuthProvider} from '../../providers/auth/auth';
 import {AlertProvider} from '../../providers/alert/alert';
 import {SharedShoppingListProvider} from '../../providers/shared-shopping-list/shared-shopping-list';
 import {SharedShoppingList} from '../../entities/SharedShoppingList';
+import {LoadingProvider} from '../../providers/loading/loading';
 
 @Component({
   selector: 'page-shopping-list',
@@ -41,14 +42,21 @@ export class ShoppingListPage implements ShoppingListCallback {
   currentLocation: LocationWithSortedCategories;
   newItemTitle: string;
 
+  loader: Loading;
+
   constructor(private navCtrl: NavController,
               private navParams: NavParams,
               private popoverCtrl: PopoverController,
               private authProvider: AuthProvider,
               private alertProvider: AlertProvider,
               private shoppingListProvider: ShoppingListProvider,
+              private loadingProvider: LoadingProvider,
               private sharedShoppingListProvider: SharedShoppingListProvider,
               private categoryProvider: CategoryProvider) {
+    // Display loading when fetching data
+    this.loader = this.loadingProvider.createLoadingDataScreen();
+    this.loader.present();
+
     this.currentUserUid = this.authProvider.getCurrentAuthUid();
     this.instantiateShoppingLists();
     this.instantiateLocationsWithCategoriesByUserUid(this.currentUserUid);
@@ -115,6 +123,8 @@ export class ShoppingListPage implements ShoppingListCallback {
    * Set current owned shopping list from user
    */
   setCurrentShoppingList(observableShoppingList: Observable<ShoppingList>) {
+    // Stop displaying loader
+    this.loader.dismiss();
     this.$currentShoppingList = observableShoppingList
     // Map shopping lists
       .switchMap(shoppingList => {
