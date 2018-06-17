@@ -202,7 +202,6 @@ export class ShoppingListOptionsPage {
     this.categoryProvider.getCategoriesByUserUid(this.currentShoppingList.userUid)
       .take(1)
       .switchMap(categories => {
-        console.log(categories)
         return this.locationWithSortedCategoriesProvider
           .createLocationWithSortedCategoriesForUser(this.userUid, title, categories)
       }).toPromise()
