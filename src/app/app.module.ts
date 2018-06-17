@@ -23,6 +23,7 @@ import { SharedShoppingListProvider } from '../providers/shared-shopping-list/sh
 import {ManageShoppingListPage} from '../pages/shopping-list/manage-shopping-list/manage-shopping-list';
 import { UserProvider } from '../providers/user/user';
 import { LoadingProvider } from '../providers/loading/loading';
+import { LocationWithSortedCategoriesProvider } from '../providers/location-with-sorted-categories/location-with-sorted-categories';
 
 // AF2 Settings
 export const firebaseConfig = {
@@ -73,7 +74,8 @@ export const firebaseConfig = {
     AuthProvider,
     SharedShoppingListProvider,
     UserProvider,
-    LoadingProvider
+    LoadingProvider,
+    LocationWithSortedCategoriesProvider
   ]
 })
 export class AppModule {

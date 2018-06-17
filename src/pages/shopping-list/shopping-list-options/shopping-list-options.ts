@@ -8,6 +8,8 @@ import {AlertProvider} from '../../../providers/alert/alert';
 import {Observable} from 'rxjs/Observable';
 import {ManageShoppingListPage} from '../manage-shopping-list/manage-shopping-list';
 import {SharedShoppingListProvider} from '../../../providers/shared-shopping-list/shared-shopping-list';
+import {CategoryProvider} from '../../../providers/categories/category';
+import {LocationWithSortedCategoriesProvider} from '../../../providers/location-with-sorted-categories/location-with-sorted-categories';
 
 /**
  * Generated class for the ShoppingListOptionsPage page.
@@ -36,7 +38,9 @@ export class ShoppingListOptionsPage {
               private alertProvider: AlertProvider,
               private loadingController: LoadingController,
               private shoppingListProvider: ShoppingListProvider,
-              private sharedShoppingListProvider: SharedShoppingListProvider) {
+              private sharedShoppingListProvider: SharedShoppingListProvider,
+              private locationWithSortedCategoriesProvider: LocationWithSortedCategoriesProvider,
+              private categoryProvider: CategoryProvider) {
     // Get parsed data
     this.shoppingListCallBack = this.navParams.get('callback');
     this.locationTitle = navParams.get('locationTitle');
@@ -170,5 +174,47 @@ export class ShoppingListOptionsPage {
       }
     );
     prompt.present();
+  }
+
+  /**
+   *
+   */
+  promptToCreateNewLocation() {
+    this.viewCtrl.dismiss();
+    const newLocationPrompt = this.alertProvider.getInputAlert(
+      'Title of new location',
+      'Please provide a title for new location',
+      {
+        text: 'Create',
+        handler: data => {
+          this.createNewLocation(data.title);
+        }
+      }
+    );
+    newLocationPrompt.present();
+  }
+
+  /**
+   * Create new location for user with provided title
+   * @param {string} title
+   */
+  private createNewLocation(title: string) {
+    this.categoryProvider.getCategoriesByUserUid(this.currentShoppingList.userUid)
+      .take(1)
+      .switchMap(categories => {
+        console.log(categories)
+        return this.locationWithSortedCategoriesProvider
+          .createLocationWithSortedCategoriesForUser(this.userUid, title, categories)
+      }).toPromise()
+      .then(() => {
+        const locationConfirm = this.alertProvider.getConfirmAlert(
+          'Location Created!',
+          'Please allow a few seconds for the location to be filled with all your categories (if you have any)',
+          {
+            text: 'OK'
+          }
+        );
+        locationConfirm.present();
+      });
   }
 }
