@@ -208,7 +208,7 @@ export class ShoppingListOptionsPage {
       .then(() => {
         const locationConfirm = this.alertProvider.getConfirmAlert(
           'Location Created!',
-          'Please allow a few seconds for the location to be filled with all your categories (if you have any)',
+          'Your new location is now available',
           {
             text: 'OK'
           }
