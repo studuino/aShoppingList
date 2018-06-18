@@ -62,4 +62,27 @@ export class ManageShoppingListPage {
     this.inviteEmail = '';
   }
 
+  /**
+   * Prompt user to confirm removing selected user
+   * @param {SharedShoppingList} sharedShoppingList
+   */
+  promptToRemoveUserFromList(sharedShoppingList: SharedShoppingList) {
+    this.alertProvider.getConfirmAlert(
+      'Remove user from list',
+      `Please confirm the removal of ${sharedShoppingList.sharedUserEmail}!`,
+      {
+        text: 'Remove',
+        handler: data => {
+          this.removeUserFromList(sharedShoppingList.uid);
+        }
+      }).present();
+  }
+
+  /**
+   * Remove user from shared shopping list
+   * @param sharedShoppingListUid
+   */
+  private removeUserFromList(sharedShoppingListUid: string) {
+    this.sharedShoppingListProvider.removeSharedShoppingList(sharedShoppingListUid);
+  }
 }
