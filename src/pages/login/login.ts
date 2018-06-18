@@ -3,7 +3,6 @@ import {IonicPage, Loading, NavController} from 'ionic-angular';
 import {AuthProvider} from '../../providers/auth/auth';
 import {LoginCredentials} from '../../entities/auth/LoginCredentials';
 import {ShoppingListPage} from '../shopping-list/shopping-list';
-import {LoadingProvider} from '../../providers/loading/loading';
 import {AlertProvider} from '../../providers/alert/alert';
 
 /**
@@ -27,7 +26,6 @@ export class LoginPage {
 
   constructor(private nav: NavController,
               private alertProvider: AlertProvider,
-              private loadingProvider: LoadingProvider,
               private authProvider: AuthProvider) {
   }
 

@@ -10,10 +10,19 @@
     <ion-grid>
       <ion-row align-items-center>
         <ion-col text-start>
-          <ion-title>{{currentLocation?.title}}</ion-title>
+          <ion-title>{{currentLocationTitle}}</ion-title>
+        </ion-col>
+        <ion-col col-2>
+          <button text-center
+                  ion-button
+                  color="success"
+                  (click)="promptForNewCategory()">
+            <ion-icon name="add"></ion-icon>
+          </button>
         </ion-col>
       </ion-row>
     </ion-grid>
+
   </ion-navbar>
 
 </ion-header>
@@ -22,9 +31,21 @@
 <ion-content padding>
   <div *ngIf="$locationWithSortedCategories | async as locationWithSortedCategories">
     <ion-list reorder="true" (ionItemReorder)="updateListOrder($event, locationWithSortedCategories)">
-      <ion-item *ngFor="let category of locationWithSortedCategories.sortedCategories">
-        {{category.title}}
-      </ion-item>
+      <ion-item-group>
+        <ion-item-sliding *ngFor="let category of locationWithSortedCategories.sortedCategories">
+          <ion-item>
+            {{category.title}}
+          </ion-item>
+          <ion-item-options side="right">
+            <button ion-button
+                    color="primary"
+                    (click)="promptForCategoryRename(category)">
+              <ion-icon name="create"></ion-icon>
+              Rename
+            </button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-item-group>
     </ion-list>
   </div>
 </ion-content>

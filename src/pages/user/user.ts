@@ -4,7 +4,6 @@ import {AuthProvider} from '../../providers/auth/auth';
 import {Observable} from 'rxjs/Observable';
 import {ShoppingUser} from '../../entities/auth/ShoppingUser';
 import {AlertProvider} from '../../providers/alert/alert';
-import {LoginPage} from '../login/login';
 
 /**
  * Generated class for the UserPage page.

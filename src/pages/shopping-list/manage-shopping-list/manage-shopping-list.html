@@ -1,6 +1,6 @@
 <ion-header>
 
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>{{shoppingList?.title}}</ion-title>
   </ion-navbar>
 
@@ -28,7 +28,7 @@
     <br>
 
     <!--SHARED WITH-->
-    <div *ngIf="$shoppingListSharedWith | async as sharedLists">
+    <div *ngIf="$shoppingListSharedWith | async as sharedShoppingLists">
       <ion-row>
         <ion-col>
           <h5 text-center>Shared With</h5>
@@ -36,7 +36,14 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <p text-center *ngFor="let sharedList of sharedLists">{{sharedList.sharedUserEmail}}</p>
+          <h6 text-center *ngFor="let sharedShoppingList of sharedShoppingLists">{{sharedShoppingList.sharedUserEmail}}
+            <button ion-button
+                    clear
+                    color="danger"
+                    margin-bottom="45" (click)="promptToRemoveUserFromList(sharedShoppingList)">
+              <ion-icon name="trash"></ion-icon>
+            </button>
+          </h6>
         </ion-col>
       </ion-row>
     </div>
