@@ -4,6 +4,8 @@ import {CategoryProvider} from '../../../providers/categories/category';
 import {ReorderIndexes} from 'ionic-angular/umd/components/item/item-reorder';
 import {ShoppingList} from '../../../entities/ShoppingList';
 import {ShoppingListProvider} from '../../../providers/shopping-list/shopping-list';
+import {AlertProvider} from '../../../providers/alert/alert';
+import {ShoppingCategory} from '../../../entities/ShoppingCategory';
 
 /**
  * Generated class for the LocationSortedCategoriesPage page.
@@ -23,16 +25,66 @@ export class LocationSortedCategoriesPage {
 
   $locationWithSortedCategories;
 
-  constructor(public navCtrl: NavController,
-              public navParams: NavParams,
+  constructor(private navCtrl: NavController,
+              private navParams: NavParams,
               private categoryProvider: CategoryProvider,
-              private shoppingListProvider: ShoppingListProvider) {
+              private shoppingListProvider: ShoppingListProvider,
+              private alertProvider: AlertProvider) {
     this.currentLocationTitle = navParams.get('locationTitle');
     this.currentShoppingList = navParams.get('shoppingList');
   }
 
   ionViewDidLoad() {
     this.$locationWithSortedCategories = this.categoryProvider.getLocationWithSortedCategoriesByName(this.currentLocationTitle);
+  }
+
+  /**
+   * Prompt user for new category name
+   */
+  promptForNewCategory() {
+    // TODO ALH: Duplicated in Categories.ts!
+    let prompt = this.alertProvider.getInputAlert(
+      'New Category',
+      'Enter a name for this new category',
+      {
+        text: 'Save',
+        handler: data => {
+          // Get new category name from user input data
+          const nameOfNewCategory = data.title;
+          this.createCategory(nameOfNewCategory)
+        }
+      });
+    prompt.present();
+  }
+
+  /**
+   * Create a new category
+   * @param {string} nameOfNewCategory
+   */
+  createCategory(nameOfNewCategory: string) {
+    // TODO ALH: Duplicated in Categories.ts!
+    this.categoryProvider.createCategoryForUserUid(this.currentShoppingList.userUid, nameOfNewCategory)
+      .then((newCategory: ShoppingCategory) => {
+        // TODO ALH: Consider moving to cloud functions!
+        this.categoryProvider.getlocationsWithSortedCategoriesByUserUid(this.currentShoppingList.userUid)
+          .take(1)
+          // Map to locations
+          .map(locationsWithSortedCategories => {
+            locationsWithSortedCategories
+            // For each location
+              .forEach(location => {
+                // Create new sortedCategory with partial information
+                const sortedCategory = {
+                  categoryUid: newCategory.uid,
+                  title: newCategory.title
+                };
+                // Push new category
+                location.sortedCategories.push(sortedCategory);
+                // Update location on firestore
+                this.categoryProvider.updateLocationWithSortedCategories(location);
+              });
+          }).subscribe()
+      });
   }
 
   /**

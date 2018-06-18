@@ -10,10 +10,19 @@
     <ion-grid>
       <ion-row align-items-center>
         <ion-col text-start>
-          <ion-title>{{currentLocation?.title}}</ion-title>
+          <ion-title>{{currentLocationTitle}}</ion-title>
+        </ion-col>
+        <ion-col col-2>
+          <button text-center
+                  ion-button
+                  color="success"
+                  (click)="promptForNewCategory()">
+            <ion-icon name="add"></ion-icon>
+          </button>
         </ion-col>
       </ion-row>
     </ion-grid>
+
   </ion-navbar>
 
 </ion-header>
