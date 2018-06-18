@@ -43,9 +43,12 @@
     <!--ADD ITEM-->
     <ion-item>
       <ion-input type="text"
+                 (debounce)="1000"
+                 (ionChange)="searchForItem(newItemTitle)"
                  (keyup.enter)="addItem(shoppingList)"
                  placeholder="Type Name Of Item To Add"
                  [(ngModel)]="newItemTitle"></ion-input>
+
       <button ion-button round
               *ngIf="newItemTitle || newItemTitle?.length > 0"
               item-right
@@ -53,6 +56,13 @@
         Add Item
       </button>
     </ion-item>
+    <ion-list *ngIf="itemsFromSearch.length > 0">
+      <ion-item *ngFor="let foundItem of itemsFromSearch"
+                text-center>
+        <button ion-button
+                clear (click)="addFoundItem(foundItem, shoppingList)">{{foundItem.title}}</button>
+      </ion-item>
+    </ion-list>
     <!--SHOPPING LIST CATEGORIES WITH ITEMS-->
     <ion-list *ngFor="let category of shoppingList.categories">
       <div *ngIf="category.items.length > 0">

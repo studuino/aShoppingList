@@ -107,7 +107,8 @@ export class ShoppingListProvider {
    * @return {Promise<void>}
    */
   updateShoppingList(shoppingList: ShoppingList) {
-    return this.afs.doc(`${this.SHOPPING_LISTS_COLLECTION}/${shoppingList.uid}`)
+    return this.afs.collection(this.SHOPPING_LISTS_COLLECTION)
+      .doc(shoppingList.uid)
       .set(shoppingList, {merge: true});
   }
 

@@ -19,6 +19,7 @@ import {SharedShoppingListProvider} from '../../providers/shared-shopping-list/s
 import {SharedShoppingList} from '../../entities/SharedShoppingList';
 import {LoadingProvider} from '../../providers/loading/loading';
 import {LocationWithSortedCategoriesProvider} from '../../providers/location-with-sorted-categories/location-with-sorted-categories';
+import {ItemsProvider} from '../../providers/items/items';
 
 @Component({
   selector: 'page-shopping-list',
@@ -32,6 +33,8 @@ export class ShoppingListPage implements ShoppingListCallback {
   $shoppingLists: Observable<ShoppingList[]>;
   $currentShoppingList: Observable<ShoppingList>;
   $locationsWithSortedCategories: Observable<LocationWithSortedCategories[]>;
+
+  itemsFromSearch: ShoppingItem[] = [];
 
   // Fields
   currentUserUid: string;
@@ -54,7 +57,8 @@ export class ShoppingListPage implements ShoppingListCallback {
               private loadingProvider: LoadingProvider,
               private sharedShoppingListProvider: SharedShoppingListProvider,
               private locationWithSortedCategoriesProvider: LocationWithSortedCategoriesProvider,
-              private categoryProvider: CategoryProvider) {
+              private categoryProvider: CategoryProvider,
+              private itemsProvider: ItemsProvider) {
     // Display loading when fetching data
     this.loader = this.loadingProvider.createLoadingDataScreen();
     this.loader.present();
@@ -246,6 +250,18 @@ export class ShoppingListPage implements ShoppingListCallback {
   /***** ITEM CRUD *****/
 
   /**
+   * Search for previously added item from user
+   * @param {string} itemTitle
+   */
+  searchForItem(itemTitle: string) {
+    this.itemsProvider.search(this.currentUserUid, itemTitle)
+      .take(1)
+      .subscribe(result => {
+        this.itemsFromSearch = result as ShoppingItem[];
+      })
+  }
+
+  /**
    * React on user adding item to list
    */
   addItem(shoppingList: ShoppingList) {
@@ -261,6 +277,50 @@ export class ShoppingListPage implements ShoppingListCallback {
     this.shoppingListProvider.updateShoppingList(shoppingList);
     // Reset newItemTitle
     this.newItemTitle = null;
+  }
+
+  /**
+   * Add found item to shopping list
+   * @param {ShoppingItem} foundItem
+   * @param {ShoppingList} shoppingList
+   */
+  addFoundItem(foundItem: ShoppingItem, shoppingList: ShoppingList) {
+    this.currentShoppingList = shoppingList;
+    // Create partial item for list
+    const partialItem: ShoppingItem = {
+      title: foundItem.title,
+      checked: foundItem.checked,
+      price: foundItem.price,
+      quantity: foundItem.quantity
+    };
+    let categoryToAddFoundItemTo: ShoppingCategory;
+    // Check if category is created in shopping list
+    const categoryInList: ShoppingCategory = this.currentShoppingList.categories.find(category => category.uid == foundItem.categoryUid);
+    // If it exists
+    if (categoryInList) {
+      // Add item to category
+      categoryInList.items.push(partialItem);
+    } else {
+      // Else recreate new category with item
+      categoryToAddFoundItemTo = {
+        uid: foundItem.categoryUid,
+        items: [],
+        title: foundItem.categoryTitle,
+        userUid: this.currentUserUid
+      };
+      // Add item to category
+      categoryToAddFoundItemTo.items.push(partialItem);
+      // Push category to list
+      this.currentShoppingList.categories.push(categoryToAddFoundItemTo);
+    }
+
+    // Reset search list
+    this.itemsFromSearch = [];
+    // Reset newItemTitle
+    this.newItemTitle = null;
+
+    // Update list on firestore
+    this.shoppingListProvider.updateShoppingList(this.currentShoppingList);
   }
 
   /**
