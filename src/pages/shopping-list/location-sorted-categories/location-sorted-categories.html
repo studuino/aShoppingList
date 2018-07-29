@@ -30,8 +30,8 @@
 
 <ion-content padding>
   <div *ngIf="$locationWithSortedCategories | async as locationWithSortedCategories">
-    <ion-list reorder="true" (ionItemReorder)="updateListOrder($event, locationWithSortedCategories)">
-      <ion-item-group>
+    <ion-list>
+      <ion-item-group reorder="true" (ionItemReorder)="updateListOrder($event, locationWithSortedCategories)">
         <ion-item-sliding *ngFor="let category of locationWithSortedCategories.sortedCategories">
           <ion-item>
             {{category.title}}
