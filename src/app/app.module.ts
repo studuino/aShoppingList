@@ -1,84 +1,53 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {ErrorHandler, NgModule} from '@angular/core';
-import {IonicApp, IonicErrorHandler, IonicModule} from 'ionic-angular';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouteReuseStrategy } from '@angular/router';
 
-import {MyApp} from './app.component';
+import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
-import {StatusBar} from '@ionic-native/status-bar';
-import {SplashScreen} from '@ionic-native/splash-screen';
-import {ShoppingListPage} from '../pages/shopping-list/shopping-list';
-import {DetailItemPage} from '../pages/shopping-list/detail-item/detail-item';
-import {ShoppingListProvider} from '../providers/shopping-list/shopping-list';
-import {AngularFireModule} from 'angularfire2';
-import {AngularFirestoreModule} from 'angularfire2/firestore';
-import {CategoryProvider} from '../providers/categories/category';
-import {ScreenOrientation} from '@ionic-native/screen-orientation';
-import {AlertProvider} from '../providers/alert/alert';
-import {CategoriesPage} from '../pages/categories/categories';
-import {ShoppingListOptionsPage} from '../pages/shopping-list/shopping-list-options/shopping-list-options';
-import {LocationSortedCategoriesPage} from '../pages/shopping-list/location-sorted-categories/location-sorted-categories';
-import {AuthProvider} from '../providers/auth/auth';
-import {AngularFireAuthModule} from 'angularfire2/auth';
-import {SharedShoppingListProvider} from '../providers/shared-shopping-list/shared-shopping-list';
-import {ManageShoppingListPage} from '../pages/shopping-list/manage-shopping-list/manage-shopping-list';
-import {UserProvider} from '../providers/user/user';
-import {LoadingProvider} from '../providers/loading/loading';
-import {LocationWithSortedCategoriesProvider} from '../providers/location-with-sorted-categories/location-with-sorted-categories';
-import { ItemsProvider } from '../providers/items/items';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AngularFireModule } from '@angular/fire';
+import { ShoppingListPageModule } from './shopping-list/shopping-list.module';
+import { LoginPageModule } from './login/login.module';
+import { CategoriesPageModule } from './categories/categories.module';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 
 // AF2 Settings
 export const firebaseConfig = {
-  apiKey: "AIzaSyD8c8n0Wi0steriAFwvty1yXCB8r1UAHw0",
-  authDomain: "adamino-shoppinglist.firebaseapp.com",
-  databaseURL: "https://adamino-shoppinglist.firebaseio.com",
-  projectId: "adamino-shoppinglist",
-  storageBucket: "adamino-shoppinglist.appspot.com",
-  messagingSenderId: "832874222094"
+  apiKey: 'AIzaSyD8c8n0Wi0steriAFwvty1yXCB8r1UAHw0',
+  authDomain: 'adamino-shoppinglist.firebaseapp.com',
+  databaseURL: 'https://adamino-shoppinglist.firebaseio.com',
+  projectId: 'adamino-shoppinglist',
+  storageBucket: 'adamino-shoppinglist.appspot.com',
+  messagingSenderId: '832874222094'
 };
 
 @NgModule({
   declarations: [
-    MyApp,
-    ShoppingListPage,
-    DetailItemPage,
-    CategoriesPage,
-    ShoppingListOptionsPage,
-    LocationSortedCategoriesPage,
-    ManageShoppingListPage
+    AppComponent,
   ],
+  entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(),
+    AppRoutingModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule.enablePersistence(),
-    AngularFireAuthModule
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    ShoppingListPage,
-    DetailItemPage,
-    CategoriesPage,
-    ShoppingListOptionsPage,
-    LocationSortedCategoriesPage,
-    ManageShoppingListPage
-
+    AngularFireAuthModule,
+    ShoppingListPageModule,
+    LoginPageModule,
+    CategoriesPageModule
   ],
   providers: [
     StatusBar,
     SplashScreen,
     ScreenOrientation,
-    {provide: ErrorHandler, useClass: IonicErrorHandler},
-    ShoppingListProvider,
-    CategoryProvider,
-    AlertProvider,
-    AuthProvider,
-    SharedShoppingListProvider,
-    UserProvider,
-    LoadingProvider,
-    LocationWithSortedCategoriesProvider,
-    ItemsProvider
-  ]
+    {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

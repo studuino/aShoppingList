@@ -1,37 +1,29 @@
-import {Component, ViewChild} from '@angular/core';
-import {Nav, Platform} from 'ionic-angular';
-import {StatusBar} from '@ionic-native/status-bar';
-import {SplashScreen} from '@ionic-native/splash-screen';
+import { Component } from '@angular/core';
 
-import {ShoppingListPage} from '../pages/shopping-list/shopping-list';
-import {ScreenOrientation} from '@ionic-native/screen-orientation';
-import {CategoriesPage} from '../pages/categories/categories';
-import {AuthProvider} from '../providers/auth/auth';
+import { MenuController, Platform } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { AuthService } from './services/auth/auth';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { Router } from '@angular/router';
+import { ModuleRouteNames } from './module-route.names';
 
 @Component({
-  templateUrl: 'app.html'
+  selector: 'app-root',
+  templateUrl: 'app.component.html',
+  styleUrls: []
 })
-export class MyApp {
-  @ViewChild(Nav) nav: Nav;
 
-  rootPage: any = 'LoginPage';
-
-  pages: Array<{ title: string, component: any }>;
-
-  constructor(public platform: Platform,
-              public statusBar: StatusBar,
-              public splashScreen: SplashScreen,
-              private authProvider: AuthProvider,
-              private screenOrientation: ScreenOrientation) {
+export class AppComponent {
+  constructor(
+    private platform: Platform,
+    private splashScreen: SplashScreen,
+    private statusBar: StatusBar,
+    private authService: AuthService,
+    private nav: Router,
+    private menu: MenuController,
+    private screenOrientation: ScreenOrientation) {
     this.initializeApp();
-
-    // used for an example of ngFor and navigation
-    this.pages = [
-      {title: 'Shopping List', component: ShoppingListPage},
-      {title: 'Categories', component: CategoriesPage},
-      {title: 'User', component: 'UserPage'}
-    ];
-
   }
 
   initializeApp() {
@@ -44,22 +36,37 @@ export class MyApp {
       // Check for mobile platform
       if (this.platform.is('cordova')) {
         // set to portrait
-        this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT)
+        this.screenOrientation.lock('portrait');
       }
 
       // Check for logged in user
-      this.authProvider.userIsLoggedIn()
-        .subscribe(isAuthenticated => {
-          if (isAuthenticated) {
-            this.rootPage = ShoppingListPage;
+      this.authService.userIsLoggedIn()
+        .subscribe(userAuth => {
+          if (userAuth) {
+            this.nav.navigateByUrl(ModuleRouteNames.SHOPPING_LIST);
+          } else {
+            this.nav.navigateByUrl(ModuleRouteNames.LOGIN);
           }
-        })
+        });
     });
   }
 
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
+  navigateHome() {
+    this.nav.navigateByUrl(ModuleRouteNames.SHOPPING_LIST);
+    this.menu.close();
+  }
+  navigateCategories() {
+    this.nav.navigateByUrl(ModuleRouteNames.CATEGORIES);
+    this.menu.close();
+  }
+  navigateUser() {
+    this.nav.navigateByUrl(ModuleRouteNames.USER);
+    this.menu.close();
+  }
+
+  logout() {
+    this.nav.navigateByUrl(ModuleRouteNames.LOGIN)
+      .then(() => this.authService.logout());
+    this.menu.close();
   }
 }

@@ -1,0 +1,59 @@
+<ion-header>
+
+  <ion-toolbar color="primary">
+    <ion-grid>
+      <ion-row align-items-center>
+        <ion-col size="2">
+          <ion-menu-toggle>
+            <ion-button>
+              <ion-icon name="menu"></ion-icon>
+            </ion-button>
+          </ion-menu-toggle>
+        </ion-col>
+        <ion-col text-start>
+          <ion-title>Categories</ion-title>
+        </ion-col>
+        <ion-col size="2">
+          <ion-button text-center
+
+                      color="success"
+                      (click)="promptForNewCategory()">
+            <ion-icon name="add"></ion-icon>
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </ion-toolbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <div *ngIf="$categories | async as categories">
+    <ion-list>
+      <ion-item-group>
+        <ion-item-sliding *ngFor="let category of categories">
+          <ion-item>
+            {{category.title}}
+            <!--SLIDE FROM RIGHT TO LEFT-->
+          </ion-item>
+          <ion-item-options side="end">
+            <ion-button
+                    color="primary"
+                    (click)="promptForCategoryRename(category)">
+              <ion-icon name="create"></ion-icon>
+              Rename
+            </ion-button>
+            <ion-button
+                    color="danger"
+                    (click)="removeCategory(category)">
+              <ion-icon name="trash"></ion-icon>
+              Remove
+            </ion-button>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-item-group>
+    </ion-list>
+  </div>
+</ion-content>

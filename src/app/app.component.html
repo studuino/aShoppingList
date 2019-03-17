@@ -1,0 +1,25 @@
+<ion-menu side="start" menuId="custom" class="my-custom-menu">
+  <ion-header>
+    <ion-toolbar color="tertiary">
+      <ion-title>Links</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item  (click)="navigateHome()">
+        Home
+      </ion-item>
+      <ion-item  (click)="navigateCategories()">
+        Categories
+      </ion-item>
+      <ion-item  (click)="navigateUser()">
+        User
+      </ion-item>
+      <ion-item  (click)="logout()">
+        Logout
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+<ion-router-outlet main></ion-router-outlet>
