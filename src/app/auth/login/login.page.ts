@@ -15,13 +15,14 @@ export class LoginPage {
 
   constructor(private authService: AuthService,
               private router: Router) {
-    this.credentials = {
-      email: '',
-      password: ''
-    };
+    this.resetCredentials();
   }
 
   ionViewDidLeave() {
+    this.resetCredentials();
+  }
+
+  private resetCredentials() {
     this.credentials = {
       email: '',
       password: ''
