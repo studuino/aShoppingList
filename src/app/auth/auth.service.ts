@@ -15,6 +15,10 @@ export class AuthService {
     return this.afAuth.authState.pipe(first()).toPromise();
   }
 
+  getAuthState() {
+    return this.afAuth.authState;
+  }
+
   login(credentials: { password: string; email: string }): Promise<any> {
     return this.afAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password);
   }
