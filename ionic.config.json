@@ -1,7 +1,6 @@
 {
   "name": "aShoppingList",
-  "integrations": {
-    "cordova": {}
-  },
-  "type": "angular"
+  "integrations": {},
+  "type": "angular",
+  "id": "b0216347"
 }

@@ -4,8 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
-import { HomePage } from './home.page';
-import { AuthGuard } from '../auth/auth.guard';
+import { ListPage } from './list.page';
 
 @NgModule({
   imports: [
@@ -15,12 +14,10 @@ import { AuthGuard } from '../auth/auth.guard';
     RouterModule.forChild([
       {
         path: '',
-        component: HomePage,
-        canActivate: [AuthGuard]
+        component: ListPage
       }
     ])
   ],
-  declarations: [HomePage]
+  declarations: [ListPage]
 })
-export class HomePageModule {
-}
+export class ListPageModule {}

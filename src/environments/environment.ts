@@ -3,7 +3,15 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    apiKey: 'AIzaSyD8c8n0Wi0steriAFwvty1yXCB8r1UAHw0',
+    authDomain: 'adamino-shoppinglist.firebaseapp.com',
+    databaseURL: 'https://adamino-shoppinglist.firebaseio.com',
+    projectId: 'adamino-shoppinglist',
+    storageBucket: 'adamino-shoppinglist.appspot.com',
+    messagingSenderId: '832874222094'
+  }
 };
 
 /*
