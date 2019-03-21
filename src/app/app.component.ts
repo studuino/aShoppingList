@@ -43,7 +43,7 @@ export class AppComponent {
   }
 
   logout() {
-    this.authService.logout()
-      .then(() => this.router.navigateByUrl(ModuleRoutes.LOGIN));
+    this.router.navigateByUrl(ModuleRoutes.LOGIN)
+      .then(() => this.authService.logout());
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Router } from '@angular/router';
 import { ModuleRoutes } from '../../routing/ModuleRoutes';
@@ -8,19 +8,24 @@ import { ModuleRoutes } from '../../routing/ModuleRoutes';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage {
   pageTitle = 'Welcome to aShoppingList!';
 
-  credentials = {
-    email: '',
-    password: ''
-  };
+  credentials;
 
   constructor(private authService: AuthService,
               private router: Router) {
+    this.credentials = {
+      email: '',
+      password: ''
+    };
   }
 
-  ngOnInit() {
+  ionViewDidLeave() {
+    this.credentials = {
+      email: '',
+      password: ''
+    };
   }
 
   login() {
