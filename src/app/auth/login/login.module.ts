@@ -13,7 +13,7 @@ import { AuthService } from '../auth.service';
 const routes: Routes = [
   {
     path: '',
-    component: LoginPage
+    component: LoginPage,
   }
 ];
 

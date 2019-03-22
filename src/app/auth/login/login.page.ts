@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { Router } from '@angular/router';
 import { ModuleRoutes } from '../../routing/ModuleRoutes';
+import { MenuController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -14,11 +14,8 @@ export class LoginPage {
   credentials;
 
   constructor(private authService: AuthService,
-              private router: Router) {
-    this.resetCredentials();
-  }
-
-  ionViewDidLeave() {
+              private navCtrl: NavController,
+              private menuCtrl: MenuController) {
     this.resetCredentials();
   }
 
@@ -32,9 +29,11 @@ export class LoginPage {
   login() {
     // Ensure no space at end!
     this.credentials.email.trim();
-    // TODO ALH: Handle login
     this.authService.login(this.credentials)
-      .then(() => this.router.navigateByUrl(ModuleRoutes.HOME))
+      .then(() => {
+        this.menuCtrl.enable(true);
+        this.navCtrl.navigateRoot(ModuleRoutes.HOME);
+      })
       .catch(error => console.log(error));
   }
 }

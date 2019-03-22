@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { MenuController, NavController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
-import { Router } from '@angular/router';
 import { ModuleRoutes } from './routing/ModuleRoutes';
 
 @Component({
@@ -12,16 +11,12 @@ import { ModuleRoutes } from './routing/ModuleRoutes';
   templateUrl: 'app.component.html'
 })
 export class AppComponent {
+
   public appPages = [
     {
       title: 'Home',
       url: '/home',
       icon: 'home'
-    },
-    {
-      title: 'List',
-      url: '/list',
-      icon: 'list'
     }
   ];
 
@@ -30,20 +25,26 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public authService: AuthService,
-    private router: Router
+    private navCtrl: NavController,
+    private menuCtrl: MenuController
   ) {
+    this.statusBar.styleDefault();
+    this.splashScreen.hide();
+    this.menuCtrl.enable(false);
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
-      this.splashScreen.hide();
+      // Do async stuff
     });
   }
 
   logout() {
-    this.router.navigateByUrl(ModuleRoutes.LOGIN)
-      .then(() => this.authService.logout());
+    this.navCtrl.navigateRoot(ModuleRoutes.LOGIN)
+      .then(() => {
+        this.menuCtrl.enable(false);
+        this.authService.logout();
+      });
   }
 }

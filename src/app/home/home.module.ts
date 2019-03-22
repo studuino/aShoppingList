@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '../shared/guards/auth.guard';
 
 @NgModule({
   imports: [
