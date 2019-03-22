@@ -36,9 +36,55 @@ describe('LoginPage', () => {
     fixture = TestBed.createComponent(LoginPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    component.ngOnInit();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render with empty fields', function () {
+    expect(component.email.value).toBe('');
+    expect(component.password.value).toBe('');
+  });
+
+  it('should render form invalid with no data', function () {
+    expect(component.myForm.invalid).toBeTruthy();
+  });
+
+  it('should disable submit on invalid form', function () {
+    const page = fixture.nativeElement;
+    const submitButton: Element = page.querySelector('ion-button');
+    expect(submitButton.outerHTML).toContain('button-disabled');
+  });
+
+  it('should have email required', function () {
+    component.email.setValue('');
+    const errors = component.email.errors || {};
+
+    expect(errors['required']).toBeTruthy();
+  });
+
+  it('should have password required', function () {
+    component.password.setValue('');
+    const errors = component.password.errors || {};
+
+    expect(errors['required']).toBeTruthy();
+  });
+
+  it('should render form valid with valid data', function () {
+    expect(component.myForm.valid).toBeFalsy();
+    component.myForm.controls['email'].setValue('test@test.com');
+    component.myForm.controls['password'].setValue('123456789');
+    expect(component.myForm.valid).toBeTruthy();
+  });
+
+  it('should render button submittable when form has valid data', function () {
+    component.myForm.controls['email'].setValue('test@test.com');
+    component.myForm.controls['password'].setValue('123456789');
+
+    const page = fixture.nativeElement;
+    const submitButton: Element = page.querySelector('ion-button');
+    expect(submitButton.innerHTML).not.toContain('button-disabled');
   });
 });

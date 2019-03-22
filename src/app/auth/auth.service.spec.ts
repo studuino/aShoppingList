@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 describe('AuthService', () => {
+
   beforeEach(() => TestBed.configureTestingModule({
     imports: [AngularFireModule.initializeApp(environment.firebase)],
     providers: [
@@ -18,4 +19,5 @@ describe('AuthService', () => {
     const service: AuthService = TestBed.get(AuthService);
     expect(service).toBeTruthy();
   });
+
 });
