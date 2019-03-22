@@ -23,7 +23,7 @@ export class AuthService {
     return isAuthenticated;
   }
 
-  async login(credentials: { password: string; email: string }): Promise<any> {
+  async login(credentials: { password: string, email: string }): Promise<any> {
     const response = await this.afAuth.auth.signInWithEmailAndPassword(credentials.email, credentials.password)
       .catch(error => Promise.reject(error));
 

@@ -1,40 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ModuleRoutes } from '../../routing/ModuleRoutes';
 import { MenuController, NavController } from '@ionic/angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-export interface Credentials {
-  email: string;
-  password: string;
-}
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage {
+export class LoginPage implements OnInit {
   pageTitle = 'Welcome to aShoppingList!';
 
-  credentials: Credentials;
+  myForm: FormGroup;
 
   constructor(private authService: AuthService,
               private navCtrl: NavController,
-              private menuCtrl: MenuController) {
-    this.resetCredentials();
+              private menuCtrl: MenuController,
+              private fb: FormBuilder) {
   }
 
-  private resetCredentials() {
-    this.credentials = {
-      email: '',
-      password: ''
-    };
+  ngOnInit(): void {
+    this.myForm = this.fb.group({
+      email: ['', [
+        Validators.required,
+        Validators.email
+      ]],
+      password: ['', [
+        Validators.required,
+        Validators.minLength(4)
+      ]]
+    });
+  }
+
+  get email() {
+    return this.myForm.get('email');
+  }
+
+  get password() {
+    return this.myForm.get('password');
   }
 
   login() {
-    // Ensure no space at end!
-    this.credentials.email.trim();
-    this.authService.login(this.credentials)
+    const credentials = this.myForm.value as { email: string, password: string; };
+    this.authService.login(credentials)
       .then(() => {
         this.menuCtrl.enable(true);
         this.navCtrl.navigateRoot(ModuleRoutes.HOME);

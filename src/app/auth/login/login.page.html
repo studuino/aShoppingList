@@ -1,45 +1,50 @@
 <a-header [headerTitle]="pageTitle"></a-header>
 
 <ion-content>
-    <form #form="ngForm" (ngSubmit)="login()">
-        <ion-grid>
-            <ion-row color="primary" justify-content-center>
-                <ion-col align-self-center sizeMd="6" sizeLg="5" sizeXs="12">
-                    <div text-center>
-                        <h3>Please Login</h3>
-                    </div>
-                    <div padding>
-                        <ion-item>
-                            <ion-input name="email"
-                                       type="email"
-                                       placeholder="your@email.com"
-                                       [(ngModel)]="credentials.email"
-                                       required></ion-input>
-                        </ion-item>
-                        <ion-item>
-                            <ion-input name="password"
-                                       type="password"
-                                       placeholder="Password"
-                                       [(ngModel)]="credentials.password"
-                                       required></ion-input>
-                        </ion-item>
-                    </div>
-                    <div padding>
-                        <ion-button size="large"
-                                    type="submit"
-                                    [disabled]="form.invalid"
-                                    expand="block">
-                            Login
-                        </ion-button>
-                    </div>
-                </ion-col>
-            </ion-row>
-            <ion-row justify-content-center>
-                <div text-center>
-                    If you don't have an account, please <a routerLink='/register'>
-                    register</a> first!
-                </div>
-            </ion-row>
-        </ion-grid>
-    </form>
+  <form [formGroup]="myForm"
+        novalidate
+        (ngSubmit)="login()">
+    <ion-grid>
+      <ion-row color="primary" justify-content-center>
+        <ion-col align-self-center sizeMd="6" sizeLg="5" sizeXs="12">
+          <div text-center>
+            <h3>Please Login</h3>
+          </div>
+          <div padding>
+            <ion-item>
+              <ion-input name="email"
+                         type="email"
+                         placeholder="your@email.com"
+                         formControlName="email"
+                         required></ion-input>
+            </ion-item>
+            <p *ngIf="email.touched && email.invalid" class="error"><sup>*</sup>Please enter an email</p>
+            <ion-item>
+              <ion-input name="password"
+                         type="password"
+                         placeholder="Password"
+                         formControlName="password"
+                         required></ion-input>
+            </ion-item>
+            <p *ngIf="password.touched && password.invalid" class="error"><sup>*</sup>Please enter a password</p>
+            <p *ngIf="password.errors?.minlength" class="error"><sup>*</sup>Password should be at least 4 characters</p>
+          </div>
+          <div padding>
+            <ion-button size="large"
+                        type="submit"
+                        [disabled]="!myForm.valid"
+                        expand="block">
+              Login
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row justify-content-center>
+        <div text-center>
+          If you don't have an account, please <a routerLink='/register'>
+          register</a> first!
+        </div>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>
