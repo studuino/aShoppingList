@@ -16,6 +16,7 @@
                          type="email"
                          placeholder="your@email.com"
                          formControlName="email"
+                         ngDefaultControl
                          required></ion-input>
             </ion-item>
             <p *ngIf="email.touched && email.invalid" class="error"><sup>*</sup>Please enter an email</p>
@@ -24,6 +25,7 @@
                          type="password"
                          placeholder="Password"
                          formControlName="password"
+                         ngDefaultControl
                          required></ion-input>
             </ion-item>
             <p *ngIf="password.touched && password.invalid" class="error"><sup>*</sup>Please enter a password</p>
