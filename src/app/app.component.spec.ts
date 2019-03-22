@@ -1,32 +1,44 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { TestBed, async } from '@angular/core/testing';
+import { async, TestBed } from '@angular/core/testing';
 
-import { Platform } from '@ionic/angular';
+import { MenuController, NavController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { AppComponent } from './app.component';
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AuthService } from './auth/auth.service';
 
 describe('AppComponent', () => {
 
-  let statusBarSpy, splashScreenSpy, platformReadySpy, platformSpy;
+  let statusBarSpy, splashScreenSpy, platformReadySpy, platformSpy, menuCtrlSpy;
 
   beforeEach(async(() => {
     statusBarSpy = jasmine.createSpyObj('StatusBar', ['styleDefault']);
     splashScreenSpy = jasmine.createSpyObj('SplashScreen', ['hide']);
     platformReadySpy = Promise.resolve();
-    platformSpy = jasmine.createSpyObj('Platform', { ready: platformReadySpy });
+    platformSpy = jasmine.createSpyObj('Platform', {ready: platformReadySpy, subscribeWithPriority: {}});
+    menuCtrlSpy = jasmine.createSpyObj('MenuController', {componentOnReady: platformReadySpy, enable: {}});
 
     TestBed.configureTestingModule({
       declarations: [AppComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       providers: [
-        { provide: StatusBar, useValue: statusBarSpy },
-        { provide: SplashScreen, useValue: splashScreenSpy },
-        { provide: Platform, useValue: platformSpy },
+        {provide: StatusBar, useValue: statusBarSpy},
+        {provide: SplashScreen, useValue: splashScreenSpy},
+        {provide: Platform, useValue: platformSpy},
+        {provide: NavController, useValue: {}},
+        {provide: MenuController, useValue: menuCtrlSpy},
+        AngularFireAuth,
+        AuthService
       ],
-      imports: [ RouterTestingModule.withRoutes([])],
+      imports: [
+        RouterTestingModule.withRoutes([]),
+        AngularFireModule.initializeApp(environment.firebase),
+      ]
     }).compileComponents();
   }));
 
@@ -51,7 +63,7 @@ describe('AppComponent', () => {
     const menuItems = app.querySelectorAll('ion-label');
     expect(menuItems.length).toEqual(2);
     expect(menuItems[0].textContent).toContain('Home');
-    expect(menuItems[1].textContent).toContain('List');
+    expect(menuItems[1].textContent).toContain('Logout');
   });
 
   it('should have urls', async () => {
@@ -61,7 +73,6 @@ describe('AppComponent', () => {
     const menuItems = app.querySelectorAll('ion-item');
     expect(menuItems.length).toEqual(2);
     expect(menuItems[0].getAttribute('ng-reflect-router-link')).toEqual('/home');
-    expect(menuItems[1].getAttribute('ng-reflect-router-link')).toEqual('/list');
   });
 
 });

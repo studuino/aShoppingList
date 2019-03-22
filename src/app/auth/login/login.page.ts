@@ -3,6 +3,11 @@ import { AuthService } from '../auth.service';
 import { ModuleRoutes } from '../../routing/ModuleRoutes';
 import { MenuController, NavController } from '@ionic/angular';
 
+export interface Credentials {
+  email: string;
+  password: string;
+}
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -11,7 +16,7 @@ import { MenuController, NavController } from '@ionic/angular';
 export class LoginPage {
   pageTitle = 'Welcome to aShoppingList!';
 
-  credentials;
+  credentials: Credentials;
 
   constructor(private authService: AuthService,
               private navCtrl: NavController,
