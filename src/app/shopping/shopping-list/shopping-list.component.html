@@ -1,8 +1,15 @@
 <a-header>
   <ng-container class="header-center-content">
-      <ion-title>
-        {{currentShoppingListTitle}}
-      </ion-title>
+    <ion-select *ngIf="userShoppingLists"
+                [value]="currentShoppingList"
+                [selectedText]="currentShoppingListTitle"
+                interface="popover">
+      <ion-select-option *ngFor="let shoppingList of userShoppingLists"
+                         [selected]="currentShoppingList"
+                         [value]="shoppingList">
+        {{ shoppingList.title }}
+      </ion-select-option>
+    </ion-select>
   </ng-container>
 
   <ng-container class="header-right-content">
@@ -13,7 +20,6 @@
 </a-header>
 
 <ion-content>
-
 </ion-content>
 <!--TODO ALH: Reimplement!-->
 <!--<ion-col *ngIf="$shoppingLists | async as shoppingLists">

@@ -22,7 +22,7 @@ export class AuthService {
   }
 
   getUserUid(): string {
-    return AuthService.AUTHENTICATED_TOKEN
+    return localStorage.getItem(AuthService.AUTHENTICATED_TOKEN);
   }
 
   async login(credentials: { password: string, email: string }): Promise<any> {

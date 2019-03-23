@@ -1,10 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {Observable, of} from "rxjs";
-import {ShoppingList} from "../../entities/ShoppingList";
-import {ShoppingCategory} from "../../entities/ShoppingCategory";
-import {ShoppingItem} from "../../entities/ShoppingItem";
-import {ShoppingListService} from "../../shared/firestore/shopping-list.service";
-import {AuthService} from "../../auth/auth.service";
+import { Component, OnInit } from '@angular/core';
+import { ShoppingList } from '../../entities/ShoppingList';
+import { ShoppingListService } from '../../shared/firestore/shopping-list.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'a-shopping-list',
@@ -12,15 +9,31 @@ import {AuthService} from "../../auth/auth.service";
   styleUrls: ['./shopping-list.component.scss'],
 })
 export class ShoppingListComponent implements OnInit {
-  currentShoppingListTitle = 'Shopping List';
-  $shoppingLists: Observable<ShoppingList[]>;
+  currentShoppingListTitle: string;
+  currentShoppingList: ShoppingList;
+  userShoppingLists: ShoppingList[];
 
   constructor(private shoppingListService: ShoppingListService,
               private authService: AuthService) {
   }
 
   ngOnInit() {
-    this.$shoppingLists = this.shoppingListService.getPartialShoppingListsByUserUid(this.authService.getUserUid());
+    const userUid = this.authService.getUserUid();
+    this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
+      .subscribe(shoppingLists => {
+        if (shoppingLists) {
+          this.userShoppingLists = shoppingLists;
+          const firstShoppingList = shoppingLists[0];
+          this.currentShoppingList = firstShoppingList;
+          this.currentShoppingListTitle = firstShoppingList.title;
+        }
+      });
+    // this.shoppingListService.getFirstShoppingListByUserUid(userUid).toPromise()
+    //   .then(firstShoppingList => {
+    //     console.log(firstShoppingList);
+    //     this.currentShoppingList = firstShoppingList;
+    //     this.currentShoppingListTitle = firstShoppingList.title;
+    //   });
     /*const shoppingItem: ShoppingItem = {
       uid: '1',
       title: 'Strawberry',
