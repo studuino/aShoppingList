@@ -33,11 +33,15 @@
                (keyup.enter)="addItem()"
                [(ngModel)]="newItemTitle">
     </ion-input>
+    <ion-button
+        shape="round"
+        fill="outline"
+        id="addItemButton"
+        *ngIf="newItemTitle?.length > 0"
+        (click)="addItem()">
+      <ion-icon slot="icon-only" name="add"></ion-icon>
+    </ion-button>
   </ion-item>
-  <ion-button float-right
-              (click)="addItem()">
-    Add Item
-  </ion-button>
 </ion-content>
 <!--
 <ion-col text-end size="2">
@@ -48,7 +52,6 @@
 
 <!--
 <ion-content>
-  <div *ngIf="$currentShoppingList | async as shoppingList">
     &lt;!&ndash;ADD ITEM&ndash;&gt;
     <ion-item>
       <ion-input type="text"
