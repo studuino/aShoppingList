@@ -1,19 +1,29 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-content>
-      <ion-grid>
-        <ion-row align-items-center>
-          <ion-col size="2">
-            <ion-menu-toggle>
-              <ion-button>
-                <ion-icon name="menu"></ion-icon>
-              </ion-button>
-            </ion-menu-toggle>
-          </ion-col>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-grid>
+      <ion-row align-items-center>
+        <ion-col>
+          <ion-title>
+            {{currentShoppingListTitle}}
+          </ion-title>
+        </ion-col>
+        <ion-col>
+          <ion-select>
+            <ion-select-option></ion-select-option>
+          </ion-select>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
           <!--TODO ALH: Reimplement!-->
-          <ion-col *ngIf="$shoppingLists | async as shoppingLists">
+          <!--<ion-col *ngIf="$shoppingLists | async as shoppingLists">
             <ion-select style="color: white"
-                        [value]="currentShoppingListTitle"
+                        [value]="shoppingLists"
+                        [selectedText]="currentShoppingListTitle"
                         interface="popover">
               <ion-select-option *ngFor="let shoppingList of shoppingLists"
                                  (select)="loadShoppingList(shoppingList)"
@@ -21,7 +31,7 @@
               </ion-select-option>
             </ion-select>
           </ion-col>
-          <!--<ion-col *ngIf="$locationsWithSortedCategories | async as locationsWithSortedCategories">
+          <ion-col *ngIf="$locationsWithSortedCategories | async as locationsWithSortedCategories">
             <ion-select style="color: white"
                         [(ngModel)]="currentLocationTitle"
                         interface="popover">
@@ -38,11 +48,6 @@
               <ion-icon name="more"></ion-icon>
             </ion-button>
           </ion-col>-->
-        </ion-row>
-      </ion-grid>
-    </ion-content>
-  </ion-toolbar>
-</ion-header>
 
 <!--TODO ALH: Reimplement-->
 <!--

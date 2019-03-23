@@ -14,8 +14,8 @@ export class AppComponent {
 
   public appPages = [
     {
-      title: 'Home',
-      url: '/home',
+      title: 'Shopping List',
+      url: '/shopping',
       icon: 'home'
     }
   ];
@@ -30,13 +30,15 @@ export class AppComponent {
   ) {
     this.statusBar.styleDefault();
     this.splashScreen.hide();
-    this.menuCtrl.enable(false);
+    // this.menuCtrl.enable(false);
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
-      // Do async stuff
+      if (this.authService.isAuthenticated()) {
+        this.navCtrl.navigateRoot(ModuleRoutes.HOME);
+      }
     });
   }
 

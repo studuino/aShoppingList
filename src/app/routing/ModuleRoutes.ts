@@ -1,4 +1,4 @@
 export enum ModuleRoutes {
-  HOME = '/home',
+  HOME = '/shopping',
   LOGIN = '/login'
 }
