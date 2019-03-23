@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ShoppingList } from '../../entities/ShoppingList';
 import { ShoppingListService } from '../../shared/firestore/shopping-list.service';
 import { AuthService } from '../../auth/auth.service';
@@ -10,10 +10,13 @@ import { CategoryService } from '../../shared/firestore/category.service';
   templateUrl: './shopping-list.component.html',
   styleUrls: ['./shopping-list.component.scss'],
 })
-export class ShoppingListComponent implements OnInit {
+export class ShoppingListComponent implements OnInit, OnDestroy {
+  $currentShoppingListSub;
   currentShoppingList: ShoppingList;
+  $shoppingListsSub;
   userShoppingLists: ShoppingList[];
 
+  $locationsSub;
   locationsWithSortedCategories: LocationWithSortedCategories[];
   currentLocationWithSortedCategories: LocationWithSortedCategories;
 
@@ -28,14 +31,25 @@ export class ShoppingListComponent implements OnInit {
     const userUid = this.authService.getUserUid();
     this.initShoppingLists(userUid);
     this.initLocationsWithSortedCategories(userUid);
-    this.shoppingListService.getFirstShoppingListByUserUid(userUid)
+    this.initFirstShoppingList(userUid);
+  }
+
+  ngOnDestroy(): void {
+    // Make sure to close connection to firestore!
+    this.$shoppingListsSub.unsubscribe();
+    this.$locationsSub.unsubscribe();
+    this.$currentShoppingListSub.unsubscribe();
+  }
+
+  private initFirstShoppingList(userUid) {
+    this.$currentShoppingListSub = this.shoppingListService.getFirstShoppingListByUserUid(userUid)
       .subscribe(firstShoppingList => {
         this.currentShoppingList = firstShoppingList;
       });
   }
 
   private initLocationsWithSortedCategories(userUid) {
-    this.categoryService.getlocationsWithSortedCategoriesByUserUid(userUid)
+    this.$locationsSub = this.categoryService.getlocationsWithSortedCategoriesByUserUid(userUid)
       .subscribe(locationsWithSortedCategories => {
         this.locationsWithSortedCategories = locationsWithSortedCategories;
         this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
@@ -43,7 +57,7 @@ export class ShoppingListComponent implements OnInit {
   }
 
   private initShoppingLists(userUid) {
-    this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
+    this.$shoppingListsSub = this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
       .subscribe(shoppingLists => {
         if (shoppingLists) {
           this.userShoppingLists = shoppingLists;
