@@ -17,6 +17,8 @@ export class ShoppingListComponent implements OnInit {
   locationsWithSortedCategories: LocationWithSortedCategories[];
   currentLocationWithSortedCategories: LocationWithSortedCategories;
 
+  newItemTitle = '';
+
   constructor(private authService: AuthService,
               private shoppingListService: ShoppingListService,
               private categoryService: CategoryService) {
@@ -25,11 +27,7 @@ export class ShoppingListComponent implements OnInit {
   ngOnInit() {
     const userUid = this.authService.getUserUid();
     this.initShoppingLists(userUid);
-    this.categoryService.getlocationsWithSortedCategoriesByUserUid(userUid)
-      .subscribe(locationsWithSortedCategories => {
-        this.locationsWithSortedCategories = locationsWithSortedCategories;
-        this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
-      });
+    this.initLocationsWithSortedCategories(userUid);
     // this.shoppingListService.getFirstShoppingListByUserUid(userUid).toPromise()
     //   .then(firstShoppingList => {
     //     console.log(firstShoppingList);
@@ -62,6 +60,14 @@ export class ShoppingListComponent implements OnInit {
     this.$shoppingLists = of([shoppingList]);*/
   }
 
+  private initLocationsWithSortedCategories(userUid) {
+    this.categoryService.getlocationsWithSortedCategoriesByUserUid(userUid)
+      .subscribe(locationsWithSortedCategories => {
+        this.locationsWithSortedCategories = locationsWithSortedCategories;
+        this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
+      });
+  }
+
   private initShoppingLists(userUid) {
     this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
       .subscribe(shoppingLists => {
@@ -71,5 +77,9 @@ export class ShoppingListComponent implements OnInit {
           this.currentShoppingList = firstShoppingList;
         }
       });
+  }
+
+  addItem() {
+    console.log(this.newItemTitle);
   }
 }
