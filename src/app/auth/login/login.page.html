@@ -1,6 +1,15 @@
-<a-header [headerTitle]="pageTitle"></a-header>
-
 <ion-content>
+  <!--Logo-->
+  <br>
+  <ion-row class="logo-row">
+    <ion-col></ion-col>
+    <ion-col width-67>
+      <img src="../../../assets/img/logo.png"/>
+    </ion-col>
+    <ion-col></ion-col>
+  </ion-row>
+
+  <!--Login form-->
   <form [formGroup]="myForm"
         novalidate
         (ngSubmit)="login()">
