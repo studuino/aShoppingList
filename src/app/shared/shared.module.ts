@@ -1,8 +1,9 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {AuthGuard} from './guards/auth.guard';
-import {LoadingService} from "./services/loading.service";
-import {ShoppingListService} from "./firestore/shopping-list.service";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AuthGuard } from './guards/auth.guard';
+import { LoadingService } from './services/loading.service';
+import { ShoppingListService } from './firestore/shopping-list.service';
+import { CategoryService } from './firestore/category.service';
 
 @NgModule({
   declarations: [],
@@ -12,7 +13,8 @@ import {ShoppingListService} from "./firestore/shopping-list.service";
   providers: [
     AuthGuard,
     LoadingService,
-    ShoppingListService
+    ShoppingListService,
+    CategoryService
   ]
 })
 export class SharedModule {

@@ -2,7 +2,7 @@
   <ng-container class="header-center-content">
     <ion-select *ngIf="userShoppingLists"
                 [value]="currentShoppingList"
-                [selectedText]="currentShoppingListTitle"
+                [selectedText]="currentShoppingList.title"
                 interface="popover">
       <ion-select-option *ngFor="let shoppingList of userShoppingLists"
                          [selected]="currentShoppingList"
@@ -13,8 +13,15 @@
   </ng-container>
 
   <ng-container class="header-right-content">
-    <ion-select>
-      <ion-select-option></ion-select-option>
+    <ion-select *ngIf="locationsWithSortedCategories"
+                [value]="currentLocationWithSortedCategories"
+                [selectedText]="currentLocationWithSortedCategories.title"
+                interface="popover">
+      <ion-select-option *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
+                         [selected]="currentShoppingList"
+                         [value]="locationWithSortedCategories">
+        {{ locationWithSortedCategories.title }}
+      </ion-select-option>
     </ion-select>
   </ng-container>
 </a-header>
@@ -22,17 +29,7 @@
 <ion-content>
 </ion-content>
 <!--TODO ALH: Reimplement!-->
-<!--<ion-col *ngIf="$shoppingLists | async as shoppingLists">
-  <ion-select style="color: white"
-              [value]="shoppingLists"
-              [selectedText]="currentShoppingListTitle"
-              interface="popover">
-    <ion-select-option *ngFor="let shoppingList of shoppingLists"
-                       (select)="loadShoppingList(shoppingList)"
-                       [value]="shoppingList.title">{{shoppingList.title}}
-    </ion-select-option>
-  </ion-select>
-</ion-col>
+<!--
 <ion-col *ngIf="$locationsWithSortedCategories | async as locationsWithSortedCategories">
   <ion-select style="color: white"
               [(ngModel)]="currentLocationTitle"

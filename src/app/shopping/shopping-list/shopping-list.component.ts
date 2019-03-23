@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ShoppingList } from '../../entities/ShoppingList';
 import { ShoppingListService } from '../../shared/firestore/shopping-list.service';
 import { AuthService } from '../../auth/auth.service';
+import { LocationWithSortedCategories } from '../../entities/LocationWithSortedCategories';
+import { CategoryService } from '../../shared/firestore/category.service';
 
 @Component({
   selector: 'a-shopping-list',
@@ -9,24 +11,24 @@ import { AuthService } from '../../auth/auth.service';
   styleUrls: ['./shopping-list.component.scss'],
 })
 export class ShoppingListComponent implements OnInit {
-  currentShoppingListTitle: string;
   currentShoppingList: ShoppingList;
   userShoppingLists: ShoppingList[];
 
-  constructor(private shoppingListService: ShoppingListService,
-              private authService: AuthService) {
+  locationsWithSortedCategories: LocationWithSortedCategories[];
+  currentLocationWithSortedCategories: LocationWithSortedCategories;
+
+  constructor(private authService: AuthService,
+              private shoppingListService: ShoppingListService,
+              private categoryService: CategoryService) {
   }
 
   ngOnInit() {
     const userUid = this.authService.getUserUid();
-    this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
-      .subscribe(shoppingLists => {
-        if (shoppingLists) {
-          this.userShoppingLists = shoppingLists;
-          const firstShoppingList = shoppingLists[0];
-          this.currentShoppingList = firstShoppingList;
-          this.currentShoppingListTitle = firstShoppingList.title;
-        }
+    this.initShoppingLists(userUid);
+    this.categoryService.getlocationsWithSortedCategoriesByUserUid(userUid)
+      .subscribe(locationsWithSortedCategories => {
+        this.locationsWithSortedCategories = locationsWithSortedCategories;
+        this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
       });
     // this.shoppingListService.getFirstShoppingListByUserUid(userUid).toPromise()
     //   .then(firstShoppingList => {
@@ -60,7 +62,14 @@ export class ShoppingListComponent implements OnInit {
     this.$shoppingLists = of([shoppingList]);*/
   }
 
-  loadShoppingLisst(shoppingList: ShoppingList) {
-    this.currentShoppingListTitle = shoppingList.title;
+  private initShoppingLists(userUid) {
+    this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
+      .subscribe(shoppingLists => {
+        if (shoppingLists) {
+          this.userShoppingLists = shoppingLists;
+          const firstShoppingList = shoppingLists[0];
+          this.currentShoppingList = firstShoppingList;
+        }
+      });
   }
 }
