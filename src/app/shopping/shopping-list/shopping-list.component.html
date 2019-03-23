@@ -1,53 +1,45 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-grid>
-      <ion-row align-items-center>
-        <ion-col>
-          <ion-title>
-            {{currentShoppingListTitle}}
-          </ion-title>
-        </ion-col>
-        <ion-col>
-          <ion-select>
-            <ion-select-option></ion-select-option>
-          </ion-select>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-toolbar>
-</ion-header>
-          <!--TODO ALH: Reimplement!-->
-          <!--<ion-col *ngIf="$shoppingLists | async as shoppingLists">
-            <ion-select style="color: white"
-                        [value]="shoppingLists"
-                        [selectedText]="currentShoppingListTitle"
-                        interface="popover">
-              <ion-select-option *ngFor="let shoppingList of shoppingLists"
-                                 (select)="loadShoppingList(shoppingList)"
-                                 [value]="shoppingList.title">{{shoppingList.title}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col *ngIf="$locationsWithSortedCategories | async as locationsWithSortedCategories">
-            <ion-select style="color: white"
-                        [(ngModel)]="currentLocationTitle"
-                        interface="popover">
-              <ion-select-option
-                  *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
-                  (select)="updateCategoriesOrderByLocation(locationWithSortedCategories)"
-                  [value]="locationWithSortedCategories.title">
-                {{locationWithSortedCategories.title}}
-              </ion-select-option>
-            </ion-select>
-          </ion-col>
-          <ion-col text-end size="2">
-            <ion-button icon-only (click)="presentPopover()">
-              <ion-icon name="more"></ion-icon>
-            </ion-button>
-          </ion-col>-->
+<a-header>
+  <ng-container class="header-center-content">
+      <ion-title>
+        {{currentShoppingListTitle}}
+      </ion-title>
+  </ng-container>
+
+  <ng-container class="header-right-content">
+    <ion-select>
+      <ion-select-option></ion-select-option>
+    </ion-select>
+  </ng-container>
+</a-header>
+<!--TODO ALH: Reimplement!-->
+<!--<ion-col *ngIf="$shoppingLists | async as shoppingLists">
+  <ion-select style="color: white"
+              [value]="shoppingLists"
+              [selectedText]="currentShoppingListTitle"
+              interface="popover">
+    <ion-select-option *ngFor="let shoppingList of shoppingLists"
+                       (select)="loadShoppingList(shoppingList)"
+                       [value]="shoppingList.title">{{shoppingList.title}}
+    </ion-select-option>
+  </ion-select>
+</ion-col>
+<ion-col *ngIf="$locationsWithSortedCategories | async as locationsWithSortedCategories">
+  <ion-select style="color: white"
+              [(ngModel)]="currentLocationTitle"
+              interface="popover">
+    <ion-select-option
+        *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
+        (select)="updateCategoriesOrderByLocation(locationWithSortedCategories)"
+        [value]="locationWithSortedCategories.title">
+      {{locationWithSortedCategories.title}}
+    </ion-select-option>
+  </ion-select>
+</ion-col>
+<ion-col text-end size="2">
+  <ion-button icon-only (click)="presentPopover()">
+    <ion-icon name="more"></ion-icon>
+  </ion-button>
+</ion-col>-->
 
 <!--TODO ALH: Reimplement-->
 <!--

@@ -30,13 +30,14 @@ export class AppComponent {
   ) {
     this.statusBar.styleDefault();
     this.splashScreen.hide();
-    // this.menuCtrl.enable(false);
+    this.menuCtrl.enable(false);
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
       if (this.authService.isAuthenticated()) {
+        this.menuCtrl.enable(true);
         this.navCtrl.navigateRoot(ModuleRoutes.HOME);
       }
     });

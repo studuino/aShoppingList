@@ -1,5 +1,22 @@
 <ion-header>
-    <ion-toolbar color="primary">
-        <ion-title>{{headerTitle}}</ion-title>
-    </ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-grid>
+      <ion-row>
+        <!--Left Menu Toggler-->
+        <ion-col size="2">
+          <ion-buttons>
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+        </ion-col>
+        <!--Center Content-->
+        <ion-col size="5">
+          <ng-content select=".header-center-content"></ng-content>
+        </ion-col>
+        <!--Right Content-->
+        <ion-col size="5">
+          <ng-content select=".header-right-content"></ng-content>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
 </ion-header>
