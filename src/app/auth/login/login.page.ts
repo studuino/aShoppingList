@@ -3,6 +3,7 @@ import { AuthService } from '../auth.service';
 import { ModuleRoutes } from '../../routing/ModuleRoutes';
 import { MenuController, NavController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {LoadingService} from "../../shared/services/loading.service";
 
 
 @Component({
@@ -18,7 +19,8 @@ export class LoginPage implements OnInit {
   constructor(private authService: AuthService,
               private navCtrl: NavController,
               private menuCtrl: MenuController,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private loadingService: LoadingService) {
   }
 
   ngOnInit(): void {
@@ -43,11 +45,13 @@ export class LoginPage implements OnInit {
   }
 
   login() {
+    this.loadingService.presentLoadingScreen('Logging you in...');
     const credentials = this.myForm.value as { email: string, password: string; };
     this.authService.login(credentials)
       .then(() => {
         this.menuCtrl.enable(true);
         this.navCtrl.navigateRoot(ModuleRoutes.HOME);
+        this.loadingService.dismissLoadingScreen();
       })
       .catch(error => console.log(error));
   }
