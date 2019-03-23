@@ -3,6 +3,8 @@ import {Observable, of} from "rxjs";
 import {ShoppingList} from "../../entities/ShoppingList";
 import {ShoppingCategory} from "../../entities/ShoppingCategory";
 import {ShoppingItem} from "../../entities/ShoppingItem";
+import {ShoppingListService} from "../../shared/firestore/shopping-list.service";
+import {AuthService} from "../../auth/auth.service";
 
 @Component({
   selector: 'a-shopping-list',
@@ -13,11 +15,13 @@ export class ShoppingListComponent implements OnInit {
   currentShoppingListTitle = 'Shopping List';
   $shoppingLists: Observable<ShoppingList[]>;
 
-  constructor() {
+  constructor(private shoppingListService: ShoppingListService,
+              private authService: AuthService) {
   }
 
   ngOnInit() {
-    const shoppingItem: ShoppingItem = {
+    this.$shoppingLists = this.shoppingListService.getPartialShoppingListsByUserUid(this.authService.getUserUid());
+    /*const shoppingItem: ShoppingItem = {
       uid: '1',
       title: 'Strawberry',
       categoryTitle: 'Fruit',
@@ -40,10 +44,10 @@ export class ShoppingListComponent implements OnInit {
       defaultLocationUid: '1',
       categories: [category]
     };
-    this.$shoppingLists = of([shoppingList]);
+    this.$shoppingLists = of([shoppingList]);*/
   }
 
-  loadShoppingList(shoppingList: ShoppingList) {
+  loadShoppingLisst(shoppingList: ShoppingList) {
     this.currentShoppingListTitle = shoppingList.title;
   }
 }
