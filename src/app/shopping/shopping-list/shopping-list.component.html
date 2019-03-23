@@ -1,4 +1,5 @@
 <a-header>
+  <!--Shopping List Selector-->
   <ng-container class="header-center-content">
     <ion-select *ngIf="userShoppingLists"
                 [value]="currentShoppingList"
@@ -12,6 +13,7 @@
     </ion-select>
   </ng-container>
 
+  <!--Location selector-->
   <ng-container class="header-right-content">
     <ion-select *ngIf="locationsWithSortedCategories"
                 [value]="currentLocationWithSortedCategories"
@@ -27,6 +29,7 @@
 </a-header>
 
 <ion-content>
+  <!--Add Item Section-->
   <ion-item>
     <ion-input type="text"
                placeholder="Type Name Of Item To Add"
@@ -42,7 +45,27 @@
       <ion-icon slot="icon-only" name="add"></ion-icon>
     </ion-button>
   </ion-item>
+
+  <!--Category-->
+  <ion-item-divider>
+    <ion-label>
+      Category
+    </ion-label>
+  </ion-item-divider>
+  <!--Items Section-->
+  <ion-list>
+    <!--Slidable item-->
+    <ion-item-sliding>
+      <ion-item>
+        <ion-label>ITEM NAME</ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option (click)="unread(item)">DELETE</ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
 </ion-content>
+
 <!--
 <ion-col text-end size="2">
   <ion-button icon-only (click)="presentPopover()">
@@ -60,13 +83,6 @@
                  (keyup.enter)="addItem(shoppingList)"
                  placeholder="Type Name Of Item To Add"
                  [(ngModel)]="newItemTitle"></ion-input>
-
-      <ion-button round
-                  *ngIf="newItemTitle || newItemTitle?.length > 0"
-                  item-right
-                  (click)="addItem(shoppingList)">
-        Add Item
-      </ion-button>
     </ion-item>
     <ion-list *ngIf="itemsFromSearch.length > 0">
       <ion-item *ngFor="let foundItem of itemsFromSearch"
