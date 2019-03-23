@@ -52,12 +52,6 @@ describe('LoginPage', () => {
     expect(component.myForm.invalid).toBeTruthy();
   });
 
-  it('should disable submit on invalid form', function () {
-    const page = fixture.nativeElement;
-    const submitButton: Element = page.querySelector('ion-button');
-    expect(submitButton.outerHTML).toContain('button-disabled');
-  });
-
   it('should have email required', function () {
     component.email.setValue('');
     const errors = component.email.errors || {};
@@ -77,14 +71,5 @@ describe('LoginPage', () => {
     component.myForm.controls['email'].setValue('test@test.com');
     component.myForm.controls['password'].setValue('123456789');
     expect(component.myForm.valid).toBeTruthy();
-  });
-
-  it('should render button submittable when form has valid data', function () {
-    component.myForm.controls['email'].setValue('test@test.com');
-    component.myForm.controls['password'].setValue('123456789');
-
-    const page = fixture.nativeElement;
-    const submitButton: Element = page.querySelector('ion-button');
-    expect(submitButton.innerHTML).not.toContain('button-disabled');
   });
 });

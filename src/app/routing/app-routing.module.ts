@@ -4,10 +4,10 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'shopping',
     pathMatch: 'full'
   },
-  {path: 'home', loadChildren: '../home/home.module#HomePageModule'},
+  {path: 'shopping', loadChildren: '../shopping/shopping.module#ShoppingPageModule'},
   {path: 'login', loadChildren: '../auth/login/login.module#LoginPageModule'}
 ];
 

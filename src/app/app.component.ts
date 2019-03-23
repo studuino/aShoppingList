@@ -7,7 +7,7 @@ import { AuthService } from './auth/auth.service';
 import { ModuleRoutes } from './routing/ModuleRoutes';
 
 @Component({
-  selector: 'app-root',
+  selector: 'a-root',
   templateUrl: 'app.component.html'
 })
 export class AppComponent {

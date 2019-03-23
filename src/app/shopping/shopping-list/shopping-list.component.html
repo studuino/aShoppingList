@@ -1,0 +1,155 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-content>
+      <ion-grid>
+        <ion-row align-items-center>
+          <ion-col size="2">
+            <ion-menu-toggle>
+              <ion-button>
+                <ion-icon name="menu"></ion-icon>
+              </ion-button>
+            </ion-menu-toggle>
+          </ion-col>
+          <!--TODO ALH: Reimplement!-->
+          <ion-col *ngIf="$shoppingLists | async as shoppingLists">
+            <ion-select style="color: white"
+                        [value]="currentShoppingListTitle"
+                        interface="popover">
+              <ion-select-option *ngFor="let shoppingList of shoppingLists"
+                                 (select)="loadShoppingList(shoppingList)"
+                                 [value]="shoppingList.title">{{shoppingList.title}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          <!--<ion-col *ngIf="$locationsWithSortedCategories | async as locationsWithSortedCategories">
+            <ion-select style="color: white"
+                        [(ngModel)]="currentLocationTitle"
+                        interface="popover">
+              <ion-select-option
+                  *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
+                  (select)="updateCategoriesOrderByLocation(locationWithSortedCategories)"
+                  [value]="locationWithSortedCategories.title">
+                {{locationWithSortedCategories.title}}
+              </ion-select-option>
+            </ion-select>
+          </ion-col>
+          <ion-col text-end size="2">
+            <ion-button icon-only (click)="presentPopover()">
+              <ion-icon name="more"></ion-icon>
+            </ion-button>
+          </ion-col>-->
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </ion-toolbar>
+</ion-header>
+
+<!--TODO ALH: Reimplement-->
+<!--
+<ion-content>
+  <div *ngIf="$currentShoppingList | async as shoppingList">
+    &lt;!&ndash;ADD ITEM&ndash;&gt;
+    <ion-item>
+      <ion-input type="text"
+                 (debounce)="1000"
+                 (ionChange)="searchForItem(newItemTitle)"
+                 (keyup.enter)="addItem(shoppingList)"
+                 placeholder="Type Name Of Item To Add"
+                 [(ngModel)]="newItemTitle"></ion-input>
+
+      <ion-button round
+                  *ngIf="newItemTitle || newItemTitle?.length > 0"
+                  item-right
+                  (click)="addItem(shoppingList)">
+        Add Item
+      </ion-button>
+    </ion-item>
+    <ion-list *ngIf="itemsFromSearch.length > 0">
+      <ion-item *ngFor="let foundItem of itemsFromSearch"
+                text-center>
+        <ion-button
+            clear (click)="addFoundItem(foundItem, shoppingList)">{{foundItem.title}}</ion-button>
+      </ion-item>
+    </ion-list>
+    &lt;!&ndash;SHOPPING LIST CATEGORIES WITH ITEMS&ndash;&gt;
+    <ion-list *ngFor="let category of shoppingList.categories">
+      <div *ngIf="category.items.length > 0">
+        &lt;!&ndash;CATEGORY TITLE&ndash;&gt;
+        <ion-list-header>
+          {{category.title}}
+        </ion-list-header>
+        <ion-item-group (ionItemReorder)="updateOrderOfItems($event, shoppingList, category)" reorder="true">
+          &lt;!&ndash;SLIDABLE ITEMS&ndash;&gt;
+          <ion-item-sliding #slidingItem *ngFor="let item of category.items">
+            <ion-item>
+              <ion-checkbox item-start
+                            (ionChange)="checkItemToCart(shoppingList, category, item)"
+                            [disabled]="item.checked"
+                            [checked]="item.checked"></ion-checkbox>
+              <ion-label *ngIf="item.quantity === 1">
+                <h2>{{item.title}}</h2>
+                &lt;!&ndash;TODO ALH: DYNAMIC CURRENCY&ndash;&gt;
+                <h3 *ngIf="item.price">{{item.price}} kr.</h3>
+              </ion-label>
+              <ion-label *ngIf="item.quantity > 1">
+                <h2>{{item.title}} - [{{item.quantity}}]</h2>
+                &lt;!&ndash;TODO ALH: DYNAMIC CURRENCY&ndash;&gt;
+                <h3 *ngIf="item.price">{{item.price * item.quantity}} Kr.</h3>
+              </ion-label>
+            </ion-item>
+            &lt;!&ndash;SLIDE FROM RIGHT TO LEFT&ndash;&gt;
+            <ion-item-options side="end">
+              &lt;!&ndash;EDIT ITEM&ndash;&gt;
+              <ion-button
+                  (click)="editItem(shoppingList, category, item, slidingItem)">
+                <ion-icon name="create"></ion-icon>
+                Edit
+              </ion-button>
+              &lt;!&ndash;REMOVE ITEM&ndash;&gt;
+              <ion-button
+                  color="danger"
+                  (click)="removeItem(shoppingList, category, item, slidingItem)">
+                <ion-icon name="trash"></ion-icon>
+                Remove
+              </ion-button>
+            </ion-item-options>
+          </ion-item-sliding>
+        </ion-item-group>
+      </div>
+    </ion-list>
+    &lt;!&ndash;SHOPPING CART&ndash;&gt;
+    <ion-list *ngIf="shoppingList.cart.items.length > 0">
+      <ion-list-header text-center>
+        Your Cart - {{currentCartTotal}} Kr.
+      </ion-list-header>
+      &lt;!&ndash;CART ACTIONS&ndash;&gt;
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button
+                item-start
+                (click)="uncheckAllItemsFromCart(shoppingList)">
+              Uncheck All
+            </ion-button>
+          </ion-col>
+          <ion-col></ion-col>
+          <ion-col>
+            <ion-button
+                item-end
+                (click)="checkoutCart(shoppingList)">
+              Checkout
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      &lt;!&ndash;CHECKED ITEMS&ndash;&gt;
+      <ion-item *ngFor="let checkedItem of shoppingList.cart.items">
+        <ion-checkbox item-start (ionChange)="uncheckItemFromCart(shoppingList, checkedItem)"
+                      [checked]="checkedItem.checked"></ion-checkbox>
+        <ion-label>
+          <h2>{{checkedItem.title}}</h2>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>-->
