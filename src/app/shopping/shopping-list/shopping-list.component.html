@@ -3,12 +3,12 @@
   <ng-container class="header-center-content">
     <ion-select *ngIf="userShoppingLists"
                 [value]="currentShoppingList"
-                [selectedText]="currentShoppingList.title"
+                [selectedText]="currentShoppingList?.title"
                 interface="popover">
       <ion-select-option *ngFor="let shoppingList of userShoppingLists"
                          [selected]="currentShoppingList"
                          [value]="shoppingList">
-        {{ shoppingList.title }}
+        {{ shoppingList?.title }}
       </ion-select-option>
     </ion-select>
   </ng-container>
@@ -17,12 +17,12 @@
   <ng-container class="header-right-content">
     <ion-select *ngIf="locationsWithSortedCategories"
                 [value]="currentLocationWithSortedCategories"
-                [selectedText]="currentLocationWithSortedCategories.title"
+                [selectedText]="currentLocationWithSortedCategories?.title"
                 interface="popover">
       <ion-select-option *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
                          [selected]="currentShoppingList"
                          [value]="locationWithSortedCategories">
-        {{ locationWithSortedCategories.title }}
+        {{ locationWithSortedCategories?.title }}
       </ion-select-option>
     </ion-select>
   </ng-container>
@@ -46,21 +46,28 @@
     </ion-button>
   </ion-item>
 
-  <!--Category-->
   <ion-item-divider>
     <ion-label>
-      Category
+      Items
     </ion-label>
   </ion-item-divider>
   <!--Items Section-->
-  <ion-list>
-    <!--Slidable item-->
-    <ion-item-sliding>
+  <ion-list *ngFor="let category of currentShoppingList?.categories">
+    <!--Category-->
+    <ion-list-header>
+      {{category.title}}
+    </ion-list-header>
+    <!--Slide item-->
+    <ion-item-sliding *ngFor="let item of category.items">
       <ion-item>
-        <ion-label>ITEM NAME</ion-label>
+        <ion-label *ngIf="item.quantity > 0">
+          <h2>{{item.title}}</h2>
+          <h3 *ngIf="item.price">{{item.price}} kr.</h3>
+        </ion-label>
       </ion-item>
       <ion-item-options side="end">
-        <ion-item-option (click)="unread(item)">DELETE</ion-item-option>
+        <ion-item-option color="primary" (click)="unread(item)">EDIT</ion-item-option>
+        <ion-item-option color="danger" (click)="unread(item)">DELETE</ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
   </ion-list>

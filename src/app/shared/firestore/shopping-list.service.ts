@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { ShoppingList } from '../../entities/ShoppingList';
-import { first, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,6 @@ export class ShoppingListService {
         .where('userUid', '==', userUid)
         .orderBy('title', 'asc'))
       .valueChanges()
-      .pipe(first())
       .pipe(map(shoppingLists => shoppingLists[0]));
   }
 }

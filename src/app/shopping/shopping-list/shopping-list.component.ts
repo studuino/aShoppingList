@@ -28,6 +28,10 @@ export class ShoppingListComponent implements OnInit {
     const userUid = this.authService.getUserUid();
     this.initShoppingLists(userUid);
     this.initLocationsWithSortedCategories(userUid);
+    this.shoppingListService.getFirstShoppingListByUserUid(userUid)
+      .subscribe(firstShoppingList => {
+        this.currentShoppingList = firstShoppingList;
+      });
   }
 
   private initLocationsWithSortedCategories(userUid) {
@@ -43,8 +47,6 @@ export class ShoppingListComponent implements OnInit {
       .subscribe(shoppingLists => {
         if (shoppingLists) {
           this.userShoppingLists = shoppingLists;
-          const firstShoppingList = shoppingLists[0];
-          this.currentShoppingList = firstShoppingList;
         }
       });
   }
