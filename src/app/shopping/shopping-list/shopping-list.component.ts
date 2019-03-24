@@ -51,7 +51,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   private initLocationsWithSortedCategories(userUid) {
-    this.$locationsSub = this.categoryService.getlocationsWithSortedCategoriesByUserUid(userUid)
+    this.$locationsSub = this.categoryService.getLocationsWithSortedCategoriesByUserUid(userUid)
       .subscribe(locationsWithSortedCategories => {
         this.locationsWithSortedCategories = locationsWithSortedCategories;
         this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
@@ -69,10 +69,21 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   addItem() {
     // TODO ALH: Add item to list!
+    const newItem: ShoppingItem = {
+      title: this.newItemTitle,
+      checked: false,
+      quantity: 1,
+    };
+    const uncategorized = this.categoryService.getUncategorizedCategoryFromShoppingList(this.currentShoppingList);
+    uncategorized.items.push(newItem);
+    // TODO ALH: Finish!
+    // this.shoppingListProvider.updateShoppingList(shoppingList);
+    // Reset newItemTitle
     this.newItemTitle = '';
   }
 
   checkItemToCart(category: ShoppingCategory, item: ShoppingItem) {
+    // TODO ALH: Implement
     console.log(item);
   }
 
