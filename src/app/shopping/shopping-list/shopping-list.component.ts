@@ -77,10 +77,26 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   reorderItems(positionChange, items: ShoppingItem[]) {
+    // Use splicing to reorder items (https://stackoverflow.com/questions/2440700/reordering-arrays/2440723)
     const fromPosition = positionChange.from;
     const itemToMove = items.splice(fromPosition, 1)[0];
     const toPosition = positionChange.to;
     items.splice(toPosition, 0, itemToMove);
     positionChange.complete();
+    // TODO ALH: Finish
+    // Send updated list to firestore!
+    // this.shoppingListProvider.updateShoppingList(shoppingList);
+  }
+
+  removeItem(category: ShoppingCategory, item: ShoppingItem) {
+    // Find index of item to remove from category
+    const indexOfItemToRemove = category.items.findIndex(itemInList => itemInList.title === item.title);
+    // Remove item
+    category.items.splice(indexOfItemToRemove, 1);
+    // TODO ALH: Finish!
+    // Send updated shopping list to update in firestore
+    // this.shoppingListProvider.updateShoppingList(shoppingList);
+    // Close slider for nice UX!
+    // slidingItem.close();
   }
 }

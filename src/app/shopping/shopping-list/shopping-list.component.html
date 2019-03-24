@@ -79,13 +79,13 @@
           <!--SLIDE FROM RIGHT TO LEFT-->
           <ion-item-options side="end">
             <ion-button
-                (click)="editItem(shoppingList, category, item, slidingItem)">
+                (click)="editItem(category, item)">
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-button>
             <!--REMOVE ITEM-->
             <ion-button
                 color="danger"
-                (click)="removeItem(shoppingList, category, item, slidingItem)">
+                (click)="removeItem(category, item)">
               <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-button>
           </ion-item-options>
@@ -96,6 +96,7 @@
 </ion-content>
 
 <!--
+TODO ALH: Implement more options!
 <ion-col text-end size="2">
   <ion-button icon-only (click)="presentPopover()">
     <ion-icon name="more"></ion-icon>
@@ -106,12 +107,9 @@
 <ion-content>
     &lt;!&ndash;ADD ITEM&ndash;&gt;
     <ion-item>
-      <ion-input type="text"
+      TODO ALH: Implement search for item!
                  (debounce)="1000"
                  (ionChange)="searchForItem(newItemTitle)"
-                 (keyup.enter)="addItem(shoppingList)"
-                 placeholder="Type Name Of Item To Add"
-                 [(ngModel)]="newItemTitle"></ion-input>
     </ion-item>
     <ion-list *ngIf="itemsFromSearch.length > 0">
       <ion-item *ngFor="let foundItem of itemsFromSearch"
@@ -120,17 +118,8 @@
             clear (click)="addFoundItem(foundItem, shoppingList)">{{foundItem.title}}</ion-button>
       </ion-item>
     </ion-list>
-    &lt;!&ndash;SHOPPING LIST CATEGORIES WITH ITEMS&ndash;&gt;
-    <ion-list *ngFor="let category of shoppingList.categories">
-      <div *ngIf="category.items.length > 0">
-        &lt;!&ndash;CATEGORY TITLE&ndash;&gt;
-        <ion-list-header>
-          {{category.title}}
-        </ion-list-header>
-        <ion-item-group (ionItemReorder)="updateOrderOfItems($event, shoppingList, category)" reorder="true">
-        </ion-item-group>
-      </div>
-    </ion-list>
+
+    TODO ALH: Implement Shopping cart
     &lt;!&ndash;SHOPPING CART&ndash;&gt;
     <ion-list *ngIf="shoppingList.cart.items.length > 0">
       <ion-list-header text-center>
