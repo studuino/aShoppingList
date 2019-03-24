@@ -50,7 +50,7 @@ export class LoginPage implements OnInit {
     this.authService.login(credentials)
       .then(() => {
         this.menuCtrl.enable(true);
-        this.navCtrl.navigateRoot(ModuleRoutes.HOME);
+        this.navCtrl.navigateRoot(ModuleRoutes.SHOPPING_LIST);
         this.loadingService.dismissLoadingScreen();
       })
       .catch(error => console.log(error));

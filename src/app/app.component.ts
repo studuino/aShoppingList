@@ -38,7 +38,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       if (this.authService.isAuthenticated()) {
         this.menuCtrl.enable(true);
-        this.navCtrl.navigateRoot(ModuleRoutes.HOME);
+        this.navCtrl.navigateRoot(ModuleRoutes.SHOPPING_LIST);
       }
     });
   }

@@ -5,6 +5,7 @@ import { ShoppingList } from '../../entities/ShoppingList';
 import { map } from 'rxjs/operators';
 import { ShoppingCart } from '../../entities/ShoppingCart';
 import { ShoppingItem } from '../../entities/ShoppingItem';
+import { ShoppingCategory } from '../../entities/ShoppingCategory';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,8 @@ import { ShoppingItem } from '../../entities/ShoppingItem';
 export class ShoppingListService {
 
   private SHOPPING_LISTS_COLLECTION = 'shoppingLists';
+  public currentItem: ShoppingItem;
+  public currentCategory: ShoppingCategory;
 
   constructor(private afs: AngularFirestore) {
   }

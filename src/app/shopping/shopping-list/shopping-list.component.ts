@@ -6,8 +6,9 @@ import { LocationWithSortedCategories } from '../../entities/LocationWithSortedC
 import { CategoryService } from '../../shared/firestore/category.service';
 import { ShoppingCategory } from '../../entities/ShoppingCategory';
 import { ShoppingItem } from '../../entities/ShoppingItem';
-import { NavigationExtras, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ModuleRoutes } from '../../ModuleRoutes';
+import { ShoppingRoutes } from '../ShoppingRoutes';
 
 @Component({
   selector: 'a-shopping-list',
@@ -118,13 +119,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   editItem(category: ShoppingCategory, item: ShoppingItem) {
-    const navigationExtras: NavigationExtras = {
-      queryParams: {
-        category: JSON.stringify(category),
-        item: JSON.stringify(item)
-      }
-    };
-    this.router.navigate([`${ModuleRoutes.HOME}/item`], navigationExtras);
+    this.shoppingListService.currentItem = item;
+    this.shoppingListService.currentCategory = category;
+    this.router.navigateByUrl(ModuleRoutes.SHOPPING_LIST + ShoppingRoutes.ITEM_DETAIL);
   }
 
   removeItem(category: ShoppingCategory, item: ShoppingItem) {
