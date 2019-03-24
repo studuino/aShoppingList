@@ -93,26 +93,21 @@
   <ion-list *ngIf="currentShoppingList?.cart.items.length > 0">
     <ion-list-header text-center>
       Your Cart - {{currentCartTotal}} Kr.
+      <ion-buttons>
+        <ion-button
+            color="warning"
+            slot="start"
+            (click)="uncheckAllItemsFromCart()">
+          Uncheck All
+        </ion-button>
+        <ion-button
+            color="success"
+            slot="end"
+            (click)="checkoutCart()">
+          Checkout
+        </ion-button>
+      </ion-buttons>
     </ion-list-header>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <ion-button
-              slot="start"
-              (click)="uncheckAllItemsFromCart(shoppingList)">
-            Uncheck All
-          </ion-button>
-        </ion-col>
-        <ion-col></ion-col>
-        <ion-col>
-          <ion-button
-              slot="end"
-              (click)="checkoutCart(shoppingList)">
-            Checkout
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
     <!--Checked items-->
     <ion-item *ngFor="let checkedItem of currentShoppingList.cart.items">
       <ion-checkbox slot="start" (ionChange)="uncheckItemFromCart(checkedItem)"

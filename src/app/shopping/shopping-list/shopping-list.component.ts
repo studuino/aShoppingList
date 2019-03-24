@@ -133,8 +133,36 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   uncheckItemFromCart(checkedItem: ShoppingItem) {
     // Make sure to uncheck item
     checkedItem.checked = false;
-    this.moveItemFromCartToOriginalCategory(checkedItem);
+    // Locate the category to move the item back to
+    const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, checkedItem);
+    originalCategory.items.push(checkedItem);
+    // Remove item from shopping cart
+    this.shoppingListService.removeItemFromItemList(this.currentShoppingList.cart.items, checkedItem);
     // Update shopping list on firestore
+    this.shoppingListService.updateShoppingList(this.currentShoppingList);
+  }
+
+  // Removes all items from shopping list cart
+  checkoutCart() {
+    // Empty shopping cart
+    this.currentShoppingList.cart.items = [];
+    // Update firestore
+    this.shoppingListService.updateShoppingList(this.currentShoppingList);
+  }
+
+  uncheckAllItemsFromCart() {
+    this.currentShoppingList.cart.items
+    // For every item in the cart
+      .forEach(itemInList => {
+        // Uncheck item
+        itemInList.checked = false;
+        // Locate the category to move the item back to
+        const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, itemInList);
+        originalCategory.items.push(itemInList);
+      });
+    // Empty shopping cart
+    this.currentShoppingList.cart.items = [];
+    // Update firestore
     this.shoppingListService.updateShoppingList(this.currentShoppingList);
   }
 
@@ -144,16 +172,5 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   private computeTotalOfCart() {
     // Set calculated cart total
     this.currentCartTotal = this.shoppingListService.calculateCartTotal(this.currentShoppingList.cart);
-  }
-
-  /**
-   * Helper method to move provided item from shopping list cart to original category
-   */
-  private moveItemFromCartToOriginalCategory(item: ShoppingItem) {
-    // Locate the category to move the item back to
-    const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, item);
-    originalCategory.items.push(item);
-    // Remove item from shopping cart
-    this.shoppingListService.removeItemFromItemList(this.currentShoppingList.cart.items, item);
   }
 }
