@@ -6,9 +6,13 @@ import { RouterModule } from '@angular/router';
 import { AuthGuard } from '../shared/guards/auth.guard';
 import { CoreModule } from '../core/core.module';
 import { FormsModule } from '@angular/forms';
+import { ItemDetailComponent } from './item-detail/item-detail.component';
 
 @NgModule({
-  declarations: [ShoppingListComponent],
+  declarations: [
+    ShoppingListComponent,
+    ItemDetailComponent
+  ],
   imports: [
     CommonModule,
     IonicModule,
@@ -18,6 +22,11 @@ import { FormsModule } from '@angular/forms';
       {
         path: '',
         component: ShoppingListComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'item',
+        component: ItemDetailComponent,
         canActivate: [AuthGuard]
       }
     ])

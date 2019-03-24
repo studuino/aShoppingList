@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
-import { ModuleRoutes } from '../../routing/ModuleRoutes';
+import { ModuleRoutes } from '../../ModuleRoutes';
 import { MenuController, NavController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {LoadingService} from "../../shared/services/loading.service";
+import { LoadingService } from '../../shared/services/loading.service';
 
 
 @Component({

@@ -4,7 +4,7 @@ import { MenuController, NavController, Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/auth.service';
-import { ModuleRoutes } from './routing/ModuleRoutes';
+import { ModuleRoutes } from './ModuleRoutes';
 
 @Component({
   selector: 'a-root',
