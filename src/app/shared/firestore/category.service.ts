@@ -3,6 +3,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { LocationWithSortedCategories } from '../../entities/LocationWithSortedCategories';
 import { ShoppingList } from '../../entities/ShoppingList';
+import { ShoppingItem } from '../../entities/ShoppingItem';
+import { ShoppingCategory } from '../../entities/ShoppingCategory';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +12,7 @@ import { ShoppingList } from '../../entities/ShoppingList';
 export class CategoryService {
 
   private LOCATION_SORTED_CATEGORIES_COLLECTION = 'locationSortedCategories';
-  private UNCATEGORIZED_TITLE = 'Uncategorized';
+  public UNCATEGORIZED_TITLE = 'Uncategorized';
 
   constructor(private afs: AngularFirestore) {
   }
@@ -29,5 +31,19 @@ export class CategoryService {
   getUncategorizedCategoryFromShoppingList(currentShoppingList: ShoppingList) {
     return currentShoppingList.categories
       .find(category => category.title === this.UNCATEGORIZED_TITLE);
+  }
+
+  /**
+   * Get category from item
+   */
+  getCategoryFromItem(shoppingList: ShoppingList, item: ShoppingItem): ShoppingCategory {
+    // If category is not uncategorized
+    if (item.categoryUid !== this.UNCATEGORIZED_TITLE) {
+      return shoppingList.categories
+        .find(category => category.uid === item.categoryUid);
+    } else {
+      // Locate uncategorized in array
+      return this.getUncategorizedCategoryFromShoppingList(shoppingList);
+    }
   }
 }

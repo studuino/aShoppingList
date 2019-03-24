@@ -88,6 +88,40 @@
       </ion-reorder-group>
     </div>
   </ion-list>
+
+  <!--Cart section-->
+  <ion-list *ngIf="currentShoppingList?.cart.items.length > 0">
+    <ion-list-header text-center>
+      Your Cart - {{currentCartTotal}} Kr.
+    </ion-list-header>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-button
+              slot="start"
+              (click)="uncheckAllItemsFromCart(shoppingList)">
+            Uncheck All
+          </ion-button>
+        </ion-col>
+        <ion-col></ion-col>
+        <ion-col>
+          <ion-button
+              slot="end"
+              (click)="checkoutCart(shoppingList)">
+            Checkout
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <!--Checked items-->
+    <ion-item *ngFor="let checkedItem of currentShoppingList.cart.items">
+      <ion-checkbox slot="start" (ionChange)="uncheckItemFromCart(checkedItem)"
+                    [checked]="checkedItem.checked"></ion-checkbox>
+      <ion-label>
+        <h2>{{checkedItem.title}}</h2>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>
 
 <!--

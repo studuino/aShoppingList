@@ -23,6 +23,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   currentLocationWithSortedCategories: LocationWithSortedCategories;
 
   newItemTitle = '';
+  private currentShoppingListTotal: number;
+  private currentCartTotal: number;
 
   constructor(private authService: AuthService,
               private shoppingListService: ShoppingListService,
@@ -47,6 +49,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.$currentShoppingListSub = this.shoppingListService.getFirstShoppingListByUserUid(userUid)
       .subscribe(firstShoppingList => {
         this.currentShoppingList = firstShoppingList;
+        this.computeTotalOfItemsInList();
+        this.computeTotalOfCart();
       });
   }
 
@@ -81,9 +85,22 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.newItemTitle = '';
   }
 
+  /***** ITEM LIST *****/
+
   checkItemToCart(category: ShoppingCategory, item: ShoppingItem) {
-    // TODO ALH: Implement
-    console.log(item);
+    // TODO ALH: Consider setting category id earlier!
+    if (category.title !== this.categoryService.UNCATEGORIZED_TITLE) {
+      // Assign categoryUid to item, to support unchecking of item
+      item.categoryUid = category.uid;
+    } else {
+      item.categoryUid = this.categoryService.UNCATEGORIZED_TITLE;
+    }
+    // Find item to remove from current category
+    const indexOfItemToMove = category.items.indexOf(item);
+    category.items.splice(indexOfItemToMove, 1);
+
+    this.currentShoppingList.cart.items.push(item);
+    this.shoppingListService.updateShoppingList(this.currentShoppingList);
   }
 
   reorderItems(positionChange, items: ShoppingItem[]) {
@@ -104,5 +121,39 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     category.items.splice(indexOfItemToRemove, 1);
     // Send updated shopping list to update in firestore
     this.shoppingListService.updateShoppingList(this.currentShoppingList);
+  }
+
+  private computeTotalOfItemsInList() {
+    // Set calculated shopping list total
+    this.currentShoppingListTotal = this.shoppingListService.calculateShoppingListTotal(this.currentShoppingList);
+  }
+
+  /***** SHOPPING CART *****/
+
+  uncheckItemFromCart(checkedItem: ShoppingItem) {
+    // Make sure to uncheck item
+    checkedItem.checked = false;
+    this.moveItemFromCartToOriginalCategory(checkedItem);
+    // Update shopping list on firestore
+    this.shoppingListService.updateShoppingList(this.currentShoppingList);
+  }
+
+  /**
+   * Helper method to compute cart total
+   */
+  private computeTotalOfCart() {
+    // Set calculated cart total
+    this.currentCartTotal = this.shoppingListService.calculateCartTotal(this.currentShoppingList.cart);
+  }
+
+  /**
+   * Helper method to move provided item from shopping list cart to original category
+   */
+  private moveItemFromCartToOriginalCategory(item: ShoppingItem) {
+    // Locate the category to move the item back to
+    const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, item);
+    originalCategory.items.push(item);
+    // Remove item from shopping cart
+    this.shoppingListService.removeItemFromItemList(this.currentShoppingList.cart.items, item);
   }
 }
