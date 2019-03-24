@@ -129,9 +129,8 @@ TODO ALH: Implement more options!
 
 <!--
 <ion-content>
-    &lt;!&ndash;ADD ITEM&ndash;&gt;
-    <ion-item>
       TODO ALH: Implement search for item!
+    <ion-item>
                  (debounce)="1000"
                  (ionChange)="searchForItem(newItemTitle)"
     </ion-item>
@@ -142,41 +141,4 @@ TODO ALH: Implement more options!
             clear (click)="addFoundItem(foundItem, shoppingList)">{{foundItem.title}}</ion-button>
       </ion-item>
     </ion-list>
-
-    TODO ALH: Implement Shopping cart
-    &lt;!&ndash;SHOPPING CART&ndash;&gt;
-    <ion-list *ngIf="shoppingList.cart.items.length > 0">
-      <ion-list-header text-center>
-        Your Cart - {{currentCartTotal}} Kr.
-      </ion-list-header>
-      &lt;!&ndash;CART ACTIONS&ndash;&gt;
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <ion-button
-                item-start
-                (click)="uncheckAllItemsFromCart(shoppingList)">
-              Uncheck All
-            </ion-button>
-          </ion-col>
-          <ion-col></ion-col>
-          <ion-col>
-            <ion-button
-                item-end
-                (click)="checkoutCart(shoppingList)">
-              Checkout
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      &lt;!&ndash;CHECKED ITEMS&ndash;&gt;
-      <ion-item *ngFor="let checkedItem of shoppingList.cart.items">
-        <ion-checkbox item-start (ionChange)="uncheckItemFromCart(shoppingList, checkedItem)"
-                      [checked]="checkedItem.checked"></ion-checkbox>
-        <ion-label>
-          <h2>{{checkedItem.title}}</h2>
-        </ion-label>
-      </ion-item>
-    </ion-list>
-  </div>
 </ion-content>-->
