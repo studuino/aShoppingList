@@ -35,4 +35,13 @@ export class ShoppingListService {
       .valueChanges()
       .pipe(map(shoppingLists => shoppingLists[0]));
   }
+
+  /**
+   * Update provided shopping list on firestore
+   */
+  updateShoppingList(shoppingList: ShoppingList) {
+    return this.afs.collection(this.SHOPPING_LISTS_COLLECTION)
+      .doc(shoppingList.uid)
+      .set(shoppingList, {merge: true});
+  }
 }

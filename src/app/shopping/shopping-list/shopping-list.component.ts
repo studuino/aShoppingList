@@ -76,8 +76,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     };
     const uncategorized = this.categoryService.getUncategorizedCategoryFromShoppingList(this.currentShoppingList);
     uncategorized.items.push(newItem);
-    // TODO ALH: Finish!
-    // this.shoppingListProvider.updateShoppingList(shoppingList);
+    this.shoppingListService.updateShoppingList(this.currentShoppingList);
     // Reset newItemTitle
     this.newItemTitle = '';
   }
@@ -94,9 +93,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const toPosition = positionChange.to;
     items.splice(toPosition, 0, itemToMove);
     positionChange.complete();
-    // TODO ALH: Finish
     // Send updated list to firestore!
-    // this.shoppingListProvider.updateShoppingList(shoppingList);
+    this.shoppingListService.updateShoppingList(this.currentShoppingList);
   }
 
   removeItem(category: ShoppingCategory, item: ShoppingItem) {
@@ -104,10 +102,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const indexOfItemToRemove = category.items.findIndex(itemInList => itemInList.title === item.title);
     // Remove item
     category.items.splice(indexOfItemToRemove, 1);
-    // TODO ALH: Finish!
     // Send updated shopping list to update in firestore
-    // this.shoppingListProvider.updateShoppingList(shoppingList);
-    // Close slider for nice UX!
-    // slidingItem.close();
+    this.shoppingListService.updateShoppingList(this.currentShoppingList);
   }
 }
