@@ -4,6 +4,8 @@ import { ShoppingListService } from '../../shared/firestore/shopping-list.servic
 import { AuthService } from '../../auth/auth.service';
 import { LocationWithSortedCategories } from '../../entities/LocationWithSortedCategories';
 import { CategoryService } from '../../shared/firestore/category.service';
+import { ShoppingCategory } from '../../entities/ShoppingCategory';
+import { ShoppingItem } from '../../entities/ShoppingItem';
 
 @Component({
   selector: 'a-shopping-list',
@@ -68,5 +70,17 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   addItem() {
     // TODO ALH: Add item to list!
     this.newItemTitle = '';
+  }
+
+  checkItemToCart(category: ShoppingCategory, item: ShoppingItem) {
+    console.log(item);
+  }
+
+  reorderItems(positionChange, items: ShoppingItem[]) {
+    const fromPosition = positionChange.from;
+    const itemToMove = items.splice(fromPosition, 1)[0];
+    const toPosition = positionChange.to;
+    items.splice(toPosition, 0, itemToMove);
+    positionChange.complete();
   }
 }
