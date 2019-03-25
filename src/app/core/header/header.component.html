@@ -1,13 +1,23 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-grid>
-      <ion-row>
+      <ion-row align-items-center>
         <!--Left Menu Toggle-->
-        <ion-col size="2">
-          <ion-buttons>
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
-        </ion-col>
+        <ng-container *ngIf="shouldDisplayBackButton; else menuButton">
+          <ion-col size="2">
+            <ion-buttons>
+              <ion-back-button slot="start" defaultHref="home"></ion-back-button>
+            </ion-buttons>
+          </ion-col>
+        </ng-container>
+
+        <ng-template #menuButton>
+          <ion-col size="2">
+            <ion-buttons>
+              <ion-menu-button slot="start"></ion-menu-button>
+            </ion-buttons>
+          </ion-col>
+        </ng-template>
         <!--Center Content-->
         <ion-col size="5">
           <ng-content select=".header-center-content"></ng-content>

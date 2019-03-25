@@ -1,8 +1,5 @@
-<a-header>
-  <ng-container class="header-center-content">
-    <!--TODO ALH: Add back button!-->
-    <ion-title>{{item?.title}}</ion-title>
-  </ng-container>
+<a-header [shouldDisplayBackButton]="true">
+  <ng-container class="header-center-content">{{item?.title}}</ng-container>
 </a-header>
 
 <ion-content>
