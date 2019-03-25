@@ -9,7 +9,7 @@ import { ShoppingItem } from '../../entities/ShoppingItem';
 import { Router } from '@angular/router';
 import { ModuleRoutes } from '../../ModuleRoutes';
 import { ShoppingRoutes } from '../ShoppingRoutes';
-import { NavController } from '@ionic/angular';
+import { IonItemSliding, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'a-shopping-list',
@@ -93,21 +93,22 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.shoppingListService.updateShoppingList(this.currentShoppingList);
   }
 
-  editItem(category: ShoppingCategory, item: ShoppingItem) {
+  editItem(category: ShoppingCategory, item: ShoppingItem, slider: IonItemSliding) {
     this.shoppingListService.currentItem = item;
     this.shoppingListService.currentCategory = category;
     this.shoppingListService.currentShoppingList = this.currentShoppingList;
     this.navCtrl.navigateForward(ModuleRoutes.SHOPPING_LIST + ShoppingRoutes.ITEM_DETAIL);
-    // this.router.navigateByUrl(ModuleRoutes.SHOPPING_LIST + ShoppingRoutes.ITEM_DETAIL);
+    slider.close();
   }
 
-  removeItem(category: ShoppingCategory, item: ShoppingItem) {
+  removeItem(category: ShoppingCategory, item: ShoppingItem, slider: IonItemSliding) {
     // Find index of item to remove from category
     const indexOfItemToRemove = category.items.findIndex(itemInList => itemInList.title === item.title);
     // Remove item
     category.items.splice(indexOfItemToRemove, 1);
     // Send updated shopping list to update in firestore
     this.shoppingListService.updateShoppingList(this.currentShoppingList);
+    slider.close();
   }
 
   private computeTotalOfItemsInList() {

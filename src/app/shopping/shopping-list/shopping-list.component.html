@@ -56,7 +56,7 @@
       <ion-reorder-group disabled="false"
                          (ionItemReorder)="reorderItems($event.detail, category.items)">
         <!--Slide item-->
-        <ion-item-sliding *ngFor="let item of category.items">
+        <ion-item-sliding *ngFor="let item of category.items" #slidingItem>
           <ion-item>
             <ion-checkbox slot="start"
                           (ionChange)="checkItemToCart(category, item)"
@@ -74,13 +74,13 @@
           <!--SLIDE FROM RIGHT TO LEFT-->
           <ion-item-options side="end">
             <ion-button
-                (click)="editItem(category, item)">
+                (click)="editItem(category, item, slidingItem)">
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-button>
             <!--REMOVE ITEM-->
             <ion-button
                 color="danger"
-                (click)="removeItem(category, item)">
+                (click)="removeItem(category, item, slidingItem)">
               <ion-icon slot="icon-only" name="trash"></ion-icon>
             </ion-button>
           </ion-item-options>
