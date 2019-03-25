@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ShoppingList } from '../../entities/ShoppingList';
-import { ShoppingListService } from '../../shared/firestore/shopping-list.service';
-import { AuthService } from '../../auth/auth.service';
-import { LocationWithSortedCategories } from '../../entities/LocationWithSortedCategories';
-import { CategoryService } from '../../shared/firestore/category.service';
-import { ShoppingCategory } from '../../entities/ShoppingCategory';
-import { ShoppingItem } from '../../entities/ShoppingItem';
-import { Router } from '@angular/router';
-import { ModuleRoutes } from '../../ModuleRoutes';
-import { ShoppingRoutes } from '../ShoppingRoutes';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ShoppingList} from '../../entities/ShoppingList';
+import {ShoppingListService} from '../../shared/firestore/shopping-list.service';
+import {AuthService} from '../../auth/auth.service';
+import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
+import {CategoryService} from '../../shared/firestore/category.service';
+import {ShoppingCategory} from '../../entities/ShoppingCategory';
+import {ShoppingItem} from '../../entities/ShoppingItem';
+import {Router} from '@angular/router';
+import {ModuleRoutes} from '../../ModuleRoutes';
+import {ShoppingRoutes} from '../ShoppingRoutes';
 
 @Component({
   selector: 'a-shopping-list',
@@ -47,32 +47,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.$shoppingListsSub.unsubscribe();
     this.$locationsSub.unsubscribe();
     this.$currentShoppingListSub.unsubscribe();
-  }
-
-  private initFirstShoppingList(userUid) {
-    this.$currentShoppingListSub = this.shoppingListService.getFirstShoppingListByUserUid(userUid)
-      .subscribe(firstShoppingList => {
-        this.currentShoppingList = firstShoppingList;
-        this.computeTotalOfItemsInList();
-        this.computeTotalOfCart();
-      });
-  }
-
-  private initLocationsWithSortedCategories(userUid) {
-    this.$locationsSub = this.categoryService.getLocationsWithSortedCategoriesByUserUid(userUid)
-      .subscribe(locationsWithSortedCategories => {
-        this.locationsWithSortedCategories = locationsWithSortedCategories;
-        this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
-      });
-  }
-
-  private initShoppingLists(userUid) {
-    this.$shoppingListsSub = this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
-      .subscribe(shoppingLists => {
-        if (shoppingLists) {
-          this.userShoppingLists = shoppingLists;
-        }
-      });
   }
 
   addItem() {
@@ -138,6 +112,41 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.currentShoppingListTotal = this.shoppingListService.calculateShoppingListTotal(this.currentShoppingList);
   }
 
+  /**
+   * Helper method for initializing first shopping list for the user
+   */
+  private initFirstShoppingList(userUid: string) {
+    this.$currentShoppingListSub = this.shoppingListService.getFirstShoppingListByUserUid(userUid)
+        .subscribe(firstShoppingList => {
+          this.currentShoppingList = firstShoppingList;
+          this.computeTotalOfItemsInList();
+          this.computeTotalOfCart();
+        });
+  }
+
+  /**
+   * Helper method for initializing users locations
+   */
+  private initLocationsWithSortedCategories(userUid) {
+    this.$locationsSub = this.categoryService.getLocationsWithSortedCategoriesByUserUid(userUid)
+        .subscribe(locationsWithSortedCategories => {
+          this.locationsWithSortedCategories = locationsWithSortedCategories;
+          this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
+        });
+  }
+
+  /**
+   * Helper method for initializing users shopping lists
+   */
+  private initShoppingLists(userUid) {
+    this.$shoppingListsSub = this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
+        .subscribe(shoppingLists => {
+          if (shoppingLists) {
+            this.userShoppingLists = shoppingLists;
+          }
+        });
+  }
+
   /***** SHOPPING CART *****/
 
   uncheckItemFromCart(checkedItem: ShoppingItem) {
@@ -152,7 +161,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.shoppingListService.updateShoppingList(this.currentShoppingList);
   }
 
-  // Removes all items from shopping list cart
   checkoutCart() {
     // Empty shopping cart
     this.currentShoppingList.cart.items = [];
@@ -163,13 +171,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   uncheckAllItemsFromCart() {
     this.currentShoppingList.cart.items
     // For every item in the cart
-      .forEach(itemInList => {
-        // Uncheck item
-        itemInList.checked = false;
-        // Locate the category to move the item back to
-        const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, itemInList);
-        originalCategory.items.push(itemInList);
-      });
+        .forEach(itemInList => {
+          // Uncheck item
+          itemInList.checked = false;
+          // Locate the category to move the item back to
+          const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, itemInList);
+          originalCategory.items.push(itemInList);
+        });
     // Empty shopping cart
     this.currentShoppingList.cart.items = [];
     // Update firestore
