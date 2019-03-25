@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ShoppingItem} from '../../entities/ShoppingItem';
 import {ShoppingCategory} from '../../entities/ShoppingCategory';
 import {ShoppingListService} from '../../shared/firestore/shopping-list.service';
+import {ShoppingList} from "../../entities/ShoppingList";
 
 @Component({
   selector: 'a-item-detail',
@@ -11,10 +12,12 @@ import {ShoppingListService} from '../../shared/firestore/shopping-list.service'
 export class ItemDetailComponent implements OnInit {
   item: ShoppingItem;
   category: ShoppingCategory;
+  shoppingList: ShoppingList;
 
   constructor(private shoppingListService: ShoppingListService) {
     this.item = this.shoppingListService.currentItem;
     this.category = this.shoppingListService.currentCategory;
+    this.shoppingList = this.shoppingListService.currentShoppingList;
   }
 
   ngOnInit() {
@@ -22,7 +25,7 @@ export class ItemDetailComponent implements OnInit {
   }
 
   updateSelectedItemInCategory() {
-
+    this.shoppingListService.updateShoppingList(this.shoppingList);
   }
 
   /**

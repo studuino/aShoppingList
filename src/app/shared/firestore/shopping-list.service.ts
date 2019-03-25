@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { ShoppingList } from '../../entities/ShoppingList';
-import { map } from 'rxjs/operators';
-import { ShoppingCart } from '../../entities/ShoppingCart';
-import { ShoppingItem } from '../../entities/ShoppingItem';
-import { ShoppingCategory } from '../../entities/ShoppingCategory';
+import {Injectable} from '@angular/core';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {Observable} from 'rxjs';
+import {ShoppingList} from '../../entities/ShoppingList';
+import {map} from 'rxjs/operators';
+import {ShoppingCart} from '../../entities/ShoppingCart';
+import {ShoppingItem} from '../../entities/ShoppingItem';
+import {ShoppingCategory} from '../../entities/ShoppingCategory';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,7 @@ export class ShoppingListService {
   private SHOPPING_LISTS_COLLECTION = 'shoppingLists';
   public currentItem: ShoppingItem;
   public currentCategory: ShoppingCategory;
+  public currentShoppingList: ShoppingList;
 
   constructor(private afs: AngularFirestore) {
   }
@@ -25,8 +26,8 @@ export class ShoppingListService {
    */
   getPartialShoppingListsByUserUid(userUid: string): Observable<ShoppingList[]> {
     return this.afs.collection<ShoppingList>(this.SHOPPING_LISTS_COLLECTION,
-      ref =>
-        ref.where('userUid', '==', userUid)).valueChanges();
+        ref =>
+            ref.where('userUid', '==', userUid)).valueChanges();
   }
 
   /**
@@ -34,11 +35,11 @@ export class ShoppingListService {
    */
   getFirstShoppingListByUserUid(userUid: string): Observable<ShoppingList> {
     return this.afs.collection<ShoppingList>(this.SHOPPING_LISTS_COLLECTION,
-      ref => ref
-        .where('userUid', '==', userUid)
-        .orderBy('title', 'asc'))
-      .valueChanges()
-      .pipe(map(shoppingLists => shoppingLists[0]));
+        ref => ref
+            .where('userUid', '==', userUid)
+            .orderBy('title', 'asc'))
+        .valueChanges()
+        .pipe(map(shoppingLists => shoppingLists[0]));
   }
 
   /**
@@ -46,8 +47,8 @@ export class ShoppingListService {
    */
   updateShoppingList(shoppingList: ShoppingList) {
     return this.afs.collection(this.SHOPPING_LISTS_COLLECTION)
-      .doc(shoppingList.uid)
-      .set(shoppingList, {merge: true});
+        .doc(shoppingList.uid)
+        .set(shoppingList, {merge: true});
   }
 
   /**
@@ -83,8 +84,8 @@ export class ShoppingListService {
     let total = 0;
     // Sum up total
     shoppingCart.items
-      .forEach(item =>
-        total += (item.price * item.quantity));
+        .forEach(item =>
+            total += (item.price * item.quantity));
     return total;
   }
 

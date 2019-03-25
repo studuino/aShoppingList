@@ -50,7 +50,6 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   addItem() {
-    // TODO ALH: Add item to list!
     const newItem: ShoppingItem = {
       title: this.newItemTitle,
       checked: false,
@@ -95,6 +94,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   editItem(category: ShoppingCategory, item: ShoppingItem) {
     this.shoppingListService.currentItem = item;
     this.shoppingListService.currentCategory = category;
+    this.shoppingListService.currentShoppingList = this.currentShoppingList;
     this.router.navigateByUrl(ModuleRoutes.SHOPPING_LIST + ShoppingRoutes.ITEM_DETAIL);
   }
 

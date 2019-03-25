@@ -72,47 +72,45 @@
       </ion-col>
     </ion-row>
     <ion-row>
-      <ion-col>
-        <ion-list inset>
-          <ion-item>
-            <ion-label text-right>Kr.</ion-label>
-            <ion-input text-center
-                       type="number"
-                       (ionChange)="updateSelectedItemInCategory()"
-                       [(ngModel)]="item.price"></ion-input>
-          </ion-item>
-        </ion-list>
+      <ion-col size="4"></ion-col>
+      <ion-col size="4">
+        <ion-item>
+          <ion-input text-center
+                     type="number"
+                     (ionChange)="updateSelectedItemInCategory()"
+                     [(ngModel)]="item.price"></ion-input>
+        </ion-item>
       </ion-col>
+      <ion-col size="4">Kr.</ion-col>
     </ion-row>
+    <ion-item-divider></ion-item-divider>
 
     <br>
 
     <!--CATEGORY-->
-    <div align="center">
-      <ion-row align-items-center>
-        <ion-col>
-          <ion-title text-center>Category</ion-title>
-        </ion-col>
-      </ion-row>
-      <!--CATEGORY SELECT-->
-      <ion-row>
-        <ion-col>
-          <ion-list>
-            <ion-item *ngIf="$categories | async as categories">
-              <ion-select style="color: black"
-                          class="category-select"
-                          (ionChange)="moveItemToCategory()"
-                          [(ngModel)]="selectorCategoryTitle">
-                <ion-select-option *ngFor="let category of categories"
-                                   (ionSelect)="selectorCategory = category"
-                                   [value]="category.title">{{category.title}}
-                </ion-select-option>
-              </ion-select>
-            </ion-item>
-          </ion-list>
-        </ion-col>
-      </ion-row>
-    </div>
+    <ion-row align-items-center>
+      <ion-col>
+        <ion-title text-center>Category</ion-title>
+      </ion-col>
+    </ion-row>
+    <!--CATEGORY SELECT-->
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item *ngIf="$categories | async as categories">
+            <ion-select style="color: black"
+                        class="category-select"
+                        (ionChange)="moveItemToCategory()"
+                        [(ngModel)]="selectorCategoryTitle">
+              <ion-select-option *ngFor="let category of categories"
+                                 (ionSelect)="selectorCategory = category"
+                                 [value]="category.title">{{category.title}}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
 
   </ion-grid>
 </ion-content>
