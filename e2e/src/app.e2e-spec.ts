@@ -1,4 +1,4 @@
-import { AppPage } from './app.po';
+import {AppPage} from './app.po';
 
 describe('new App', () => {
   let page: AppPage;
@@ -8,12 +8,12 @@ describe('new App', () => {
   });
   describe('default screen', () => {
     beforeEach(() => {
-      page.navigateTo('/home');
+      page.navigateTo('/shopping');
     });
-    it('should have a title saying Home', () => {
-      page.getPageOneTitleText().then(title => {
-        expect(title).toEqual('Home');
-      });
+    it('should have a title saying Please Login', async () => {
+      const result = await page.getElementByClass('ion-input').getAttribute('ng-reflect-placeholder');
+      console.log(result);
+      expect(result).toBeTruthy();
     });
   });
 });
