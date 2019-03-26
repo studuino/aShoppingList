@@ -7,16 +7,18 @@ import UserCredential = firebase.auth.UserCredential;
 })
 export class AuthService {
   private static readonly AUTHENTICATED_TOKEN = 'authenticated';
-  private static readonly NOT_AUTHENTICATED_STRING = 'false';
 
   constructor(private afAuth: AngularFireAuth) {
   }
 
   isAuthenticated(): boolean {
-    const isAuthenticated = localStorage.getItem(AuthService.AUTHENTICATED_TOKEN) !== AuthService.NOT_AUTHENTICATED_STRING;
+    const authenticated: string = localStorage.getItem(AuthService.AUTHENTICATED_TOKEN);
+    const isAuthenticated =
+      authenticated !== null &&
+      authenticated !== '';
 
     if (!isAuthenticated) {
-      localStorage.setItem(AuthService.AUTHENTICATED_TOKEN, AuthService.NOT_AUTHENTICATED_STRING);
+      localStorage.clear();
     }
     return isAuthenticated;
   }
@@ -36,7 +38,7 @@ export class AuthService {
   }
 
   logout(): Promise<any> {
-    localStorage.setItem(AuthService.AUTHENTICATED_TOKEN, AuthService.NOT_AUTHENTICATED_STRING);
+    localStorage.clear();
     return this.afAuth.auth.signOut();
   }
 }

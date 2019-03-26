@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, CanLoad, Route, Router, UrlSegment } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { ModuleRoutes } from '../../ModuleRoutes';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate, CanLoad {
 
   constructor(private router: Router,
               private authService: AuthService) {
@@ -21,6 +22,10 @@ export class AuthGuard implements CanActivate {
     }
 
     return loggedIn;
+  }
+
+  canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
+    return this.canActivate();
   }
 
 }
