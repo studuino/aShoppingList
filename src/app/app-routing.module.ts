@@ -8,9 +8,12 @@ const routes: Routes = [
     redirectTo: 'shopping',
     pathMatch: 'full'
   },
+  /**** AUTH ROUTES ****/
   {path: 'login', loadChildren: './auth/login/login.module#LoginPageModule'},
-  // SHOPPING ROUTES
+  {path: 'register', loadChildren: './auth/register/register.module#RegisterPageModule'},
+  /**** SHOPPING ROUTES ****/
   {path: 'shopping', loadChildren: './shopping/shopping.module#ShoppingPageModule', canLoad: [AuthGuard]}
+
 
 ];
 

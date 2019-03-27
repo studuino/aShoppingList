@@ -31,6 +31,8 @@ The project is started with the regular [Ionic Commands](https://ionicframework.
 
 An alternative is to emulate the app on a device or upload it to the ionic cloud. From here you can download the ionic view app and use the app on all devices.
 
+## Here will come a section about testing!
+
 ## Bugs and Issues
 
 Have a bug or an issue with this template? [Open a new issue](https://github.com/onero/aShoppingList/issues) here on Github.

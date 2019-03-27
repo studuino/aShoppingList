@@ -14,7 +14,7 @@ import { LoadingService } from '../../shared/services/loading.service';
 export class LoginPage implements OnInit {
   pageTitle = 'Welcome to aShoppingList!';
 
-  myForm: FormGroup;
+  loginForm: FormGroup;
 
   constructor(private authService: AuthService,
               private navCtrl: NavController,
@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.myForm = this.fb.group({
+    this.loginForm = this.fb.group({
       email: ['', [
         Validators.required,
         Validators.email
@@ -37,16 +37,16 @@ export class LoginPage implements OnInit {
   }
 
   get email() {
-    return this.myForm.get('email');
+    return this.loginForm.get('email');
   }
 
   get password() {
-    return this.myForm.get('password');
+    return this.loginForm.get('password');
   }
 
   login() {
     this.loadingService.presentLoadingScreen('Logging you in...');
-    const credentials = this.myForm.value as { email: string, password: string; };
+    const credentials = this.loginForm.value as { email: string, password: string; };
     this.authService.login(credentials)
       .then(() => {
         this.menuCtrl.enable(true);

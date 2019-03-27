@@ -49,7 +49,7 @@ describe('LoginPage', () => {
   });
 
   it('should render form invalid with no data', function () {
-    expect(component.myForm.invalid).toBeTruthy();
+    expect(component.loginForm.invalid).toBeTruthy();
   });
 
   it('should have email required', function () {
@@ -67,9 +67,9 @@ describe('LoginPage', () => {
   });
 
   it('should render form valid with valid data', function () {
-    expect(component.myForm.valid).toBeFalsy();
-    component.myForm.controls['email'].setValue('test@test.com');
-    component.myForm.controls['password'].setValue('123456789');
-    expect(component.myForm.valid).toBeTruthy();
+    expect(component.loginForm.valid).toBeFalsy();
+    component.loginForm.controls['email'].setValue('test@test.com');
+    component.loginForm.controls['password'].setValue('123456789');
+    expect(component.loginForm.valid).toBeTruthy();
   });
 });

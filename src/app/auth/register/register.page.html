@@ -10,44 +10,64 @@
   </ion-row>
 
   <!--Login form-->
-  <form [formGroup]="loginForm"
+  <form [formGroup]="registerForm"
         novalidate
-        (ngSubmit)="login()">
+        (ngSubmit)="register()">
     <ion-grid>
       <ion-row color="primary" justify-content-center>
         <ion-col align-self-center sizeMd="6" sizeLg="5" sizeXs="12">
           <div text-center>
-            <ion-title>Please Login</ion-title>
+            <ion-title>Register here to start using aShoppingList</ion-title>
           </div>
           <div padding>
+            <!--REGISTER EMAIL-->
             <ion-item>
               <ion-input name="email"
                          type="email"
                          placeholder="your@email.com"
                          formControlName="email"
-                         ngDefaultControl
                          required></ion-input>
             </ion-item>
             <p *ngIf="email.touched && email.invalid" class="error"><sup>*</sup>Please enter an email</p>
+
+            <!--REGISTER PASSWORD-->
             <ion-item>
               <ion-input name="password"
                          type="password"
                          placeholder="Password"
                          formControlName="password"
-                         ngDefaultControl
                          required></ion-input>
             </ion-item>
             <p *ngIf="password.touched && password.invalid" class="error"><sup>*</sup>Please enter a password</p>
             <p *ngIf="password.errors?.minlength" class="error"><sup>*</sup>Password should be at least 4 characters</p>
+
+            <ion-item>
+              <ion-input name="confirmPassword"
+                         type="password"
+                         placeholder="Repeat Password"
+                         formControlName="confirmPassword"
+                         required></ion-input>
+            </ion-item>
+            <p *ngIf="confirmPassword.touched && confirmPassword.invalid" class="error"><sup>*</sup>
+              Please type password again
+            </p>
+            <p *ngIf="confirmPassword.touched &&
+                      confirmPassword.invalid &&
+                      confirmPassword.errors?.NoPassswordMatch"
+               class="error"><sup>*</sup>
+              Passwords should match
+            </p>
           </div>
           <div padding>
+
             <ion-button size="large"
                         type="submit"
-                        [disabled]="!loginForm.valid"
+                        [disabled]="!registerForm.valid"
                         expand="block">
               Login
             </ion-button>
           </div>
+
         </ion-col>
       </ion-row>
       <ion-row justify-content-center>
