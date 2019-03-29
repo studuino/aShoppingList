@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { RepeatPasswordValidator } from './RepeatPasswordValidator';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {PasswordValidator} from "./password.validator";
 
 @Component({
   selector: 'a-register',
@@ -15,20 +15,18 @@ export class RegisterPage implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-        email: ['', [
-          Validators.required,
-          Validators.email
-        ]],
-        password: ['', [
-          Validators.required,
-          Validators.minLength(4)
-        ]],
-        confirmPassword: [null, Validators.compose([Validators.required])]
-      },
-      {
-        // check whether our password and confirm password match
-        validator: RepeatPasswordValidator
-      });
+      email: new FormControl('', Validators.compose([
+        Validators.required,
+        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+      ])),
+      password: ['', [
+        Validators.required,
+        Validators.minLength(4)
+      ]],
+      repeatPassword: ['', [
+        Validators.required,
+        PasswordValidator.passwordsMustMatch()]]
+    });
   }
 
   get email() {
@@ -40,7 +38,7 @@ export class RegisterPage implements OnInit {
   }
 
   get confirmPassword() {
-    return this.registerForm.get('confirmPassword');
+    return this.registerForm.get('repeatPassword');
   }
 
   register() {

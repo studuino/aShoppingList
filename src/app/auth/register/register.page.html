@@ -17,7 +17,7 @@
       <ion-row color="primary" justify-content-center>
         <ion-col align-self-center sizeMd="6" sizeLg="5" sizeXs="12">
           <div text-center>
-            <ion-title>Register here to start using aShoppingList</ion-title>
+            <ion-title>Register and start shopping</ion-title>
           </div>
           <div padding>
             <!--REGISTER EMAIL-->
@@ -28,7 +28,10 @@
                          formControlName="email"
                          required></ion-input>
             </ion-item>
-            <p *ngIf="email.touched && email.invalid" class="error"><sup>*</sup>Please enter an email</p>
+            <div *ngIf="email.touched && email.invalid">
+              <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+              Please enter a valid email
+            </div>
 
             <!--REGISTER PASSWORD-->
             <ion-item>
@@ -38,25 +41,28 @@
                          formControlName="password"
                          required></ion-input>
             </ion-item>
-            <p *ngIf="password.touched && password.invalid" class="error"><sup>*</sup>Please enter a password</p>
-            <p *ngIf="password.errors?.minlength" class="error"><sup>*</sup>Password should be at least 4 characters</p>
+            <div *ngIf="password.touched && password.invalid">
+              <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+              Please enter a password
+            </div>
+            <div *ngIf="password.errors?.minlength">
+              <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+              Password should be at least 4 characters
+            </div>
 
             <ion-item>
-              <ion-input name="confirmPassword"
+              <ion-input name="repeatPassword"
                          type="password"
                          placeholder="Repeat Password"
-                         formControlName="confirmPassword"
+                         formControlName="repeatPassword"
                          required></ion-input>
             </ion-item>
-            <p *ngIf="confirmPassword.touched && confirmPassword.invalid" class="error"><sup>*</sup>
-              Please type password again
-            </p>
-            <p *ngIf="confirmPassword.touched &&
+            <div *ngIf="confirmPassword.touched &&
                       confirmPassword.invalid &&
-                      confirmPassword.errors?.NoPassswordMatch"
-               class="error"><sup>*</sup>
-              Passwords should match
-            </p>
+                      confirmPassword.getError('passwordsMustMatch')">
+              <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+              Please type password again
+            </div>
           </div>
           <div padding>
 
