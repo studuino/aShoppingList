@@ -1,15 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ShoppingList } from '../../entities/ShoppingList';
-import { ShoppingListService } from '../../shared/firestore/shopping-list.service';
-import { AuthService } from '../../auth/auth.service';
-import { LocationWithSortedCategories } from '../../entities/LocationWithSortedCategories';
-import { CategoryService } from '../../shared/firestore/category.service';
-import { ShoppingCategory } from '../../entities/ShoppingCategory';
-import { ShoppingItem } from '../../entities/ShoppingItem';
-import { Router } from '@angular/router';
-import { ModuleRoutes } from '../../ModuleRoutes';
-import { ShoppingRoutes } from '../ShoppingRoutes';
-import { IonItemSliding, NavController } from '@ionic/angular';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ShoppingList} from '../../entities/ShoppingList';
+import {ShoppingListService} from '../../shared/firestore/shopping-list.service';
+import {AuthService} from '../../auth/shared/auth.service';
+import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
+import {CategoryService} from '../../shared/firestore/category.service';
+import {ShoppingCategory} from '../../entities/ShoppingCategory';
+import {ShoppingItem} from '../../entities/ShoppingItem';
+import {Router} from '@angular/router';
+import {ModuleRoutes} from '../../ModuleRoutes';
+import {ShoppingRoutes} from '../ShoppingRoutes';
+import {IonItemSliding, NavController} from '@ionic/angular';
 
 @Component({
   selector: 'a-shopping-list',
@@ -121,11 +121,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
    */
   private initFirstShoppingList(userUid: string) {
     this.$currentShoppingListSub = this.shoppingListService.getFirstShoppingListByUserUid(userUid)
-      .subscribe(firstShoppingList => {
-        this.currentShoppingList = firstShoppingList;
-        this.computeTotalOfItemsInList();
-        this.computeTotalOfCart();
-      });
+        .subscribe(firstShoppingList => {
+          this.currentShoppingList = firstShoppingList;
+          this.computeTotalOfItemsInList();
+          this.computeTotalOfCart();
+        });
   }
 
   /**
@@ -133,10 +133,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
    */
   private initLocationsWithSortedCategories(userUid) {
     this.$locationsSub = this.categoryService.getLocationsWithSortedCategoriesByUserUid(userUid)
-      .subscribe(locationsWithSortedCategories => {
-        this.locationsWithSortedCategories = locationsWithSortedCategories;
-        this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
-      });
+        .subscribe(locationsWithSortedCategories => {
+          this.locationsWithSortedCategories = locationsWithSortedCategories;
+          this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
+        });
   }
 
   /**
@@ -144,11 +144,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
    */
   private initShoppingLists(userUid) {
     this.$shoppingListsSub = this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
-      .subscribe(shoppingLists => {
-        if (shoppingLists) {
-          this.userShoppingLists = shoppingLists;
-        }
-      });
+        .subscribe(shoppingLists => {
+          if (shoppingLists) {
+            this.userShoppingLists = shoppingLists;
+          }
+        });
   }
 
   /***** SHOPPING CART *****/
@@ -175,13 +175,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   uncheckAllItemsFromCart() {
     this.currentShoppingList.cart.items
     // For every item in the cart
-      .forEach(itemInList => {
-        // Uncheck item
-        itemInList.checked = false;
-        // Locate the category to move the item back to
-        const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, itemInList);
-        originalCategory.items.push(itemInList);
-      });
+        .forEach(itemInList => {
+          // Uncheck item
+          itemInList.checked = false;
+          // Locate the category to move the item back to
+          const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, itemInList);
+          originalCategory.items.push(itemInList);
+        });
     // Empty shopping cart
     this.currentShoppingList.cart.items = [];
     // Update firestore

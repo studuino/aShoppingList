@@ -1,13 +1,13 @@
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { LoginPage } from './login.page';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AngularFireModule } from '@angular/fire';
-import { environment } from '../../../environments/environment';
-import { AuthService } from '../auth.service';
+import {LoginPage} from './login.page';
+import {ReactiveFormsModule} from '@angular/forms';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {RouterTestingModule} from '@angular/router/testing';
+import {AngularFireModule} from '@angular/fire';
+import {environment} from '../../../environments/environment';
+import {AuthService} from '../shared/auth.service';
 
 describe('LoginPage', () => {
   let component: LoginPage;
@@ -29,7 +29,7 @@ describe('LoginPage', () => {
         AuthService
       ]
     })
-      .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
