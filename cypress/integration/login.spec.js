@@ -1,7 +1,6 @@
 describe('Login Page', () => {
-    const email = 'e2e@test.dk';
-    const password = '123456';
     const baseUrl = 'http://localhost:8100';
+    const email = 'e2e@test.dk';
 
     const emailFieldSelector = 'input[name=email]';
 
@@ -40,9 +39,7 @@ describe('Login Page', () => {
     });
 
     it('should login with valid form', () => {
-        cy.get(emailFieldSelector).type(email);
-        cy.get(passwordFieldSelector).type(password);
-        cy.get('ion-button').click();
+        cy.login();
         cy.url().should('include', 'shopping');
     });
 });
