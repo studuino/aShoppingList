@@ -1,4 +1,5 @@
 export enum ModuleRoutes {
   SHOPPING_LIST = '/shopping',
-  LOGIN = '/login'
+  LOGIN = '/login',
+  REGISTER = '/register',
 }
