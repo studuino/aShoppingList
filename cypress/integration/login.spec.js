@@ -2,7 +2,9 @@ describe('Login Page', () => {
     const email = 'e2e@test.dk';
     const password = '123456';
     const baseUrl = 'http://localhost:8100';
+
     const emailFieldSelector = 'input[name=email]';
+
     const passwordFieldSelector = 'input[name=password]';
     const fieldInvalidClass = 'ng-invalid';
 
