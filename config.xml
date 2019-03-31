@@ -3,7 +3,7 @@
     <name>aShoppingList</name>
     <description>A Live ShoppingList app</description>
     <author email="info@adamino.dk" href="http://adamino.dk/">Adamino</author>
-    <content original-src="index.html" src="http://192.168.0.10:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
@@ -83,6 +83,6 @@
     <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^3.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
-    <allow-navigation href="http://192.168.0.10:8100" sessionid="12eca6e9" />
+    <allow-navigation href="*" />
     <engine name="android" spec="7.1.4" />
 </widget>
