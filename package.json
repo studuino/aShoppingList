@@ -4,6 +4,7 @@
   "author": "Adam Hansen",
   "homepage": "https://adamino.dk",
   "scripts": {
+    "ionic-android": "ionic cordova run android -l",
     "ionic-serve": "ng run app:serve --host=0.0.0.0 --port=8100",
     "ng": "ng",
     "start": "ng serve",
