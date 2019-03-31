@@ -7,6 +7,7 @@ describe('Login Page', () => {
     const fieldInvalidClass = 'ng-invalid';
 
     beforeEach(() => {
+        cy.viewport('iphone-6');
         cy.visit(`${baseUrl}/login`);
     });
 
