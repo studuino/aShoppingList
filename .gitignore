@@ -5,6 +5,9 @@
 cypress/screenshots/*
 cypress/videos/*
 
+# IDE Settings for project
+!.idea/codeStyles/Project.xml
+
 *~
 *.sw[mnpcod]
 *.log
