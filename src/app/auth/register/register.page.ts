@@ -1,6 +1,9 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {PasswordValidator} from "../shared/password.validator";
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { PasswordValidator } from '../shared/password.validator';
+import { AuthService } from '../shared/auth.service';
+import { NavController } from '@ionic/angular';
+import { ModuleRoutes } from '../../ModuleRoutes';
 
 @Component({
   selector: 'a-register',
@@ -10,7 +13,9 @@ import {PasswordValidator} from "../shared/password.validator";
 export class RegisterPage implements OnInit {
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private authService: AuthService,
+              private navCtrl: NavController) {
   }
 
   ngOnInit(): void {
@@ -42,6 +47,17 @@ export class RegisterPage implements OnInit {
   }
 
   register() {
-
+    // Ensure no space at end!
+    const email = this.email.value.trim();
+    const password = this.password.value;
+    // Handle registration
+    this.authService.registerWithEmailAndPassword(email, password)
+      .then(() => {
+        this.navCtrl.navigateRoot(ModuleRoutes.LOGIN);
+      })
+      .catch(err => {
+        // TODO Handle error and add popup!
+        // this.showPopup('Error', err.message);
+      });
   }
 }

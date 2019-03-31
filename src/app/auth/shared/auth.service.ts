@@ -41,4 +41,8 @@ export class AuthService {
     localStorage.clear();
     return this.afAuth.auth.signOut();
   }
+
+  registerWithEmailAndPassword(email: string, password: string) {
+    return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+  }
 }
