@@ -11,10 +11,20 @@ import { ShoppingCategory } from '../../entities/ShoppingCategory';
 })
 export class CategoryService {
 
+  private CATEGORIES_COLLECTION = 'categories';
   private LOCATION_SORTED_CATEGORIES_COLLECTION = 'locationSortedCategories';
   public UNCATEGORIZED_TITLE = 'Uncategorized';
 
   constructor(private afs: AngularFirestore) {
+  }
+
+  /**
+   * Get all categories from userUid
+   */
+  getCategoriesByUserUid(userUid: string) {
+    return this.afs.collection<ShoppingCategory>(`${this.CATEGORIES_COLLECTION}`,
+      ref => ref.where('userUid', '==', userUid)
+        .orderBy('title')).valueChanges();
   }
 
   /**

@@ -1,9 +1,9 @@
 <a-header [shouldDisplayBackButton]="true">
-  <ng-container class="header-center-content">{{item?.title}}</ng-container>
+  <ng-container class="header-center-content">{{selectedItem?.title}}</ng-container>
 </a-header>
 
 <ion-content>
-  <ion-grid *ngIf="item">
+  <ion-grid *ngIf="selectedItem">
     <!--EDIT TITLE-->
     <ion-row>
       <ion-col>
@@ -16,7 +16,7 @@
           <ion-input text-center
                      type="text"
                      (ionChange)="updateSelectedItemInCategory()"
-                     [(ngModel)]="item.title"></ion-input>
+                     [(ngModel)]="selectedItem.title"></ion-input>
         </ion-item>
       </ion-col>
     </ion-row>
@@ -45,7 +45,7 @@
         <!--DISPLAY AMOUNT-->
         <ion-input text-center
                    type="number"
-                   [value]="item.quantity"></ion-input>
+                   [value]="selectedItem.quantity"></ion-input>
       </ion-col>
 
       <ion-col>
@@ -76,7 +76,7 @@
           <ion-input text-center
                      type="number"
                      (ionChange)="updateSelectedItemInCategory()"
-                     [(ngModel)]="item.price"></ion-input>
+                     [(ngModel)]="selectedItem.price"></ion-input>
         </ion-item>
       </ion-col>
       <ion-col size="4">Kr.</ion-col>
@@ -95,14 +95,14 @@
     <ion-row>
       <ion-col>
         <ion-list>
-          <ion-item *ngIf="$categories | async as categories">
+          <ion-item *ngIf="$categories | async as categories" justify-content-center>
             <ion-select style="color: black"
                         class="category-select"
                         (ionChange)="moveItemToCategory()"
-                        [(ngModel)]="selectorCategoryTitle">
+                        [selectedText]="selectedCategory.title"
+                        [(ngModel)]="selectedCategory">
               <ion-select-option *ngFor="let category of categories"
-                                 (ionSelect)="selectorCategory = category"
-                                 [value]="category.title">{{category.title}}
+                                 [value]="category">{{category.title}}
               </ion-select-option>
             </ion-select>
           </ion-item>
