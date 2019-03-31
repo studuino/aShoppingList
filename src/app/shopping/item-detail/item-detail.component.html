@@ -95,7 +95,7 @@
     <ion-row>
       <ion-col>
         <ion-list>
-          <ion-item *ngIf="$categories | async as categories" justify-content-center>
+          <ion-item *ngIf="$categories | async as categories">
             <ion-select style="color: black"
                         class="category-select"
                         (ionChange)="moveItemToCategory()"
