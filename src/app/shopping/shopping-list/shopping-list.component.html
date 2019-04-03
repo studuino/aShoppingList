@@ -47,8 +47,8 @@
   </ion-item>
 
   <!--Items Section-->
-  <ion-list *ngFor="let category of currentShoppingList?.categories">
-    <div *ngIf="category.items.length > 0">
+  <ng-container *ngFor="let category of currentShoppingList?.categories">
+    <ion-list *ngIf="category.items.length > 0">
       <!--Category-->
       <ion-list-header>
         {{category.title}}
@@ -86,8 +86,8 @@
           </ion-item-options>
         </ion-item-sliding>
       </ion-reorder-group>
-    </div>
-  </ion-list>
+    </ion-list>
+  </ng-container>
 
   <!--Cart section-->
   <ion-list *ngIf="currentShoppingList?.cart.items.length > 0">
