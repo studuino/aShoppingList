@@ -6,7 +6,7 @@
                 [selectedText]="currentShoppingList?.title"
                 interface="popover">
       <ion-select-option *ngFor="let shoppingList of userShoppingLists"
-                         [selected]="currentShoppingList"
+                         [selected]="currentShoppingList?.uid.match(shoppingList?.uid)"
                          [value]="shoppingList">
         {{ shoppingList?.title }}
       </ion-select-option>
@@ -20,7 +20,7 @@
                 [selectedText]="currentLocationWithSortedCategories?.title"
                 interface="popover">
       <ion-select-option *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
-                         [selected]="currentShoppingList"
+                         [selected]="currentLocationWithSortedCategories?.uid.match(locationWithSortedCategories?.uid)"
                          [value]="locationWithSortedCategories">
         {{ locationWithSortedCategories?.title }}
       </ion-select-option>

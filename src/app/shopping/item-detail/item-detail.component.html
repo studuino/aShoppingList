@@ -99,9 +99,9 @@
             class="category-select"
             (ionChange)="moveItemToCategory()"
             [selectedText]="selectedCategory.title"
-            [value]="selectedCategory">
+            [(ngModel)]="selectedCategory">
           <ion-select-option *ngFor="let category of categories"
-                             [selected]="selectedCategory"
+                             [selected]="selectedCategory.uid.match(category.uid)"
                              [value]="category">{{category.title}}
           </ion-select-option>
         </ion-select>
