@@ -1,6 +1,8 @@
 # aShoppingList
 Ionic Live Shopping List App
 
+The app is live deployed [Here](https://adamino-shoppinglist.firebaseapp.com/shopping)
+
 ## Before starting the project
 The project is configured to use [Google Firebase](https://firebase.google.com/).
 

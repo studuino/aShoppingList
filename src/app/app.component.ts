@@ -34,9 +34,8 @@ export class AppComponent {
     if (this.platform.is('desktop')) {
       console.log('Running in browser!');
       this.browserMode = true;
-    } else {
-      this.menuCtrl.enable(false);
     }
+    this.menuCtrl.enable(false);
     this.initializeApp();
   }
 

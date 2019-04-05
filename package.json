@@ -7,6 +7,7 @@
     "ionic-android": "ionic cordova run android -l",
     "release-android": "ionic cordova build android --prod --release",
     "ionic-serve": "ng run app:serve --host=0.0.0.0 --port=8100",
+    "release-web": "ionic build --prod && firebase deploy",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
