@@ -29,13 +29,14 @@ export class AppComponent {
     private navCtrl: NavController,
     private menuCtrl: MenuController
   ) {
-    this.statusBar.styleDefault();
-    this.splashScreen.hide();
     if (this.platform.is('desktop')) {
       console.log('Running in browser!');
       this.browserMode = true;
+    } else {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+      this.menuCtrl.enable(false);
     }
-    this.menuCtrl.enable(false);
     this.initializeApp();
   }
 
