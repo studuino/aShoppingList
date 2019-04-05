@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
+<widget id="dk.adamino.ashoppinglist" version="0.0.1" xmlns="http://www.w3.org/ns/widgets">
     <name>aShoppingList</name>
     <description>A Live ShoppingList app</description>
     <author email="info@adamino.dk" href="http://adamino.dk/">Adamino</author>
