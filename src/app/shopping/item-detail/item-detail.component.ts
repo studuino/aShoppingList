@@ -51,6 +51,8 @@ export class ItemDetailComponent {
 
   moveItemToCategory() {
     const oldCategory = this.shoppingListService.currentCategory;
+    // Ensure that we do not update on same category!
+    if (oldCategory === this.selectedCategory) return;
     // Find index of item to remove from old category
     const indexOfItemToRemove = oldCategory.items.indexOf(this.selectedItem);
     // Remove item from category
@@ -73,11 +75,13 @@ export class ItemDetailComponent {
       // And add category
       this.selectedShoppingList.categories.push(this.selectedCategory);
     }
+    // Update old category
+    this.shoppingListService.currentCategory = this.selectedCategory;
     // Update item category uuid
     this.selectedItem.categoryUid = this.selectedCategory.uid;
     // Push selected item to new category
     this.selectedCategory.items.push(this.selectedItem);
     // Update the shopping list
-    this.shoppingListService.updateShoppingList(this.selectedShoppingList);
+    this.updateSelectedItemInCategory();
   }
 }

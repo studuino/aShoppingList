@@ -92,23 +92,23 @@
       </ion-col>
     </ion-row>
     <!--CATEGORY SELECT-->
-    <ion-row>
+    <ion-row *ngIf="$categories | async as categories">
       <ion-col>
-        <ion-list>
-          <ion-item *ngIf="$categories | async as categories">
-            <ion-select style="color: black"
-                        class="category-select"
-                        (ionChange)="moveItemToCategory()"
-                        [selectedText]="selectedCategory.title"
-                        [(ngModel)]="selectedCategory">
-              <ion-select-option *ngFor="let category of categories"
-                                 [value]="category">{{category.title}}
-              </ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-list>
+        <ion-select
+            text-center
+            class="category-select"
+            (ionChange)="moveItemToCategory()"
+            [selectedText]="selectedCategory.title"
+            [value]="selectedCategory">
+          <ion-select-option *ngFor="let category of categories"
+                             [selected]="selectedCategory"
+                             [value]="category">{{category.title}}
+          </ion-select-option>
+        </ion-select>
       </ion-col>
     </ion-row>
+
+    <ion-item-divider></ion-item-divider>
 
   </ion-grid>
 </ion-content>
