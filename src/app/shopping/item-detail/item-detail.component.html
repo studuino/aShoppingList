@@ -101,7 +101,7 @@
             [selectedText]="selectedCategory.title"
             [(ngModel)]="selectedCategory">
           <ion-select-option *ngFor="let category of categories"
-                             [selected]="selectedCategory.uid.match(category.uid)"
+                             [selected]="selectedCategory.title === 'Uncategorized' || selectedCategory.uid.match(category.uid)"
                              [value]="category">{{category.title}}
           </ion-select-option>
         </ion-select>
