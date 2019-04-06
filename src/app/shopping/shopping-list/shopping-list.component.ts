@@ -1,15 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ShoppingList} from '../../entities/ShoppingList';
-import {ShoppingListService} from '../../shared/firestore/shopping-list.service';
-import {AuthService} from '../../auth/shared/auth.service';
-import {LocationWithSortedCategories} from '../../entities/LocationWithSortedCategories';
-import {CategoryService} from '../../shared/firestore/category.service';
-import {ShoppingCategory} from '../../entities/ShoppingCategory';
-import {ShoppingItem} from '../../entities/ShoppingItem';
-import {Router} from '@angular/router';
-import {ModuleRoutes} from '../../ModuleRoutes';
-import {ShoppingRoutes} from '../ShoppingRoutes';
-import {IonItemSliding, NavController} from '@ionic/angular';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ShoppingList } from '../../entities/ShoppingList';
+import { ShoppingListService } from '../../shared/firestore/shopping-list.service';
+import { AuthService } from '../../auth/shared/auth.service';
+import { LocationWithSortedCategories } from '../../entities/LocationWithSortedCategories';
+import { CategoryService } from '../../shared/firestore/category.service';
+import { ShoppingCategory } from '../../entities/ShoppingCategory';
+import { ShoppingItem } from '../../entities/ShoppingItem';
+import { Router } from '@angular/router';
+import { ModuleRoutes } from '../../ModuleRoutes';
+import { ShoppingRoutes } from '../ShoppingRoutes';
+import { IonItemSliding, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'a-shopping-list',
@@ -17,7 +17,6 @@ import {IonItemSliding, NavController} from '@ionic/angular';
   styleUrls: ['./shopping-list.component.scss'],
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  $currentShoppingListSub;
   currentShoppingList: ShoppingList;
   $shoppingListsSub;
   userShoppingLists: ShoppingList[];
@@ -41,14 +40,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const userUid = this.authService.getUserUid();
     this.initShoppingLists(userUid);
     this.initLocationsWithSortedCategories(userUid);
-    this.initFirstShoppingList(userUid);
   }
 
   ngOnDestroy(): void {
     // Make sure to close connection to firestore!
     this.$shoppingListsSub.unsubscribe();
     this.$locationsSub.unsubscribe();
-    this.$currentShoppingListSub.unsubscribe();
   }
 
   addItem() {
@@ -59,7 +56,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     };
     const uncategorized = this.categoryService.getUncategorizedCategoryFromShoppingList(this.currentShoppingList);
     uncategorized.items.push(newItem);
-    this.shoppingListService.updateShoppingList(this.currentShoppingList);
+    this.updateShoppingList();
     // Reset newItemTitle
     this.newItemTitle = '';
   }
@@ -79,7 +76,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     category.items.splice(indexOfItemToMove, 1);
 
     this.currentShoppingList.cart.items.push(item);
-    this.shoppingListService.updateShoppingList(this.currentShoppingList);
+    this.updateShoppingList();
   }
 
   reorderItems(positionChange, items: ShoppingItem[]) {
@@ -90,7 +87,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     items.splice(toPosition, 0, itemToMove);
     positionChange.complete();
     // Send updated list to firestore!
-    this.shoppingListService.updateShoppingList(this.currentShoppingList);
+    this.updateShoppingList();
   }
 
   editItem(category: ShoppingCategory, item: ShoppingItem, slider: IonItemSliding) {
@@ -107,7 +104,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     // Remove item
     category.items.splice(indexOfItemToRemove, 1);
     // Send updated shopping list to update in firestore
-    this.shoppingListService.updateShoppingList(this.currentShoppingList);
+    this.updateShoppingList();
     slider.close();
   }
 
@@ -117,38 +114,34 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Helper method for initializing first shopping list for the user
-   */
-  private initFirstShoppingList(userUid: string) {
-    this.$currentShoppingListSub = this.shoppingListService.getFirstShoppingListByUserUid(userUid)
-        .subscribe(firstShoppingList => {
-          this.currentShoppingList = firstShoppingList;
-          this.computeTotalOfItemsInList();
-          this.computeTotalOfCart();
-        });
-  }
-
-  /**
    * Helper method for initializing users locations
    */
   private initLocationsWithSortedCategories(userUid) {
     this.$locationsSub = this.categoryService.getLocationsWithSortedCategoriesByUserUid(userUid)
-        .subscribe(locationsWithSortedCategories => {
-          this.locationsWithSortedCategories = locationsWithSortedCategories;
-          this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
-        });
+      .subscribe(locationsWithSortedCategories => {
+        this.locationsWithSortedCategories = locationsWithSortedCategories;
+        this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
+      });
   }
 
   /**
    * Helper method for initializing users shopping lists
    */
   private initShoppingLists(userUid) {
-    this.$shoppingListsSub = this.shoppingListService.getPartialShoppingListsByUserUid(userUid)
-        .subscribe(shoppingLists => {
-          if (shoppingLists) {
-            this.userShoppingLists = shoppingLists;
+    this.$shoppingListsSub = this.shoppingListService.getShoppingListsByUserUid(userUid)
+      .subscribe(shoppingLists => {
+        if (shoppingLists) {
+          if (this.shoppingListService.currentShoppingList) {
+            this.currentShoppingList = shoppingLists.find(shoppingList =>
+              shoppingList.uid === this.shoppingListService.currentShoppingList.uid);
+          } else {
+            this.currentShoppingList = shoppingLists[0];
           }
-        });
+          this.userShoppingLists = shoppingLists;
+          this.computeTotalOfItemsInList();
+          this.computeTotalOfCart();
+        }
+      });
   }
 
   /***** SHOPPING CART *****/
@@ -162,29 +155,33 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     // Remove item from shopping cart
     this.shoppingListService.removeItemFromItemList(this.currentShoppingList.cart.items, checkedItem);
     // Update shopping list on firestore
-    this.shoppingListService.updateShoppingList(this.currentShoppingList);
+    this.updateShoppingList();
   }
 
   checkoutCart() {
     // Empty shopping cart
     this.currentShoppingList.cart.items = [];
     // Update firestore
-    this.shoppingListService.updateShoppingList(this.currentShoppingList);
+    this.updateShoppingList();
   }
 
   uncheckAllItemsFromCart() {
     this.currentShoppingList.cart.items
     // For every item in the cart
-        .forEach(itemInList => {
-          // Uncheck item
-          itemInList.checked = false;
-          // Locate the category to move the item back to
-          const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, itemInList);
-          originalCategory.items.push(itemInList);
-        });
+      .forEach(itemInList => {
+        // Uncheck item
+        itemInList.checked = false;
+        // Locate the category to move the item back to
+        const originalCategory = this.categoryService.getCategoryFromItem(this.currentShoppingList, itemInList);
+        originalCategory.items.push(itemInList);
+      });
     // Empty shopping cart
     this.currentShoppingList.cart.items = [];
     // Update firestore
+    this.updateShoppingList();
+  }
+
+  updateShoppingList() {
     this.shoppingListService.updateShoppingList(this.currentShoppingList);
   }
 
@@ -194,5 +191,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   private computeTotalOfCart() {
     // Set calculated cart total
     this.currentCartTotal = this.shoppingListService.calculateCartTotal(this.currentShoppingList.cart);
+  }
+
+  selectShoppingList() {
+    this.shoppingListService.currentShoppingList = this.currentShoppingList;
   }
 }

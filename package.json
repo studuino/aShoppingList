@@ -1,9 +1,11 @@
 {
   "name": "aShoppingList",
-  "version": "0.0.1",
-  "author": "Adam Hansen",
+  "version": "0.0.3",
+  "author": "Adam Hansen <info@adamino.dk>",
   "homepage": "https://adamino.dk",
+  "license": "MIT",
   "scripts": {
+    "release": "npm run release-web && npm run release-android",
     "ionic-android": "ionic cordova run android -l",
     "release-android": "ionic cordova build android --prod --release",
     "ionic-serve": "ng run app:serve --host=0.0.0.0 --port=8100",

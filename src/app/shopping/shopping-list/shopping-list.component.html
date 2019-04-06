@@ -2,7 +2,8 @@
   <!--Shopping List Selector-->
   <ng-container class="header-center-content">
     <ion-select *ngIf="userShoppingLists"
-                [value]="currentShoppingList"
+                [(ngModel)]="currentShoppingList"
+                (ionChange)="selectShoppingList()"
                 [selectedText]="currentShoppingList?.title"
                 interface="popover">
       <ion-select-option *ngFor="let shoppingList of userShoppingLists"

@@ -1,11 +1,10 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {Observable} from 'rxjs';
-import {ShoppingList} from '../../entities/ShoppingList';
-import {map} from 'rxjs/operators';
-import {ShoppingCart} from '../../entities/ShoppingCart';
-import {ShoppingItem} from '../../entities/ShoppingItem';
-import {ShoppingCategory} from '../../entities/ShoppingCategory';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
+import { ShoppingList } from '../../entities/ShoppingList';
+import { ShoppingCart } from '../../entities/ShoppingCart';
+import { ShoppingItem } from '../../entities/ShoppingItem';
+import { ShoppingCategory } from '../../entities/ShoppingCategory';
 
 @Injectable({
   providedIn: 'root'
@@ -24,31 +23,20 @@ export class ShoppingListService {
    * Get all shopping lists with just title and uid
    * for later specific querying
    */
-  getPartialShoppingListsByUserUid(userUid: string): Observable<ShoppingList[]> {
+  getShoppingListsByUserUid(userUid: string): Observable<ShoppingList[]> {
     return this.afs.collection<ShoppingList>(this.SHOPPING_LISTS_COLLECTION,
-        ref =>
-            ref.where('userUid', '==', userUid)).valueChanges();
-  }
-
-  /**
-   * Get first shopping list from user
-   */
-  getFirstShoppingListByUserUid(userUid: string): Observable<ShoppingList> {
-    return this.afs.collection<ShoppingList>(this.SHOPPING_LISTS_COLLECTION,
-        ref => ref
-            .where('userUid', '==', userUid)
-            .orderBy('title', 'asc'))
-        .valueChanges()
-        .pipe(map(shoppingLists => shoppingLists[0]));
+      ref =>
+        ref.where('userUid', '==', userUid)).valueChanges();
   }
 
   /**
    * Update provided shopping list on firestore
    */
   updateShoppingList(shoppingList: ShoppingList) {
+    console.log(`${shoppingList.title} updated!`);
     return this.afs.collection(this.SHOPPING_LISTS_COLLECTION)
-        .doc(shoppingList.uid)
-        .set(shoppingList, {merge: true});
+      .doc(shoppingList.uid)
+      .set(shoppingList, {merge: true});
   }
 
   /**
@@ -84,8 +72,8 @@ export class ShoppingListService {
     let total = 0;
     // Sum up total
     shoppingCart.items
-        .forEach(item =>
-            total += (item.price * item.quantity));
+      .forEach(item =>
+        total += (item.price * item.quantity));
     return total;
   }
 
