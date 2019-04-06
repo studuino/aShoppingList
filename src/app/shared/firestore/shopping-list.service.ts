@@ -101,15 +101,11 @@ export class ShoppingListService {
    * Calculate and return total of shopping cart
    */
   calculateCartTotal(shoppingCart: ShoppingCart) {
-    // Defensive programming
-    if (!Array.isArray(shoppingCart.items)) {
-      return;
-    }
     let total = 0;
     // Sum up total
     shoppingCart.items
       .forEach(item =>
-        total += (item.price * item.quantity));
+        total += item.price ? (item.price * item.quantity) : 0);
     return total;
   }
 

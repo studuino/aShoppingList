@@ -63,6 +63,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   addItem() {
     const newItem: ShoppingItem = {
       title: this.newItemTitle,
+      price: 0,
       checked: false,
       quantity: 1,
     };
