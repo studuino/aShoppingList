@@ -52,6 +52,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   selectShoppingList() {
     this.shoppingListService.currentShoppingList = this.currentShoppingList;
+    this.checkDefaultLocation();
+    this.sortItemsByCurrentLocation();
   }
 
   sortItemsByCurrentLocation() {
@@ -129,9 +131,29 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   private initLocationsWithSortedCategories(userUid) {
     this.$locationsSub = this.categoryService.getLocationsWithSortedCategoriesByUserUid(userUid)
       .subscribe(locationsWithSortedCategories => {
+        // Set locations
         this.locationsWithSortedCategories = locationsWithSortedCategories;
+        // Set ensure current location is set
         this.currentLocationWithSortedCategories = locationsWithSortedCategories[0];
+        // Check if user has set a default location
+        this.checkDefaultLocation();
+        this.sortItemsByCurrentLocation();
       });
+  }
+
+  /**
+   * Check if user has set default location
+   * If set, then update current location
+   */
+  checkDefaultLocation() {
+    if (this.currentShoppingList.defaultLocationUid) {
+      const defaultLocation = this.locationsWithSortedCategories
+        .find(location => location.uid === this.currentShoppingList.defaultLocationUid);
+      // If default location exists then set it to the current location
+      if (defaultLocation) {
+        this.currentLocationWithSortedCategories = defaultLocation;
+      }
+    }
   }
 
   /**
