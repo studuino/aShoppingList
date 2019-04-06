@@ -17,7 +17,8 @@
   <!--Location selector-->
   <ng-container class="header-right-content">
     <ion-select *ngIf="locationsWithSortedCategories"
-                [value]="currentLocationWithSortedCategories"
+                [(ngModel)]="currentLocationWithSortedCategories"
+                (ionChange)="sortItemsByCurrentLocation()"
                 [selectedText]="currentLocationWithSortedCategories?.title"
                 interface="popover">
       <ion-select-option *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
@@ -29,7 +30,7 @@
   </ng-container>
 </a-header>
 
-<ion-content>
+<ion-content *ngIf="currentShoppingList">
   <!--Add Item Section-->
   <ion-item>
     <ion-input type="text"

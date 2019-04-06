@@ -48,6 +48,16 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.$locationsSub.unsubscribe();
   }
 
+  /***** HEADER ACTIONS *****/
+
+  selectShoppingList() {
+    this.shoppingListService.currentShoppingList = this.currentShoppingList;
+  }
+
+  sortItemsByCurrentLocation() {
+    this.shoppingListService.sortItemsByCurrentLocation(this.currentShoppingList, this.currentLocationWithSortedCategories);
+  }
+
   addItem() {
     const newItem: ShoppingItem = {
       title: this.newItemTitle,
@@ -191,9 +201,5 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   private computeTotalOfCart() {
     // Set calculated cart total
     this.currentCartTotal = this.shoppingListService.calculateCartTotal(this.currentShoppingList.cart);
-  }
-
-  selectShoppingList() {
-    this.shoppingListService.currentShoppingList = this.currentShoppingList;
   }
 }
