@@ -35,8 +35,8 @@ export class AppComponent {
     } else {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.menuCtrl.enable(false);
     }
+    this.menuCtrl.enable(false);
     this.initializeApp();
   }
 
