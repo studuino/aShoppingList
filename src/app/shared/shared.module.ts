@@ -4,6 +4,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { LoadingService } from './services/loading.service';
 import { ShoppingListService } from './firestore/shopping-list.service';
 import { CategoryService } from './firestore/category.service';
+import { AlertService } from './services/alert.service';
+import { LocationWithSortedCategoriesService } from './services/location-with-sorted-categories.service';
 
 @NgModule({
   declarations: [],
@@ -14,7 +16,9 @@ import { CategoryService } from './firestore/category.service';
     AuthGuard,
     LoadingService,
     ShoppingListService,
-    CategoryService
+    CategoryService,
+    AlertService,
+    LocationWithSortedCategoriesService
   ]
 })
 export class SharedModule {

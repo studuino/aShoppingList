@@ -56,4 +56,21 @@ export class CategoryService {
       return this.getUncategorizedCategoryFromShoppingList(shoppingList);
     }
   }
+
+  /**
+   * Create new category for user
+   */
+  createCategory(userUid: string, nameOfNewCategory: string) {
+    const newUid = this.afs.createId();
+    const newCategory: ShoppingCategory = {
+      uid: newUid,
+      userUid: userUid,
+      title: nameOfNewCategory
+    };
+    return this.afs.doc(`${this.CATEGORIES_COLLECTION}/${newUid}`)
+      .set(newCategory)
+      .then(() => {
+        return newCategory;
+      });
+  }
 }
