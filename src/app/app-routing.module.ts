@@ -12,7 +12,9 @@ const routes: Routes = [
   {path: 'login', loadChildren: './auth/login/login.module#LoginPageModule'},
   {path: 'register', loadChildren: './auth/register/register.module#RegisterPageModule'},
   /**** SHOPPING ROUTES ****/
-  {path: 'shopping', loadChildren: './shopping/shopping.module#ShoppingPageModule', canLoad: [AuthGuard]}
+  {path: 'shopping', loadChildren: './shopping/shopping.module#ShoppingPageModule', canLoad: [AuthGuard]},
+  /**** CATEGORY ROUTES ****/
+  {path: 'category', loadChildren: './category/category.module#CategoryPageModule', canLoad: [AuthGuard]}
 
 
 ];

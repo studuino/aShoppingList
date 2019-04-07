@@ -1,0 +1,45 @@
+<a-header>
+  <ng-container class="header-center-content">
+    <label>{{pageTitle}}</label>
+  </ng-container>
+
+  <ng-container class="header-right-content">
+    <ion-button float-end
+                shape="round"
+                size="small"
+                color="success"
+                (click)="promptForNewCategory()">
+      <ion-icon slot="icon-only" name="add"></ion-icon>
+    </ion-button>
+  </ng-container>
+</a-header>
+
+<ion-content>
+  <ng-container *ngIf="$categories | async as categories">
+    <ion-list>
+      <ion-item-sliding *ngFor="let category of categories">
+        <ion-item text-center>
+          <ion-label>
+            <h2>{{category.title}}</h2>
+          </ion-label>
+        </ion-item>
+        <!--SLIDE FROM LEFT TO RIGHT-->
+        <ion-item-options side="start">
+          <!--REMOVE ITEM-->
+          <ion-item-option color="danger">
+            <!--            TODO ALH: Implement-->
+            <!--            (click)="removeItem(category, item, slidingItem)"-->
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+        <!--SLIDE FROM RIGHT TO LEFT-->
+        <ion-item-options side="end">
+          <!--EDIT ITEM-->
+          <ion-item-option>
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </ng-container>
+</ion-content>

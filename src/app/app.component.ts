@@ -16,7 +16,12 @@ export class AppComponent {
     {
       title: 'Shopping List',
       url: '/shopping',
-      icon: 'home'
+      icon: 'basket'
+    },
+    {
+      title: 'Categories',
+      url: '/category',
+      icon: 'filing'
     }
   ];
   browserMode = false;
