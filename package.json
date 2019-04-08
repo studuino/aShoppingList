@@ -1,6 +1,6 @@
 {
   "name": "aShoppingList",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Adam Hansen <info@adamino.dk>",
   "homepage": "https://adamino.dk",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "ionic-android": "ionic cordova run android -l",
     "release-android": "ionic cordova build android --prod --release",
     "ionic-serve": "ng run app:serve --host=0.0.0.0 --port=8100",
-    "release-web": "npm version patch && ionic build --prod && firebase deploy",
+    "release-web": "ionic build --prod && firebase deploy",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
