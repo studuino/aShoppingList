@@ -6,6 +6,7 @@ import { ShoppingCart } from '../../entities/ShoppingCart';
 import { ShoppingItem } from '../../entities/ShoppingItem';
 import { ShoppingCategory } from '../../entities/ShoppingCategory';
 import { LocationWithSortedCategories } from '../../entities/LocationWithSortedCategories';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -109,10 +110,33 @@ export class ShoppingListService {
     return total;
   }
 
+  /**
+   * Remove provided item from category array of items
+   */
   removeItemFromItemList(categoryToRemoveItemFrom: ShoppingItem[], item: ShoppingItem) {
     // Locate index of item in cart
     const indexOfItemInCart = categoryToRemoveItemFrom.indexOf(item);
     // Remove item from cart
     categoryToRemoveItemFrom.splice(indexOfItemInCart, 1);
+  }
+
+  /**
+   * Remove provided category from all shopping lists by provided user uid
+   */
+  removeCategoryFromAllShoppingLists(userUid: string, category: ShoppingCategory) {
+    this.getShoppingListsByUserUid(userUid)
+      .pipe(map(shoppingLists => {
+        shoppingLists.forEach(shoppingList => {
+          // Locate category in all shopping lists
+          const index = shoppingList.categories.findIndex(categoryInShoppingList => categoryInShoppingList.uid === category.uid);
+          // If category exists
+          if (index !== -1) {
+            // Remove it
+            shoppingList.categories.splice(index, 1);
+            // Update shopping list
+            this.updateShoppingList(shoppingList);
+          }
+        });
+      }));
   }
 }

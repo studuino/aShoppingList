@@ -55,4 +55,28 @@ export class LocationWithSortedCategoriesService {
         });
       })).subscribe();
   }
+
+  /**
+   * Remove provided category to all locations from user
+   */
+  removeCategoryFromAllLocations(userUid: string, category: ShoppingCategory) {
+    // Get hold of all locations
+    this.getAll(userUid)
+    // Ensure to close subscription
+      .pipe(first())
+      // Add new category to each location
+      .pipe(map(locations => {
+        locations.forEach(location => {
+          // Locate category
+          const index = location.sortedCategories.findIndex((sortedCategory: ShoppingCategory) => sortedCategory.uid === category.uid);
+          // Category exists
+          if (index !== -1) {
+            // Remove it from array
+            location.sortedCategories.splice(index, 1);
+            // Update firestore
+            this.update(location);
+          }
+        });
+      })).subscribe();
+  }
 }

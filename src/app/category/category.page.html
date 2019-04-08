@@ -17,7 +17,7 @@
 <ion-content>
   <ng-container *ngIf="$categories | async as categories">
     <ion-list>
-      <ion-item-sliding *ngFor="let category of categories">
+      <ion-item-sliding *ngFor="let category of categories" #slidingItem>
         <ion-item text-center>
           <ion-label>
             <h2>{{category.title}}</h2>
@@ -26,9 +26,8 @@
         <!--SLIDE FROM LEFT TO RIGHT-->
         <ion-item-options side="start">
           <!--REMOVE ITEM-->
-          <ion-item-option color="danger">
-            <!--            TODO ALH: Implement-->
-            <!--            (click)="removeItem(category, item, slidingItem)"-->
+          <ion-item-option color="danger"
+                           (click)="delete(category, slidingItem)">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
           </ion-item-option>
         </ion-item-options>

@@ -73,4 +73,14 @@ export class CategoryService {
         return newCategory;
       });
   }
+
+  /**
+   * Delete user category from firestore
+   */
+  delete(categoryUid: string) {
+    return this.afs.collection(this.CATEGORIES_COLLECTION)
+      .doc(categoryUid)
+      .delete();
+  }
+
 }
