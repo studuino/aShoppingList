@@ -139,4 +139,25 @@ export class ShoppingListService {
         });
       }));
   }
+
+  /**
+   * Rename category in all shopping lists
+   */
+  renameCategoryInAllShoppingLists(userUid: string, categoryUid: string, newTitle: string) {
+    this.getShoppingListsByUserUid(userUid)
+      .pipe(map(shoppingLists => {
+        shoppingLists.forEach(shoppingList => {
+          // Locate category
+          const category: ShoppingCategory = shoppingList.categories
+            .find((shoppingCategory: ShoppingCategory) => shoppingCategory.uid === categoryUid);
+          // Category exists
+          if (category) {
+            // Remove it from array
+            category.title = newTitle;
+            // Update shopping list
+            this.updateShoppingList(shoppingList);
+          }
+        });
+      }));
+  }
 }

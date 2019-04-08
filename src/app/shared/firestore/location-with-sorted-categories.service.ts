@@ -79,4 +79,29 @@ export class LocationWithSortedCategoriesService {
         });
       })).subscribe();
   }
+
+  /**
+   * Rename category by category uid in all locations by user uid
+   */
+  renameCategoryInAllLocations(userUid: string, categoryUid: string, newTitle: string) {
+    // Get hold of all locations
+    this.getAll(userUid)
+    // Ensure to close subscription
+      .pipe(first())
+      // Add new category to each location
+      .pipe(map(locations => {
+        locations.forEach(location => {
+          // Locate category
+          const category: ShoppingCategory = location.sortedCategories
+            .find((sortedCategory: ShoppingCategory) => sortedCategory.uid === categoryUid);
+          // Category exists
+          if (category) {
+            // Remove it from array
+            category.title = newTitle;
+            // Update firestore
+            this.update(location);
+          }
+        });
+      })).subscribe();
+  }
 }

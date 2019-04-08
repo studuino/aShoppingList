@@ -34,7 +34,8 @@
         <!--SLIDE FROM RIGHT TO LEFT-->
         <ion-item-options side="end">
           <!--EDIT ITEM-->
-          <ion-item-option>
+          <ion-item-option color="primary"
+                           (click)="promptForRename(category, slidingItem)">
             <ion-icon slot="icon-only" name="create"></ion-icon>
           </ion-item-option>
         </ion-item-options>

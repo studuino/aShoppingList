@@ -83,4 +83,14 @@ export class CategoryService {
       .delete();
   }
 
+  /**
+   * Update category
+   */
+  renameCategory(categoryUid: string, newTitleForCategory: string) {
+    return this.afs.collection(this.CATEGORIES_COLLECTION)
+      .doc(categoryUid)
+      .update({
+        title: newTitleForCategory
+      });
+  }
 }

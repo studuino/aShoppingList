@@ -59,4 +59,31 @@ export class CategoryPage implements OnInit {
     const category = await this.categoryService.createCategory(this.authService.getUserUid(), nameOfNewCategory);
     this.locationService.addCategoryToAllLocations(this.authService.getUserUid(), category);
   }
+
+  async promptForRename(category: ShoppingCategory, slidingItem: IonItemSliding) {
+    const prompt = await this.alertService.getInputAlert(
+      'Rename Category',
+      'Enter a new title for this category',
+      {
+        text: 'Save',
+        handler: data => {
+          // Get new category name from user input data
+          const newTitleForCategory = data.title;
+          this.renameCategory(category.uid, newTitleForCategory);
+          slidingItem.close();
+        }
+      });
+    prompt.present();
+  }
+
+  private async renameCategory(categoryUid: string, newTitle: string) {
+    await this.categoryService.renameCategory(categoryUid, newTitle);
+
+    // Rename category in all locations
+    const userUid = this.authService.getUserUid();
+    await this.locationService.renameCategoryInAllLocations(userUid, categoryUid, newTitle);
+
+    // Rename category in all shopping lists
+    this.shoppingListService.renameCategoryInAllShoppingLists(userUid, categoryUid, newTitle);
+  }
 }
