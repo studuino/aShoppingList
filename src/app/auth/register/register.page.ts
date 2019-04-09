@@ -4,6 +4,7 @@ import { PasswordValidator } from '../shared/password.validator';
 import { AuthService } from '../shared/auth.service';
 import { NavController } from '@ionic/angular';
 import { ModuleRoutes } from '../../ModuleRoutes';
+import { PlatformService } from '../../shared/services/platform.service';
 
 @Component({
   selector: 'a-register',
@@ -12,13 +13,17 @@ import { ModuleRoutes } from '../../ModuleRoutes';
 })
 export class RegisterPage implements OnInit {
   registerForm: FormGroup;
+  browserMode = false;
 
   constructor(private fb: FormBuilder,
+              private platformService: PlatformService,
               private authService: AuthService,
               private navCtrl: NavController) {
   }
 
   ngOnInit(): void {
+    this.browserMode = this.platformService.isDesktopOptimized();
+
     this.registerForm = this.fb.group({
       email: new FormControl('', Validators.compose([
         Validators.required,

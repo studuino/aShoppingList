@@ -1,27 +1,66 @@
-<a-header [shouldDisplayBackButton]="true">
-</a-header>
-
 <ion-content>
   <!--Logo-->
   <br>
-  <ion-row class="logo-row">
-    <ion-col></ion-col>
-    <ion-col width-67>
-      <img src="../../../assets/img/logo.png"/>
-    </ion-col>
-    <ion-col></ion-col>
-  </ion-row>
+  <ion-grid>
+    <!--Logo-->
+    <a-logo></a-logo>
 
-  <!--Login form-->
+    <!--FORM-->
+    <ion-row justify-content-center>
+      <!--LEFT COL (only needed on browser)-->
+      <ion-col *ngIf="browserMode"></ion-col>
+      <!--CENTER COL-->
+      <ion-col size="8">
+        <!--Login form-->
+        <ng-container *ngIf="browserMode then browser; else mobile"></ng-container>
+      </ion-col>
+      <!--RIGHT COL (only needed on browser)-->
+      <ion-col *ngIf="browserMode"></ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col>
+        <!--REGISTER LINK-->
+        <div text-center>
+          Already have an account? Go to <a routerLink="/login">login</a>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+
+<ng-template #browser>
+  <ion-card>
+    <!--HEADER-->
+    <ion-card-header>
+      <ion-card-title text-center>Welcome to aShoppingList!</ion-card-title>
+    </ion-card-header>
+
+    <!--FORM-->
+    <ion-card-content>
+      <ng-container [ngTemplateOutlet]="form"></ng-container>
+    </ion-card-content>
+  </ion-card>
+</ng-template>
+
+<ng-template #mobile>
+  <ng-container [ngTemplateOutlet]="form"></ng-container>
+</ng-template>
+
+<ng-template #form>
   <form [formGroup]="registerForm"
         novalidate
         (ngSubmit)="register()">
     <ion-grid>
-      <ion-row color="primary" justify-content-center>
-        <ion-col align-self-center sizeMd="6" sizeLg="5" sizeXs="12">
-          <div text-center>
-            <ion-title>Register and start shopping</ion-title>
-          </div>
+      <ion-row>
+        <ion-col>
+          <h2 text-center>Register here</h2>
+        </ion-col>
+      </ion-row>
+
+      <ion-row justify-content-center>
+        <ion-col sizeXl="8" sizeLg="8" sizeSm="12" sizeMd="12">
           <div padding>
             <!--REGISTER EMAIL-->
             <ion-item>
@@ -79,4 +118,4 @@
       </ion-row>
     </ion-grid>
   </form>
-</ion-content>
+</ng-template>
