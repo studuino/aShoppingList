@@ -36,7 +36,6 @@ export class AppComponent {
     private platformService: PlatformService
   ) {
     this.browserMode = this.platformService.isDesktopOptimized();
-    console.log(this.browserMode);
 
     if (this.platformService.isMobile()) {
       this.statusBar.styleDefault();
