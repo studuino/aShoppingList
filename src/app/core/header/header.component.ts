@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ModuleRoutes } from '../../ModuleRoutes';
-import { MenuController, NavController, Platform } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { AuthService } from '../../auth/shared/auth.service';
+import { PlatformService } from '../../shared/services/platform.service';
 
 @Component({
   selector: 'a-header',
@@ -19,13 +20,11 @@ export class HeaderComponent implements OnInit {
   browserMode = false;
 
   constructor(private router: Router,
-              private platform: Platform,
+              private platformService: PlatformService,
               private navCtrl: NavController,
               private menuCtrl: MenuController,
               private authService: AuthService) {
-    if (this.platform.is('desktop')) {
-      this.browserMode = true;
-    }
+    this.browserMode = this.platformService.isDesktopOptimized();
   }
 
   ngOnInit() {

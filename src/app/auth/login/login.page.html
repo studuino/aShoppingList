@@ -13,79 +13,97 @@
 
     <!--FORM-->
     <ion-row text-center>
-      <!--LEFT COL-->
-      <ion-col></ion-col>
+      <!--LEFT COL (only needed on browser)-->
+      <ion-col *ngIf="browserMode"></ion-col>
       <!--CENTER COL-->
-      <ion-col size="6">
+      <ion-col>
         <!--Login form-->
-        <ion-card>
-          <!--HEADER-->
-          <ion-card-header>
-            <ion-card-title>Welcome to aShoppingList!</ion-card-title>
-          </ion-card-header>
-
-          <!--FORM-->
-          <ion-card-content>
-            <form [formGroup]="loginForm"
-                  novalidate
-                  (ngSubmit)="login()">
-              <ion-grid>
-                <ion-row color="primary" justify-content-center>
-                  <ion-col align-self-center sizeMd="6" sizeLg="5" sizeXs="12">
-                    <div text-center>
-                      <ion-title>Please Login</ion-title>
-                    </div>
-                    <div padding>
-                      <!--EMAIL INPUT-->
-                      <ion-item>
-                        <ion-input name="email"
-                                   type="email"
-                                   placeholder="your@email.com"
-                                   formControlName="email"
-                                   ngDefaultControl
-                                   required></ion-input>
-                      </ion-item>
-                      <p *ngIf="email.touched && email.invalid" class="error"><sup>*</sup>Please enter an email</p>
-                      <!--PASSWORD INPUT-->
-                      <ion-item>
-                        <ion-input name="password"
-                                   type="password"
-                                   placeholder="Password"
-                                   formControlName="password"
-                                   ngDefaultControl
-                                   required></ion-input>
-                      </ion-item>
-                      <p *ngIf="password.touched && password.invalid" class="error"><sup>*</sup>Please enter a password
-                      </p>
-                      <p *ngIf="password.errors?.minlength" class="error"><sup>*</sup>Password should be at least 4
-                        characters
-                      </p>
-                    </div>
-                    <div padding>
-                      <!--SUBMIT-->
-                      <ion-button size="large"
-                                  type="submit"
-                                  [disabled]="!loginForm.valid"
-                                  expand="block">
-                        Login
-                      </ion-button>
-                    </div>
-                  </ion-col>
-                </ion-row>
-                <ion-row justify-content-center>
-                  <ion-col>
-                    <!--REGISTER LINK-->
-                    <div text-center>
-                      Don't have an account? Please <a routerLink="/register">register</a>
-                    </div>
-                  </ion-col>
-                </ion-row>
-              </ion-grid>
-            </form>
-          </ion-card-content>
-        </ion-card>
+        <ng-container *ngIf="browserMode then browser; else mobile"></ng-container>
       </ion-col>
-      <ion-col></ion-col>
+      <!--RIGHT COL (only needed on browser)-->
+      <ion-col *ngIf="browserMode"></ion-col>
     </ion-row>
   </ion-grid>
 </ion-content>
+
+<ng-template #browser>
+  <ion-card>
+    <!--HEADER-->
+    <ion-card-header>
+      <ion-card-title>Welcome to aShoppingList!</ion-card-title>
+    </ion-card-header>
+
+    <!--FORM-->
+    <ion-card-content>
+      <ng-container [ngTemplateOutlet]="form"></ng-container>
+    </ion-card-content>
+  </ion-card>
+</ng-template>
+
+<ng-template #mobile>
+  <ng-container [ngTemplateOutlet]="form"></ng-container>
+</ng-template>
+
+<ng-template #form>
+  <form [formGroup]="loginForm"
+        novalidate
+        (ngSubmit)="login()">
+    <ion-grid>
+      <ion-row justify-content-center>
+        <ion-col sizeXl="8" sizeLg="8" sizeSm="12" sizeMd="12">
+          <div text-center>
+            <ion-title>Please Login</ion-title>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <ion-row justify-content-center>
+        <ion-col sizeXl="8" sizeLg="8" sizeSm="12" sizeMd="12">
+          <div padding>
+            <!--EMAIL INPUT-->
+            <ion-item>
+              <ion-input name="email"
+                         type="email"
+                         placeholder="your@email.com"
+                         formControlName="email"
+                         ngDefaultControl
+                         required></ion-input>
+            </ion-item>
+            <p *ngIf="email.touched && email.invalid" class="error"><sup>*</sup>Please enter an email</p>
+            <!--PASSWORD INPUT-->
+            <ion-item>
+              <ion-input name="password"
+                         type="password"
+                         placeholder="Password"
+                         formControlName="password"
+                         ngDefaultControl
+                         required></ion-input>
+            </ion-item>
+            <p *ngIf="password.touched && password.invalid" class="error"><sup>*</sup>Please enter a password
+            </p>
+            <p *ngIf="password.errors?.minlength" class="error"><sup>*</sup>Password should be at least 4
+              characters
+            </p>
+          </div>
+          <div padding>
+            <!--SUBMIT-->
+            <ion-button size="large"
+                        type="submit"
+                        [disabled]="!loginForm.valid"
+                        expand="block">
+              Login
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row justify-content-center>
+        <ion-col>
+          <!--REGISTER LINK-->
+          <div text-center>
+            Don't have an account? Please <a routerLink="/register">register</a>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ng-template>

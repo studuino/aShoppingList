@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 
-import { MenuController, NavController, Platform } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './auth/shared/auth.service';
 import { ModuleRoutes } from './ModuleRoutes';
+import { PlatformService } from './shared/services/platform.service';
 
 @Component({
   selector: 'a-root',
@@ -27,17 +28,17 @@ export class AppComponent {
   browserMode = false;
 
   constructor(
-    private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public authService: AuthService,
     private navCtrl: NavController,
-    private menuCtrl: MenuController
+    private menuCtrl: MenuController,
+    private platformService: PlatformService
   ) {
-    if (this.platform.is('desktop')) {
-      console.log('Running in browser!');
-      this.browserMode = true;
-    } else {
+    this.browserMode = this.platformService.isDesktopOptimized();
+    console.log(this.browserMode);
+
+    if (this.platformService.isMobile()) {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
     }
@@ -45,13 +46,12 @@ export class AppComponent {
     this.initializeApp();
   }
 
-  initializeApp() {
-    this.platform.ready().then(() => {
-      if (this.authService.isAuthenticated()) {
-        this.menuCtrl.enable(true);
-        this.navCtrl.navigateRoot(ModuleRoutes.SHOPPING_LIST);
-      }
-    });
+  async initializeApp() {
+    await this.platformService.isReady();
+    if (this.authService.isAuthenticated()) {
+      this.menuCtrl.enable(true);
+      this.navCtrl.navigateRoot(ModuleRoutes.SHOPPING_LIST);
+    }
   }
 
   logout() {
