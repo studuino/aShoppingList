@@ -1,4 +1,4 @@
-describe('Login Page', () => {
+describe('Logout Page', () => {
     const baseUrl = 'http://localhost:8100';
 
     beforeEach(() => {
@@ -7,9 +7,7 @@ describe('Login Page', () => {
     });
 
     it('should logout', () => {
-        cy.login();
-        cy.get('ion-menu-button')
-            .should('be', 'visible')
-            .click();
+        cy.login().wait(3000);
+        // TODO ALH workout menu toggle click!
     });
 });
