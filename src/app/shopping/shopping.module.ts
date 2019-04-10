@@ -7,12 +7,15 @@ import { AuthGuard } from '../shared/guards/auth.guard';
 import { CoreModule } from '../core/core.module';
 import { FormsModule } from '@angular/forms';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
+import { ShoppingOptionsComponent } from './shopping-options/shopping-options.component';
 
 @NgModule({
   declarations: [
     ShoppingListComponent,
-    ItemDetailComponent
+    ItemDetailComponent,
+    ShoppingOptionsComponent
   ],
+  entryComponents: [ShoppingOptionsComponent],
   imports: [
     CommonModule,
     IonicModule,

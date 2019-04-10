@@ -28,6 +28,16 @@
       </ion-select-option>
     </ion-select>
   </ng-container>
+
+  <!--Options selector-->
+  <ng-container class="header-end-content">
+    <ion-buttons>
+      <ion-button (click)="presentOptions($event)">
+        <ion-icon mode="md" name="more" size="small" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ng-container>
+
 </a-header>
 
 <ion-content *ngIf="currentShoppingList">
@@ -83,7 +93,7 @@
           </ion-item-options>
           <!--SLIDE FROM RIGHT TO LEFT-->
           <ion-item-options side="end">
-            <!--EDIT ITEM-->
+            <!--RENAME ITEM-->
             <ion-item-option (click)="editItem(category, item, slidingItem)">
               <ion-icon slot="icon-only" name="create"></ion-icon>
             </ion-item-option>

@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { ShoppingCategory } from '../entities/ShoppingCategory';
 import { CategoryService } from '../shared/firestore/category.service';
 import { AuthService } from '../auth/shared/auth.service';
-import { AlertService } from '../shared/services/alert.service';
+import { InformationService } from '../shared/services/information.service';
 import { LocationWithSortedCategoriesService } from '../shared/firestore/location-with-sorted-categories.service';
 import { IonItemSliding } from '@ionic/angular';
 import { ShoppingListService } from '../shared/firestore/shopping-list.service';
@@ -19,7 +19,7 @@ export class CategoryPage implements OnInit {
 
   constructor(private categoryService: CategoryService,
               private authService: AuthService,
-              private alertService: AlertService,
+              private alertService: InformationService,
               private locationService: LocationWithSortedCategoriesService,
               private shoppingListService: ShoppingListService) {
   }
@@ -41,7 +41,7 @@ export class CategoryPage implements OnInit {
   }
 
   async promptForNewCategory() {
-    const prompt = await this.alertService.getInputAlert(
+    const prompt = await this.alertService.getRenamePrompt(
       'New Category',
       'Enter a name for this new category',
       {
@@ -61,7 +61,7 @@ export class CategoryPage implements OnInit {
   }
 
   async promptForRename(category: ShoppingCategory, slidingItem: IonItemSliding) {
-    const prompt = await this.alertService.getInputAlert(
+    const prompt = await this.alertService.getRenamePrompt(
       'Rename Category',
       'Enter a new title for this category',
       {

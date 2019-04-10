@@ -17,7 +17,12 @@
           <ng-content select=".header-right-content"></ng-content>
         </ion-col>
 
-        <ion-col *ngIf="browserMode">
+        <!--Optional end content-->
+        <ion-col class="center" size="1" *ngIf="mobile">
+          <ng-content select=".header-end-content"></ng-content>
+        </ion-col>
+
+        <ion-col class="center" size="1" *ngIf="browserMode">
           <ion-buttons justify-content-end>
             <ion-button (click)="logout()">
               <ion-icon icon="log-out" slot="icon-only"></ion-icon>

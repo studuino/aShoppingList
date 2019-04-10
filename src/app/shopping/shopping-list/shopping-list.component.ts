@@ -9,7 +9,10 @@ import { ShoppingItem } from '../../entities/ShoppingItem';
 import { Router } from '@angular/router';
 import { ModuleRoutes } from '../../ModuleRoutes';
 import { ShoppingRoutes } from '../ShoppingRoutes';
-import { IonItemSliding, NavController } from '@ionic/angular';
+import { IonItemSliding, NavController, PopoverController } from '@ionic/angular';
+import { ShoppingOptionsComponent } from '../shopping-options/shopping-options.component';
+import { EShoppingOption } from '../shared/EShoppingOption';
+import { InformationService } from '../../shared/services/information.service';
 
 @Component({
   selector: 'a-shopping-list',
@@ -33,7 +36,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
               private shoppingListService: ShoppingListService,
               private categoryService: CategoryService,
               private router: Router,
-              private navCtrl: NavController) {
+              private navCtrl: NavController,
+              private popoverCtrl: PopoverController,
+              private informationService: InformationService) {
   }
 
   ngOnInit() {
@@ -54,6 +59,41 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.shoppingListService.currentShoppingList = this.currentShoppingList;
     this.checkDefaultLocation();
     this.sortItemsByCurrentLocation();
+  }
+
+  async presentOptions(event) {
+    const popover = await this.popoverCtrl.create({
+      component: ShoppingOptionsComponent,
+      event: event,
+      translucent: true
+    });
+
+    popover.onDidDismiss().then((optionResponse) => this.handlePopoverClosed(optionResponse.data));
+
+    return await popover.present();
+  }
+
+  private async handlePopoverClosed(option) {
+    const shoppingListOption = option as EShoppingOption;
+
+    if (shoppingListOption === EShoppingOption.RENAME) {
+      const prompt = await this.informationService.getRenamePrompt(
+        'Rename Shopping list',
+        'Please provide new title for Shopping List',
+        data => {
+          // Get new category name from user input data
+          const newTitleForList = data.title;
+          this.renameShoppingList(newTitleForList);
+        }
+      );
+      prompt.present();
+    }
+  }
+
+  private renameShoppingList(newTitle: string) {
+    this.currentShoppingList.title = newTitle;
+
+    this.updateShoppingList();
   }
 
   sortItemsByCurrentLocation() {

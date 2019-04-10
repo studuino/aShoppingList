@@ -4,7 +4,7 @@ import { AlertController } from '@ionic/angular';
 @Injectable({
   providedIn: 'root'
 })
-export class AlertService {
+export class InformationService {
 
   constructor(private alertCtrl: AlertController) {
   }
@@ -12,7 +12,7 @@ export class AlertService {
   /**
    * Create standard alert with input for user
    */
-  async getInputAlert(title: string, messageForAlert: string, successButton) {
+  async getRenamePrompt(title: string, messageForAlert: string, successHandler) {
     return await this.alertCtrl.create({
       header: title,
       message: messageForAlert,
@@ -30,7 +30,10 @@ export class AlertService {
             console.log('Cancel clicked');
           }
         },
-        successButton
+        {
+          text: 'Save',
+          handler: successHandler
+        }
       ]
     });
   }
