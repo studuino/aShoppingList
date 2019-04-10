@@ -18,11 +18,11 @@
         </ion-col>
 
         <!--Optional end content-->
-        <ion-col class="center" size="1" *ngIf="mobile">
+        <ion-col>
           <ng-content select=".header-end-content"></ng-content>
         </ion-col>
 
-        <ion-col class="center" size="1" *ngIf="browserMode">
+        <ion-col *ngIf="browserMode">
           <ion-buttons justify-content-end>
             <ion-button (click)="logout()">
               <ion-icon icon="log-out" slot="icon-only"></ion-icon>
