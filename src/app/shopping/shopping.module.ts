@@ -8,12 +8,14 @@ import { CoreModule } from '../core/core.module';
 import { FormsModule } from '@angular/forms';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { ShoppingOptionsComponent } from './shopping-options/shopping-options.component';
+import { LocationWithSortedCategoriesComponent } from './location-with-sorted-categories/location-with-sorted-categories.component';
 
 @NgModule({
   declarations: [
     ShoppingListComponent,
     ItemDetailComponent,
-    ShoppingOptionsComponent
+    ShoppingOptionsComponent,
+    LocationWithSortedCategoriesComponent
   ],
   entryComponents: [ShoppingOptionsComponent],
   imports: [
@@ -30,6 +32,11 @@ import { ShoppingOptionsComponent } from './shopping-options/shopping-options.co
       {
         path: 'item',
         component: ItemDetailComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'location',
+        component: LocationWithSortedCategoriesComponent,
         canActivate: [AuthGuard]
       }
     ])

@@ -13,6 +13,7 @@ import { IonItemSliding, NavController, PopoverController } from '@ionic/angular
 import { ShoppingOptionsComponent } from '../shopping-options/shopping-options.component';
 import { EShoppingOption } from '../shared/EShoppingOption';
 import { InformationService } from '../../shared/services/information.service';
+import { ArrayUtil } from '../../shared/utils/ArrayUtil';
 
 @Component({
   selector: 'a-shopping-list',
@@ -76,17 +77,26 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   private async handlePopoverClosed(option) {
     const shoppingListOption = option as EShoppingOption;
 
-    if (shoppingListOption === EShoppingOption.RENAME) {
-      const prompt = await this.informationService.getRenamePrompt(
-        'Rename Shopping list',
-        'Please provide new title for Shopping List',
-        data => {
-          // Get new category name from user input data
-          const newTitleForList = data.title;
-          this.renameShoppingList(newTitleForList);
-        }
-      );
-      prompt.present();
+    switch (shoppingListOption) {
+      case EShoppingOption.RENAME:
+        const prompt = await this.informationService.getRenamePrompt(
+          'Rename Shopping list',
+          'Please provide new title for Shopping List',
+          data => {
+            // Get new category name from user input data
+            const newTitleForList = data.title;
+            this.renameShoppingList(newTitleForList);
+          }
+        );
+        prompt.present();
+        break;
+      case EShoppingOption.REORDER:
+        // Ensure current location is shared
+        this.shoppingListService.currentLocation = this.currentLocationWithSortedCategories;
+        this.navCtrl.navigateForward(`${ModuleRoutes.SHOPPING_LIST}/${ShoppingRoutes.LOCATION_WITH_SORTED_CATEGORIES}`);
+        break;
+      default:
+        break;
     }
   }
 
@@ -133,11 +143,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   reorderItems(positionChange, items: ShoppingItem[]) {
-    // Use splicing to reorder items (https://stackoverflow.com/questions/2440700/reordering-arrays/2440723)
-    const fromPosition = positionChange.from;
-    const itemToMove = items.splice(fromPosition, 1)[0];
-    const toPosition = positionChange.to;
-    items.splice(toPosition, 0, itemToMove);
+    ArrayUtil.reorderItemsInArray(positionChange, items);
     positionChange.complete();
     // Send updated list to firestore!
     this.updateShoppingList();

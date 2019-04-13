@@ -1,0 +1,17 @@
+<a-header [shouldDisplayBackButton]="true">
+  <ng-container class="header-center-content">
+    <ion-label>LOCATION</ion-label>
+  </ng-container>
+</a-header>
+
+<ion-content *ngIf="currentLocation">
+  <ion-list>
+    <ion-reorder-group disabled="false"
+                       (ionItemReorder)="reorderItems($event.detail)">
+      <ion-item *ngFor="let category of currentLocation.sortedCategories">
+        <ion-label>{{category?.title}}</ion-label>
+        <ion-reorder slot="end"></ion-reorder>
+      </ion-item>
+    </ion-reorder-group>
+  </ion-list>
+</ion-content>

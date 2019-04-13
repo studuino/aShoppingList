@@ -1,3 +1,4 @@
 export enum EShoppingOption {
-  RENAME = 'RENAME'
+  RENAME = 'RENAME',
+  REORDER = 'REORDER'
 }

@@ -17,6 +17,7 @@ export class ShoppingListService {
   public currentItem: ShoppingItem;
   public currentCategory: ShoppingCategory;
   public currentShoppingList: ShoppingList;
+  public currentLocation: LocationWithSortedCategories;
 
   constructor(private afs: AngularFirestore) {
   }
