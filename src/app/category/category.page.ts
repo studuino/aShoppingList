@@ -44,13 +44,10 @@ export class CategoryPage implements OnInit {
     const prompt = await this.alertService.getRenamePrompt(
       'New Category',
       'Enter a name for this new category',
-      {
-        text: 'Save',
-        handler: data => {
-          // Get new category name from user input data
-          const nameOfNewCategory = data.title;
-          this.createCategory(nameOfNewCategory);
-        }
+      data => {
+        // Get new category name from user input data
+        const nameOfNewCategory = data.title;
+        this.createCategory(nameOfNewCategory);
       });
     prompt.present();
   }
