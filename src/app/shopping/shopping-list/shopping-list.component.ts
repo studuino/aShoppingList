@@ -14,6 +14,7 @@ import { ShoppingOptionsComponent } from '../shopping-options/shopping-options.c
 import { EShoppingOption } from '../shared/EShoppingOption';
 import { InformationService } from '../../shared/services/information.service';
 import { ArrayUtil } from '../../shared/utils/ArrayUtil';
+import { LocationWithSortedCategoriesService } from '../../shared/firestore/location-with-sorted-categories.service';
 
 @Component({
   selector: 'a-shopping-list',
@@ -36,6 +37,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   constructor(private authService: AuthService,
               private shoppingListService: ShoppingListService,
               private categoryService: CategoryService,
+              private locationService: LocationWithSortedCategoriesService,
               private router: Router,
               private navCtrl: NavController,
               private popoverCtrl: PopoverController,
@@ -78,22 +80,34 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const shoppingListOption = option as EShoppingOption;
 
     switch (shoppingListOption) {
-      case EShoppingOption.RENAME:
-        const prompt = await this.informationService.getRenamePrompt(
+      case EShoppingOption.RENAME_SHOPPING_LIST:
+        const renameListPrompt = await this.informationService.getRenamePrompt(
           'Rename Shopping list',
-          'Please provide new title for Shopping List',
+          'Please provide new title for the Shopping List',
           data => {
             // Get new category name from user input data
-            const newTitleForList = data.title;
-            this.renameShoppingList(newTitleForList);
+            const newTitle = data.title;
+            this.renameShoppingList(newTitle);
           }
         );
-        prompt.present();
+        renameListPrompt.present();
         break;
-      case EShoppingOption.REORDER:
+      case EShoppingOption.REORDER_CATEGORIES:
         // Ensure current location is shared
         this.shoppingListService.currentLocation = this.currentLocationWithSortedCategories;
         this.navCtrl.navigateForward(`${ModuleRoutes.SHOPPING_LIST}/${ShoppingRoutes.LOCATION_WITH_SORTED_CATEGORIES}`);
+        break;
+      case EShoppingOption.RENAME_LOCATION:
+        const renameLocationPrompt = await this.informationService.getRenamePrompt(
+          'Rename Location',
+          'Please provide new title for the location',
+          data => {
+            // Get new category name from user input data
+            const newTitle = data.title;
+            this.renameLocation(newTitle);
+          }
+        );
+        renameLocationPrompt.present();
         break;
       default:
         break;
@@ -104,6 +118,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.currentShoppingList.title = newTitle;
 
     this.updateShoppingList();
+  }
+
+  private renameLocation(newTitle: string) {
+    this.currentLocationWithSortedCategories.title = newTitle;
+
+    this.locationService.update(this.currentLocationWithSortedCategories);
   }
 
   sortItemsByCurrentLocation() {

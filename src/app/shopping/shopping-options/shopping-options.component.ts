@@ -17,10 +17,14 @@ export class ShoppingOptionsComponent implements OnInit {
   onEditClicked() {
     // String is used, since the data binding will not recognized by the handler
     // TODO ALH: Investigate further
-    this.popoverCtrl.dismiss('RENAME');
+    this.popoverCtrl.dismiss('RENAME_SHOPPING_LIST');
   }
 
   onReorderClicked() {
-    this.popoverCtrl.dismiss('REORDER');
+    this.popoverCtrl.dismiss('REORDER_CATEGORIES');
+  }
+
+  onRenameClicked() {
+    this.popoverCtrl.dismiss('RENAME_LOCATION');
   }
 }
