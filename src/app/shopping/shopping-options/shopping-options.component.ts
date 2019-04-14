@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 import { ShoppingListService } from '../../shared/firestore/shopping-list.service';
 import { AuthService } from '../../auth/shared/auth.service';
@@ -9,7 +9,7 @@ import { first, map } from 'rxjs/operators';
   templateUrl: './shopping-options.component.html',
   styleUrls: ['./shopping-options.component.scss'],
 })
-export class ShoppingOptionsComponent implements OnInit, OnDestroy {
+export class ShoppingOptionsComponent implements OnInit {
   deleteAvailable: boolean;
 
   $shoppingListCount;
@@ -17,17 +17,13 @@ export class ShoppingOptionsComponent implements OnInit, OnDestroy {
   constructor(private popoverCtrl: PopoverController,
               private authService: AuthService,
               private shoppingListService: ShoppingListService) {
+  }
+
+  ngOnInit() {
     this.$shoppingListCount = this.shoppingListService.getShoppingListsByUserUid(this.authService.getUserUid())
       .pipe(first())
       .pipe(map(shoppingListsArray => shoppingListsArray.length))
       .subscribe(amountOfShoppingLists => this.deleteAvailable = amountOfShoppingLists > 1);
-  }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy(): void {
-    this.$shoppingListCount.unsubscribe();
   }
 
   /**** SHOPPING LIST ACTIONS ****/

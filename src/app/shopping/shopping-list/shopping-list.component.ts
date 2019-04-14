@@ -58,7 +58,15 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   /***** HEADER ACTIONS *****/
 
-  selectShoppingList() {
+  selectShoppingList(uid?: string) {
+    // If a uid was provided to this method
+    if (uid) {
+      // Find list in array
+      const selectedListInArray = this.userShoppingLists.find(shoppingList => shoppingList.uid === uid);
+      if (selectedListInArray) {
+        this.currentShoppingList = selectedListInArray;
+      }
+    }
     this.shoppingListService.currentShoppingList = this.currentShoppingList;
     this.checkDefaultLocation();
     this.sortItemsByCurrentLocation();
@@ -142,7 +150,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   private createShoppingList(newTitle: string) {
-    this.shoppingListService.create(this.authService.getUserUid(), newTitle, this.currentLocationWithSortedCategories.uid);
+    this.shoppingListService.create(this.authService.getUserUid(), newTitle, this.currentLocationWithSortedCategories.uid)
+      .then(newShoppingListUid => this.selectShoppingList(newShoppingListUid));
   }
 
   private renameShoppingList(newTitle: string) {
