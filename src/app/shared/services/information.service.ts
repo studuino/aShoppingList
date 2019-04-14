@@ -10,6 +10,29 @@ export class InformationService {
   }
 
   /**
+   * Create standard alert for deletion
+   */
+  async getDeletePrompt(title: string, messageForAlert: string, successHandler) {
+    return await this.alertCtrl.create({
+      header: title,
+      message: `<strong>${messageForAlert}</strong>`,
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: data => {
+            console.log('Cancel clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          cssClass: 'danger',
+          handler: successHandler
+        }
+      ]
+    });
+  }
+
+  /**
    * Create standard alert with input for user
    */
   async getRenamePrompt(title: string, messageForAlert: string, successHandler) {

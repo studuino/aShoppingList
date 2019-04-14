@@ -4,14 +4,21 @@
     <ion-label>Shopping List</ion-label>
   </ion-list-header>
 
-  <!--RENAME SHOPPING LIST SHOPPING LIST-->
+  <!--CREATE NEW SHOPPING LIST-->
   <ion-item (click)="onNewListClicked()">
     <ion-label>New</ion-label>
     <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
   </ion-item>
 
+  <!--RENAME SHOPPING LIST SHOPPING LIST-->
   <ion-item (click)="onRenameListClicked()">
     <ion-label>Rename</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+
+  <!--DELETE SHOPPING LIST-->
+  <ion-item *ngIf="deleteAvailable" (click)="onDeleteList()">
+    <ion-label>Delete</ion-label>
     <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
   </ion-item>
 

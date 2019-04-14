@@ -104,6 +104,21 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         );
         renameListPrompt.present();
         break;
+      case EShoppingOption.DELETE_SHOPPING_LIST:
+        const promptDeleteList = await this.informationService.getDeletePrompt(
+          'Delete Shopping list',
+          'Please confirm that you want to delete the Shopping List',
+          data => {
+            const listToSwitchTo = this.userShoppingLists.find(shoppingList => shoppingList.uid !== this.currentShoppingList.uid);
+            if (listToSwitchTo) {
+              const selectedShoppingListUidToDelete = this.currentShoppingList.uid;
+              this.currentShoppingList = listToSwitchTo;
+              this.deleteShoppingList(selectedShoppingListUidToDelete);
+            }
+          }
+        );
+        promptDeleteList.present();
+        break;
       case EShoppingOption.REORDER_CATEGORIES:
         // Ensure current location is shared
         this.shoppingListService.currentLocation = this.currentLocationWithSortedCategories;
@@ -127,13 +142,17 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   private createShoppingList(newTitle: string) {
-    this.shoppingListService.createShoppingList(this.authService.getUserUid(), newTitle, this.currentLocationWithSortedCategories.uid);
+    this.shoppingListService.create(this.authService.getUserUid(), newTitle, this.currentLocationWithSortedCategories.uid);
   }
 
   private renameShoppingList(newTitle: string) {
     this.currentShoppingList.title = newTitle;
 
     this.updateShoppingList();
+  }
+
+  private deleteShoppingList(uid: string) {
+    this.shoppingListService.delete(uid);
   }
 
   private renameLocation(newTitle: string) {

@@ -32,6 +32,47 @@ export class ShoppingListService {
         ref.where('userUid', '==', userUid)).valueChanges();
   }
 
+  /***
+   * Create new shopping list in firestore
+   * @return Uid of new list as {Promise<string>}
+   */
+  create(userUid: string, newTitle: string, defaultLocationUid: string): Promise<string> {
+    // Create UUID for document
+    const newUid = this.afs.createId();
+    // Create new shopping list
+    const newShoppingList: ShoppingList = {
+      uid: newUid,
+      userUid: userUid,
+      defaultLocationUid: defaultLocationUid,
+      title: newTitle,
+      cart: {
+        items: []
+      },
+      categories: [
+        {
+          title: 'Uncategorized',
+          items: []
+        }
+      ]
+    };
+    // Add new shopping list to firestore
+    return this.afs.firestore.collection(this.SHOPPING_LISTS_COLLECTION)
+      .doc(newUid)
+      .set(newShoppingList)
+      .then(() => {
+        // Return uid of new list
+        return newUid;
+      });
+  }
+
+  /**
+   * Delete shopping list, by provided uid from firestore
+   */
+  delete(uid: string) {
+    return this.afs.firestore.collection(this.SHOPPING_LISTS_COLLECTION).doc(uid)
+      .delete();
+  }
+
   sortItemsByCurrentLocation(shoppingList: ShoppingList,
                              locationWithSortedCategories: LocationWithSortedCategories) {
     const UNCATEGORIZED = 'Uncategorized';
@@ -160,38 +201,5 @@ export class ShoppingListService {
           }
         });
       }));
-  }
-
-  /***
-   * Create new shopping list in firestore
-   * @return Uid of new list as {Promise<string>}
-   */
-  createShoppingList(userUid: string, newTitle: string, defaultLocationUid: string): Promise<string> {
-    // Create UUID for document
-    const newUid = this.afs.createId();
-    // Create new shopping list
-    const newShoppingList: ShoppingList = {
-      uid: newUid,
-      userUid: userUid,
-      defaultLocationUid: defaultLocationUid,
-      title: newTitle,
-      cart: {
-        items: []
-      },
-      categories: [
-        {
-          title: 'Uncategorized',
-          items: []
-        }
-      ]
-    };
-    // Add new shopping list to firestore
-    return this.afs.firestore.collection(this.SHOPPING_LISTS_COLLECTION)
-      .doc(newUid)
-      .set(newShoppingList)
-      .then(() => {
-        // Return uid of new list
-        return newUid;
-      });
   }
 }
