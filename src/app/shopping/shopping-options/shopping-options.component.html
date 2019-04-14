@@ -5,7 +5,12 @@
   </ion-list-header>
 
   <!--RENAME SHOPPING LIST SHOPPING LIST-->
-  <ion-item (click)="onEditClicked()">
+  <ion-item (click)="onNewListClicked()">
+    <ion-label>New</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+
+  <ion-item (click)="onRenameListClicked()">
     <ion-label>Rename</ion-label>
     <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
   </ion-item>
@@ -16,7 +21,7 @@
   </ion-list-header>
 
   <!--RENAME SHOPPING LIST LOCATION-->
-  <ion-item (click)="onRenameClicked()">
+  <ion-item (click)="onRenameLocationClicked()">
     <ion-label>Rename</ion-label>
     <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
   </ion-item>

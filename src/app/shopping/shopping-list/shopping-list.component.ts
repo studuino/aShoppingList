@@ -80,6 +80,18 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const shoppingListOption = option as EShoppingOption;
 
     switch (shoppingListOption) {
+      case EShoppingOption.NEW_SHOPPING_LIST:
+        const newListPrompt = await this.informationService.getRenamePrompt(
+          'Create new Shopping list',
+          'Please provide a title for the Shopping List',
+          data => {
+            // Get new category name from user input data
+            const newTitle = data.title;
+            this.createShoppingList(newTitle);
+          }
+        );
+        newListPrompt.present();
+        break;
       case EShoppingOption.RENAME_SHOPPING_LIST:
         const renameListPrompt = await this.informationService.getRenamePrompt(
           'Rename Shopping list',
@@ -112,6 +124,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       default:
         break;
     }
+  }
+
+  private createShoppingList(newTitle: string) {
+    this.shoppingListService.createShoppingList(this.authService.getUserUid(), newTitle, this.currentLocationWithSortedCategories.uid);
   }
 
   private renameShoppingList(newTitle: string) {

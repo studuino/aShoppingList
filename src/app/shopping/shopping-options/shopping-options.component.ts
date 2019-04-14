@@ -14,7 +14,7 @@ export class ShoppingOptionsComponent implements OnInit {
   ngOnInit() {
   }
 
-  onEditClicked() {
+  onRenameListClicked() {
     // String is used, since the data binding will not recognized by the handler
     // TODO ALH: Investigate further
     this.popoverCtrl.dismiss('RENAME_SHOPPING_LIST');
@@ -24,7 +24,11 @@ export class ShoppingOptionsComponent implements OnInit {
     this.popoverCtrl.dismiss('REORDER_CATEGORIES');
   }
 
-  onRenameClicked() {
+  onRenameLocationClicked() {
     this.popoverCtrl.dismiss('RENAME_LOCATION');
+  }
+
+  onNewListClicked() {
+    this.popoverCtrl.dismiss('NEW_SHOPPING_LIST');
   }
 }
