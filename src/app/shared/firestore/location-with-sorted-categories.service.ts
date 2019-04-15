@@ -131,4 +131,13 @@ export class LocationWithSortedCategoriesService {
     return this.afs.doc<LocationWithSortedCategories>(`${this.LOCATION_WITH_SORTED_CATEGORIES_COLLECTION}/${uid}`)
       .valueChanges();
   }
+
+  /**
+   * Delete location from firestore
+   */
+  delete(uid: string) {
+    return this.afs.collection(this.LOCATION_WITH_SORTED_CATEGORIES_COLLECTION)
+      .doc(uid)
+      .delete();
+  }
 }

@@ -54,4 +54,8 @@ export class ShoppingOptionsComponent implements OnInit {
   onNewLocationClicked() {
     this.popoverCtrl.dismiss('NEW_LOCATION');
   }
+
+  onDeleteLocationClicked() {
+    this.popoverCtrl.dismiss('DELETE_LOCATION');
+  }
 }

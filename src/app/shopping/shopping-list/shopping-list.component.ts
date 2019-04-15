@@ -156,6 +156,23 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         );
         renameLocationPrompt.present();
         break;
+      case EShoppingOption.DELETE_LOCATION:
+        const promptDeleteLocation = await this.informationService.getDeletePrompt(
+          'Delete location',
+          'Please confirm that you want to delete the location',
+          data => {
+            const locationToSwitchTo = this.locationsWithSortedCategories
+              .find(location => location.uid !== this.currentLocationWithSortedCategories.uid);
+            if (locationToSwitchTo) {
+              const selectedLocationUidToDelete = this.currentLocationWithSortedCategories.uid;
+              this.currentLocationWithSortedCategories = locationToSwitchTo;
+              this.sortItemsByCurrentLocation();
+              this.deleteLocation(selectedLocationUidToDelete);
+            }
+          }
+        );
+        promptDeleteLocation.present();
+        break;
       default:
         break;
     }
@@ -174,6 +191,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   private deleteShoppingList(uid: string) {
     this.shoppingListService.delete(uid);
+  }
+
+  private async deleteLocation(uid: string) {
+    await this.locationService.delete(uid);
   }
 
   private createLocation(newTitle: string) {
