@@ -3,15 +3,14 @@ import { LocationWithSortedCategories } from '../../entities/LocationWithSortedC
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ShoppingCategory } from '../../entities/ShoppingCategory';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { first } from 'rxjs/internal/operators/first';
+import { first, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocationWithSortedCategoriesService {
 
-  private LOCATION_SORTED_CATEGORIES_COLLECTION = 'locationSortedCategories';
+  private LOCATION_WITH_SORTED_CATEGORIES_COLLECTION = 'locationSortedCategories';
 
   constructor(private afs: AngularFirestore) {
   }
@@ -20,7 +19,7 @@ export class LocationWithSortedCategoriesService {
    * Get location sorted categories by user uid
    */
   getAll(userUid: string): Observable<LocationWithSortedCategories[]> {
-    return this.afs.collection<LocationWithSortedCategories>(this.LOCATION_SORTED_CATEGORIES_COLLECTION,
+    return this.afs.collection<LocationWithSortedCategories>(this.LOCATION_WITH_SORTED_CATEGORIES_COLLECTION,
       ref => ref.where('userUid', '==', userUid)).valueChanges();
   }
 
@@ -28,7 +27,7 @@ export class LocationWithSortedCategoriesService {
    * Update location with sorted categories
    */
   update(locationWithSortedCategories: LocationWithSortedCategories) {
-    return this.afs.collection(this.LOCATION_SORTED_CATEGORIES_COLLECTION)
+    return this.afs.collection(this.LOCATION_WITH_SORTED_CATEGORIES_COLLECTION)
       .doc(locationWithSortedCategories.uid)
       .update(locationWithSortedCategories);
   }
@@ -103,5 +102,33 @@ export class LocationWithSortedCategoriesService {
           }
         });
       })).subscribe();
+  }
+
+  /**
+   * Create a new location with sorted categories for user
+   */
+  async create(userUid: string, title: string, categories: ShoppingCategory[]): Promise<LocationWithSortedCategories> {
+    const newUid = this.afs.createId();
+    const newLocationWithSortedCategories: LocationWithSortedCategories = {
+      uid: newUid,
+      userUid: userUid,
+      title: title,
+      sortedCategories: categories
+    };
+    await this.afs.collection(this.LOCATION_WITH_SORTED_CATEGORIES_COLLECTION)
+      .doc(newUid)
+      .set(newLocationWithSortedCategories);
+
+    return await this.get(newUid)
+      .pipe(first())
+      .toPromise();
+  }
+
+  /**
+   * Get Location by uid
+   */
+  get(uid: string): Observable<LocationWithSortedCategories> {
+    return this.afs.doc<LocationWithSortedCategories>(`${this.LOCATION_WITH_SORTED_CATEGORIES_COLLECTION}/${uid}`)
+      .valueChanges();
   }
 }

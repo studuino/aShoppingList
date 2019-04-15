@@ -51,4 +51,7 @@ export class ShoppingOptionsComponent implements OnInit {
     this.popoverCtrl.dismiss('RENAME_LOCATION');
   }
 
+  onNewLocationClicked() {
+    this.popoverCtrl.dismiss('NEW_LOCATION');
+  }
 }

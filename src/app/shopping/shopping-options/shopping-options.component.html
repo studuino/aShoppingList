@@ -6,19 +6,19 @@
 
   <!--CREATE NEW SHOPPING LIST-->
   <ion-item (click)="onNewListClicked()">
-    <ion-label>New</ion-label>
+    <ion-label>New List</ion-label>
     <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
   </ion-item>
 
   <!--RENAME SHOPPING LIST SHOPPING LIST-->
   <ion-item (click)="onRenameListClicked()">
-    <ion-label>Rename</ion-label>
+    <ion-label>Rename List</ion-label>
     <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
   </ion-item>
 
   <!--DELETE SHOPPING LIST-->
   <ion-item *ngIf="deleteAvailable" (click)="onDeleteList()">
-    <ion-label>Delete</ion-label>
+    <ion-label>Delete List</ion-label>
     <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
   </ion-item>
 
@@ -27,9 +27,15 @@
     <ion-label>Location</ion-label>
   </ion-list-header>
 
+  <!--NEW SHOPPING LIST LOCATION-->
+  <ion-item (click)="onNewLocationClicked()">
+    <ion-label>New Location</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+
   <!--RENAME SHOPPING LIST LOCATION-->
   <ion-item (click)="onRenameLocationClicked()">
-    <ion-label>Rename</ion-label>
+    <ion-label>Rename Location</ion-label>
     <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
   </ion-item>
 

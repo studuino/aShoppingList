@@ -41,7 +41,7 @@ export class CategoryPage implements OnInit {
   }
 
   async promptForNewCategory() {
-    const prompt = await this.alertService.getRenamePrompt(
+    const prompt = await this.alertService.getInputTitlePrompt(
       'New Category',
       'Enter a name for this new category',
       data => {
@@ -58,7 +58,7 @@ export class CategoryPage implements OnInit {
   }
 
   async promptForRename(category: ShoppingCategory, slidingItem: IonItemSliding) {
-    const prompt = await this.alertService.getRenamePrompt(
+    const prompt = await this.alertService.getInputTitlePrompt(
       'Rename Category',
       'Enter a new title for this category',
       data => {

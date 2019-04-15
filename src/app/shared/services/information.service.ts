@@ -35,7 +35,7 @@ export class InformationService {
   /**
    * Create standard alert with input for user
    */
-  async getRenamePrompt(title: string, messageForAlert: string, successHandler) {
+  async getInputTitlePrompt(title: string, messageForAlert: string, successHandler) {
     return await this.alertCtrl.create({
       header: title,
       message: messageForAlert,

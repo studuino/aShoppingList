@@ -89,7 +89,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
     switch (shoppingListOption) {
       case EShoppingOption.NEW_SHOPPING_LIST:
-        const newListPrompt = await this.informationService.getRenamePrompt(
+        const newListPrompt = await this.informationService.getInputTitlePrompt(
           'Create new Shopping list',
           'Please provide a title for the Shopping List',
           data => {
@@ -101,7 +101,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         newListPrompt.present();
         break;
       case EShoppingOption.RENAME_SHOPPING_LIST:
-        const renameListPrompt = await this.informationService.getRenamePrompt(
+        const renameListPrompt = await this.informationService.getInputTitlePrompt(
           'Rename Shopping list',
           'Please provide new title for the Shopping List',
           data => {
@@ -127,13 +127,25 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         );
         promptDeleteList.present();
         break;
+      case EShoppingOption.NEW_LOCATION:
+        const newLocationPrompt = await this.informationService.getInputTitlePrompt(
+          'New Location',
+          'Please provide a title for the location',
+          data => {
+            // Get new category name from user input data
+            const newTitle = data.title;
+            this.createLocation(newTitle);
+          }
+        );
+        newLocationPrompt.present();
+        break;
       case EShoppingOption.REORDER_CATEGORIES:
         // Ensure current location is shared
         this.shoppingListService.currentLocation = this.currentLocationWithSortedCategories;
         this.navCtrl.navigateForward(`${ModuleRoutes.SHOPPING_LIST}/${ShoppingRoutes.LOCATION_WITH_SORTED_CATEGORIES}`);
         break;
       case EShoppingOption.RENAME_LOCATION:
-        const renameLocationPrompt = await this.informationService.getRenamePrompt(
+        const renameLocationPrompt = await this.informationService.getInputTitlePrompt(
           'Rename Location',
           'Please provide new title for the location',
           data => {
@@ -162,6 +174,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   private deleteShoppingList(uid: string) {
     this.shoppingListService.delete(uid);
+  }
+
+  private createLocation(newTitle: string) {
+    this.locationService.create(this.authService.getUserUid(), newTitle, this.currentLocationWithSortedCategories.sortedCategories)
+      .then(newLocation => this.currentLocationWithSortedCategories = newLocation);
   }
 
   private renameLocation(newTitle: string) {
