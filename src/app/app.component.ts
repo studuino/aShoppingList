@@ -23,6 +23,11 @@ export class AppComponent {
       title: 'Categories',
       url: '/category',
       icon: 'filing'
+    },
+    {
+      title: 'Profile',
+      url: '/profile',
+      icon: 'contact'
     }
   ];
   browserMode = false;

@@ -60,4 +60,20 @@ export class InformationService {
       ]
     });
   }
+
+  /**
+   * Get standard confirm alert for user
+   */
+  async getConfirmAlert(title: string, messageForAlert: string, successHandler) {
+    return await this.alertCtrl.create({
+      header: title,
+      message: messageForAlert,
+      buttons: [
+        {
+          text: 'Roger!',
+          handler: successHandler
+        }
+      ]
+    });
+  }
 }

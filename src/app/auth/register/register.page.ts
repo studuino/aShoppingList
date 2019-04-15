@@ -5,6 +5,7 @@ import { AuthService } from '../shared/auth.service';
 import { NavController } from '@ionic/angular';
 import { ModuleRoutes } from '../../ModuleRoutes';
 import { PlatformService } from '../../shared/services/platform.service';
+import { InformationService } from '../../shared/services/information.service';
 
 @Component({
   selector: 'a-register',
@@ -18,7 +19,8 @@ export class RegisterPage implements OnInit {
   constructor(private fb: FormBuilder,
               private platformService: PlatformService,
               private authService: AuthService,
-              private navCtrl: NavController) {
+              private navCtrl: NavController,
+              private informationService: InformationService) {
   }
 
   ngOnInit(): void {
@@ -31,7 +33,7 @@ export class RegisterPage implements OnInit {
       ])),
       password: ['', [
         Validators.required,
-        Validators.minLength(4)
+        Validators.minLength(6)
       ]],
       repeatPassword: ['', [
         Validators.required,
@@ -57,8 +59,15 @@ export class RegisterPage implements OnInit {
     const password = this.password.value;
     // Handle registration
     this.authService.registerWithEmailAndPassword(email, password)
-      .then(() => {
+      .then(async () => {
         this.navCtrl.navigateRoot(ModuleRoutes.LOGIN);
+        const confirmation = await this.informationService.getConfirmAlert(
+          'Your account is now created!',
+          'Please login for the first time to validate your account.',
+          () => {
+          }
+        );
+        confirmation.present();
       })
       .catch(err => {
         // TODO Handle error and add popup!

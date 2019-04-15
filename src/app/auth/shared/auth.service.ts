@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
+import { FirestoreUser } from '../../entities/FirestoreUser';
 import UserCredential = firebase.auth.UserCredential;
 
 @Injectable({
@@ -44,5 +45,22 @@ export class AuthService {
 
   registerWithEmailAndPassword(email: string, password: string) {
     return this.afAuth.auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  /**
+   * Convert current auth user to typesafe user
+   */
+  getUser() {
+    const user: FirestoreUser = {
+      email: this.afAuth.auth.currentUser.email
+    };
+    return user;
+  }
+
+  /**
+   * Delete current user from firestore
+   */
+  deleteAccount() {
+    return this.afAuth.auth.currentUser.delete();
   }
 }

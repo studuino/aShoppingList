@@ -14,7 +14,9 @@ const routes: Routes = [
   /**** SHOPPING ROUTES ****/
   {path: 'shopping', loadChildren: './shopping/shopping.module#ShoppingPageModule', canLoad: [AuthGuard]},
   /**** CATEGORY ROUTES ****/
-  {path: 'category', loadChildren: './category/category.module#CategoryPageModule', canLoad: [AuthGuard]}
+  {path: 'category', loadChildren: './category/category.module#CategoryPageModule', canLoad: [AuthGuard]},
+  /**** PROFILE ROUTES ****/
+  {path: 'profile', loadChildren: './profile/profile.module#ProfilePageModule'}
 
 
 ];
