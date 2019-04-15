@@ -43,8 +43,13 @@
     </ion-button>
 
     <!--CATEGORY LINK-->
-    <ion-button [ngClass]="{'active': !isShoppingUrl()}" (click)="navigateToCategories()">
+    <ion-button [ngClass]="{'active': isCategories()}" (click)="navigateToCategories()">
       <ion-icon icon="filing" slot="icon-only"></ion-icon>
+    </ion-button>
+
+    <!--PROFILE LINK-->
+    <ion-button [ngClass]="{'active': isProfile()}" (click)="navigateToProfile()">
+      <ion-icon icon="contact" slot="icon-only"></ion-icon>
     </ion-button>
 
   </ion-buttons>

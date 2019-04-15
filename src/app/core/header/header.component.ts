@@ -38,8 +38,20 @@ export class HeaderComponent implements OnInit {
     return window.location.href.includes(ModuleRoutes.SHOPPING_LIST);
   }
 
+  isCategories() {
+    return window.location.href.includes(ModuleRoutes.CATEGORY);
+  }
+
+  isProfile() {
+    return window.location.href.includes(ModuleRoutes.PROFILE);
+  }
+
   navigateToCategories() {
     this.router.navigateByUrl('/category');
+  }
+
+  navigateToProfile() {
+    this.router.navigateByUrl('/profile');
   }
 
   logout() {
