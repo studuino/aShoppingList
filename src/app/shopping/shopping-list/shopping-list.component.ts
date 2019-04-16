@@ -216,6 +216,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.shoppingListService.sortItemsByCurrentLocation(this.currentShoppingList, this.currentLocationWithSortedCategories);
   }
 
+  /**
+   * Add new uncategorized item
+   */
   addItem() {
     const newItem: ShoppingItem = {
       title: this.newItemTitle,
