@@ -14,6 +14,7 @@
       <ion-col>
         <ion-item>
           <ion-input text-center
+                     debounce="500"
                      type="text"
                      (ionChange)="updateSelectedItemInCategory()"
                      [(ngModel)]="selectedItem.title"></ion-input>
@@ -44,7 +45,7 @@
       <ion-col>
         <!--DISPLAY AMOUNT-->
         <ion-input text-center
-                   type="number"
+                   debounce="500"
                    [value]="selectedItem.quantity"></ion-input>
       </ion-col>
 
@@ -74,7 +75,7 @@
       <ion-col size="4">
         <ion-item>
           <ion-input text-center
-                     type="number"
+                     debounce="500"
                      (ionChange)="updateSelectedItemInCategory()"
                      [(ngModel)]="selectedItem.price"></ion-input>
         </ion-item>

@@ -44,6 +44,8 @@
   <!--Add Item Section-->
   <ion-item>
     <ion-input type="text"
+               debounce="100"
+               (ionChange)="searchForItem(newItemTitle)"
                placeholder="Type Name Of Item To Add"
                (keyup.enter)="addItem()"
                [(ngModel)]="newItemTitle">
@@ -57,6 +59,14 @@
       <ion-icon slot="icon-only" name="add"></ion-icon>
     </ion-button>
   </ion-item>
+
+  <ion-list *ngIf="itemsFromSearch?.length > 0">
+    <ion-item *ngFor="let foundItem of itemsFromSearch"
+              text-center>
+      <ion-button
+          clear (click)="addFoundItem(foundItem)">{{foundItem.title}}</ion-button>
+    </ion-item>
+  </ion-list>
 
   <!--Items Section-->
   <ng-container *ngFor="let category of currentShoppingList?.categories">

@@ -7,6 +7,7 @@ import { CategoryService } from './firestore/category.service';
 import { InformationService } from './services/information.service';
 import { LocationWithSortedCategoriesService } from './firestore/location-with-sorted-categories.service';
 import { PlatformService } from './services/platform.service';
+import { ItemsService } from './firestore/items.service';
 
 @NgModule({
   declarations: [],
@@ -20,7 +21,8 @@ import { PlatformService } from './services/platform.service';
     CategoryService,
     InformationService,
     LocationWithSortedCategoriesService,
-    PlatformService
+    PlatformService,
+    ItemsService
   ]
 })
 export class SharedModule {

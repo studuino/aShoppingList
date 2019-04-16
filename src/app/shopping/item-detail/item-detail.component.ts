@@ -6,6 +6,7 @@ import { ShoppingList } from '../../entities/ShoppingList';
 import { AuthService } from '../../auth/shared/auth.service';
 import { CategoryService } from '../../shared/firestore/category.service';
 import { Observable } from 'rxjs';
+import { ItemsService } from '../../shared/firestore/items.service';
 
 @Component({
   selector: 'a-item-detail',
@@ -20,6 +21,7 @@ export class ItemDetailComponent {
 
   constructor(private shoppingListService: ShoppingListService,
               private authService: AuthService,
+              private itemService: ItemsService,
               private categoriesService: CategoryService) {
     this.selectedItem = this.shoppingListService.currentItem;
     this.selectedCategory = this.shoppingListService.currentCategory;
@@ -83,5 +85,7 @@ export class ItemDetailComponent {
     this.selectedCategory.items.push(this.selectedItem);
     // Update the shopping list
     this.updateSelectedItemInCategory();
+    // Add item to users previously added items
+    this.itemService.add(this.authService.getUserUid(), this.selectedItem);
   }
 }

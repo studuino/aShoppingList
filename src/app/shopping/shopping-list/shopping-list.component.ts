@@ -15,6 +15,8 @@ import { EShoppingOption } from '../shared/EShoppingOption';
 import { InformationService } from '../../shared/services/information.service';
 import { ArrayUtil } from '../../shared/utils/ArrayUtil';
 import { LocationWithSortedCategoriesService } from '../../shared/firestore/location-with-sorted-categories.service';
+import { take } from 'rxjs/operators';
+import { ItemsService } from '../../shared/firestore/items.service';
 
 @Component({
   selector: 'a-shopping-list',
@@ -33,10 +35,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   newItemTitle = '';
   private currentShoppingListTotal: number;
   private currentCartTotal: number;
+  private itemsFromSearch: ShoppingItem[];
 
   constructor(private authService: AuthService,
               private shoppingListService: ShoppingListService,
               private categoryService: CategoryService,
+              private itemService: ItemsService,
               private locationService: LocationWithSortedCategoriesService,
               private router: Router,
               private navCtrl: NavController,
@@ -222,8 +226,52 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     const uncategorized = this.categoryService.getUncategorizedCategoryFromShoppingList(this.currentShoppingList);
     uncategorized.items.push(newItem);
     this.updateShoppingList();
-    // Reset newItemTitle
+
     this.newItemTitle = '';
+  }
+
+  searchForItem(newItemTitle: string) {
+    // Ensure we clear out previous search
+    this.itemsFromSearch = null;
+
+    // Defensive programming
+    if (newItemTitle.length === 0) return;
+
+    this.itemService.searchForPreviousItem(this.authService.getUserUid(), newItemTitle)
+    // Ensure subscriptions is closed
+      .pipe(take(1))
+      .subscribe(result => {
+        console.log(result);
+        this.itemsFromSearch = result as ShoppingItem[];
+      });
+  }
+
+  private clearSearch() {
+    this.newItemTitle = '';
+    this.itemsFromSearch = null;
+  }
+
+  /**
+   * Add found item from item search
+   */
+  addFoundItem(foundItem: ShoppingItem) {
+    this.clearSearch();
+
+    foundItem.checked = false;
+    foundItem.quantity = 1;
+
+    // Look for category from item in shopping list
+    let categoryToAddItemTo: ShoppingCategory = this.currentShoppingList.categories
+      .find(category => category.uid === foundItem.categoryUid);
+
+    // If not found, instantiate category to default
+    if (!categoryToAddItemTo) {
+      categoryToAddItemTo = this.categoryService.getUncategorizedCategoryFromShoppingList(this.currentShoppingList);
+    }
+    // Add item to category
+    categoryToAddItemTo.items.push(foundItem);
+
+    this.updateShoppingList();
   }
 
   /***** ITEM LIST *****/
