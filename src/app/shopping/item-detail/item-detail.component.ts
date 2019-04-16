@@ -85,7 +85,9 @@ export class ItemDetailComponent {
     this.selectedCategory.items.push(this.selectedItem);
     // Update the shopping list
     this.updateSelectedItemInCategory();
+    // Ensure Pascal case!
+    this.selectedItem.title = this.selectedItem.title.charAt(0).toUpperCase() + this.selectedItem.title.slice(1);
     // Add item to users previously added items
-    this.itemService.add(this.authService.getUserUid(), this.selectedItem);
+    this.itemService.addItem(this.authService.getUserUid(), this.selectedItem);
   }
 }
