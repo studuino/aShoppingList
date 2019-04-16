@@ -8,6 +8,7 @@
     "release": "npm run release-web && npm run release-android",
     "ionic-android": "ionic cordova run android -l",
     "release-android": "ionic cordova build android --prod --release",
+    "ionic-ios": "ionic cordova run ios -l",
     "ionic-serve": "ng run app:serve --host=0.0.0.0 --port=8100",
     "release-web": "ionic build --prod && firebase deploy",
     "ng": "ng",
