@@ -1,6 +1,8 @@
 # aShoppingList
 Ionic Live Shopping List App
 
+The app is live deployed [Here](https://adamino-shoppinglist.firebaseapp.com/shopping)
+
 ## Before starting the project
 The project is configured to use [Google Firebase](https://firebase.google.com/).
 
@@ -30,6 +32,8 @@ The project is started with the regular [Ionic Commands](https://ionicframework.
     - iOS: `ionic cordova build ios --device`
 
 An alternative is to emulate the app on a device or upload it to the ionic cloud. From here you can download the ionic view app and use the app on all devices.
+
+## Here will come a section about testing!
 
 ## Bugs and Issues
 

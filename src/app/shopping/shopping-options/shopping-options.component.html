@@ -1,0 +1,53 @@
+<ion-list no-padding no-margin>
+  <!--SHOPPING LIST ACTIONS-->
+  <ion-list-header>
+    <ion-label>Shopping List</ion-label>
+  </ion-list-header>
+
+  <!--CREATE NEW SHOPPING LIST-->
+  <ion-item (click)="onNewListClicked()">
+    <ion-label>New List</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+
+  <!--RENAME SHOPPING LIST SHOPPING LIST-->
+  <ion-item (click)="onRenameListClicked()">
+    <ion-label>Rename List</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+
+  <!--DELETE SHOPPING LIST-->
+  <ion-item *ngIf="deleteAvailable" (click)="onDeleteList()">
+    <ion-label>Delete List</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+
+  <!--LOCATION ACTIONS-->
+  <ion-list-header>
+    <ion-label>Location</ion-label>
+  </ion-list-header>
+
+  <!--NEW SHOPPING LIST LOCATION-->
+  <ion-item (click)="onNewLocationClicked()">
+    <ion-label>New Location</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+
+  <!--RENAME SHOPPING LIST LOCATION-->
+  <ion-item (click)="onRenameLocationClicked()">
+    <ion-label>Rename Location</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+
+  <!--REORDER CATEGORY CATEGORY FOR LOCATION-->
+  <ion-item (click)="onReorderClicked()">
+    <ion-label>Reorder Categories</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+
+  <!--DELETE SHOPPING LIST LOCATION-->
+  <ion-item (click)="onDeleteLocationClicked()">
+    <ion-label>Delete Location</ion-label>
+    <ion-icon mode="ios" name="arrow-forward" slot="end"></ion-icon>
+  </ion-item>
+</ion-list>

@@ -1,0 +1,168 @@
+<a-header>
+  <!--Shopping List Selector-->
+  <ng-container class="header-center-content">
+    <ion-select *ngIf="userShoppingLists"
+                [(ngModel)]="currentShoppingList"
+                (ionChange)="selectShoppingList()"
+                [selectedText]="currentShoppingList?.title"
+                interface="popover">
+      <ion-select-option *ngFor="let shoppingList of userShoppingLists"
+                         [selected]="currentShoppingList?.uid.match(shoppingList?.uid)"
+                         [value]="shoppingList">
+        {{ shoppingList?.title }}
+      </ion-select-option>
+    </ion-select>
+  </ng-container>
+
+  <!--Location selector-->
+  <ng-container class="header-right-content">
+    <ion-select *ngIf="locationsWithSortedCategories"
+                [(ngModel)]="currentLocationWithSortedCategories"
+                (ionChange)="sortItemsByCurrentLocation()"
+                [selectedText]="currentLocationWithSortedCategories?.title"
+                interface="popover">
+      <ion-select-option *ngFor="let locationWithSortedCategories of locationsWithSortedCategories"
+                         [selected]="currentLocationWithSortedCategories?.uid.match(locationWithSortedCategories?.uid)"
+                         [value]="locationWithSortedCategories">
+        {{ locationWithSortedCategories?.title }}
+      </ion-select-option>
+    </ion-select>
+  </ng-container>
+
+  <!--Options selector-->
+  <ng-container class="header-end-content">
+    <ion-buttons justify-content-center>
+      <ion-button (click)="presentOptions($event)">
+        <ion-icon mode="md" name="more" size="small" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ng-container>
+
+</a-header>
+
+<ion-content *ngIf="currentShoppingList">
+  <!--Add Item Section-->
+  <ion-item>
+    <ion-input type="text"
+               debounce="100"
+               (ionChange)="searchForItem(newItemTitle)"
+               placeholder="Type Name Of Item To Add"
+               (keyup.enter)="addItem()"
+               [(ngModel)]="newItemTitle">
+    </ion-input>
+    <ion-button
+        shape="round"
+        fill="outline"
+        id="addItemButton"
+        *ngIf="newItemTitle?.length > 0"
+        (click)="addItem()">
+      <ion-icon slot="icon-only" name="add"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-list *ngIf="itemsFromSearch?.length > 0">
+    <ion-item *ngFor="let foundItem of itemsFromSearch"
+              text-center>
+      <ion-button
+          clear (click)="addFoundItem(foundItem)">{{foundItem.title}}</ion-button>
+    </ion-item>
+  </ion-list>
+
+  <!--Items Section-->
+  <ng-container *ngFor="let category of currentShoppingList?.categories">
+    <ion-list *ngIf="category.items.length > 0">
+      <!--Category-->
+      <ion-list-header>
+        {{category.title}}
+      </ion-list-header>
+      <ion-reorder-group disabled="false"
+                         (ionItemReorder)="reorderItems($event.detail, category.items)">
+        <!--Slide item-->
+        <ion-item-sliding *ngFor="let item of category.items" #slidingItem>
+          <ion-item>
+            <ion-checkbox slot="start"
+                          (ionChange)="checkItemToCart(category, item)"
+                          [(ngModel)]="item.checked"></ion-checkbox>
+            <ion-label *ngIf="item.quantity === 1">
+              <h2>{{item.title}}</h2>
+              <h3 *ngIf="item.price">{{item.price}} kr.</h3>
+            </ion-label>
+            <ion-label *ngIf="item.quantity > 1">
+              <h2>{{item.title}} - [{{item.quantity}}]</h2>
+              <h3 *ngIf="item.price">{{item.price * item.quantity}} Kr.</h3>
+            </ion-label>
+            <ion-reorder slot="end"></ion-reorder>
+          </ion-item>
+          <!--SLIDE FROM LEFT TO RIGHT-->
+          <ion-item-options side="start">
+            <!--REMOVE ITEM-->
+            <ion-item-option color="danger"
+                             (click)="removeItem(category, item, slidingItem)">
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+          <!--SLIDE FROM RIGHT TO LEFT-->
+          <ion-item-options side="end">
+            <!--RENAME ITEM-->
+            <ion-item-option (click)="editItem(category, item, slidingItem)">
+              <ion-icon slot="icon-only" name="create"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
+        </ion-item-sliding>
+      </ion-reorder-group>
+    </ion-list>
+  </ng-container>
+
+  <!--Cart section-->
+  <ion-list *ngIf="currentShoppingList?.cart.items.length > 0">
+    <ion-list-header text-center>
+      Your Cart - {{currentCartTotal}} Kr.
+      <ion-buttons>
+        <ion-button
+            color="warning"
+            slot="start"
+            (click)="uncheckAllItemsFromCart()">
+          Uncheck All
+        </ion-button>
+        <ion-button
+            color="success"
+            slot="end"
+            (click)="checkoutCart()">
+          Checkout
+        </ion-button>
+      </ion-buttons>
+    </ion-list-header>
+    <!--Checked items-->
+    <ion-item *ngFor="let checkedItem of currentShoppingList.cart.items">
+      <ion-checkbox slot="start" (ionChange)="uncheckItemFromCart(checkedItem)"
+                    [checked]="checkedItem.checked"></ion-checkbox>
+      <ion-label>
+        <h2>{{checkedItem.title}}</h2>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<!--
+TODO ALH: Implement more options!
+<ion-col text-end size="2">
+  <ion-button icon-only (click)="presentPopover()">
+    <ion-icon name="more"></ion-icon>
+  </ion-button>
+</ion-col>-->
+
+<!--
+<ion-content>
+      TODO ALH: Implement search for item!
+    <ion-item>
+                 (debounce)="1000"
+                 (ionChange)="searchForItem(newItemTitle)"
+    </ion-item>
+    <ion-list *ngIf="itemsFromSearch.length > 0">
+      <ion-item *ngFor="let foundItem of itemsFromSearch"
+                text-center>
+        <ion-button
+            clear (click)="addFoundItem(foundItem, shoppingList)">{{foundItem.title}}</ion-button>
+      </ion-item>
+    </ion-list>
+</ion-content>-->

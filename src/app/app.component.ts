@@ -1,65 +1,68 @@
-import {Component, ViewChild} from '@angular/core';
-import {Nav, Platform} from 'ionic-angular';
-import {StatusBar} from '@ionic-native/status-bar';
-import {SplashScreen} from '@ionic-native/splash-screen';
+import { Component } from '@angular/core';
 
-import {ShoppingListPage} from '../pages/shopping-list/shopping-list';
-import {ScreenOrientation} from '@ionic-native/screen-orientation';
-import {CategoriesPage} from '../pages/categories/categories';
-import {AuthProvider} from '../providers/auth/auth';
+import { MenuController, NavController } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { AuthService } from './auth/shared/auth.service';
+import { ModuleRoutes } from './ModuleRoutes';
+import { PlatformService } from './shared/services/platform.service';
 
 @Component({
-  templateUrl: 'app.html'
+  selector: 'a-root',
+  templateUrl: 'app.component.html'
 })
-export class MyApp {
-  @ViewChild(Nav) nav: Nav;
+export class AppComponent {
 
-  rootPage: any = 'LoginPage';
+  public appPages = [
+    {
+      title: 'Shopping List',
+      url: '/shopping',
+      icon: 'basket'
+    },
+    {
+      title: 'Categories',
+      url: '/category',
+      icon: 'filing'
+    },
+    {
+      title: 'Profile',
+      url: '/profile',
+      icon: 'contact'
+    }
+  ];
+  browserMode = false;
 
-  pages: Array<{ title: string, component: any }>;
+  constructor(
+    private splashScreen: SplashScreen,
+    private statusBar: StatusBar,
+    public authService: AuthService,
+    private navCtrl: NavController,
+    private menuCtrl: MenuController,
+    private platformService: PlatformService
+  ) {
+    this.browserMode = this.platformService.isDesktopOptimized();
 
-  constructor(public platform: Platform,
-              public statusBar: StatusBar,
-              public splashScreen: SplashScreen,
-              private authProvider: AuthProvider,
-              private screenOrientation: ScreenOrientation) {
-    this.initializeApp();
-
-    // used for an example of ngFor and navigation
-    this.pages = [
-      {title: 'Shopping List', component: ShoppingListPage},
-      {title: 'Categories', component: CategoriesPage},
-      {title: 'User', component: 'UserPage'}
-    ];
-
-  }
-
-  initializeApp() {
-    this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
+    if (this.platformService.isMobile()) {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-
-      // Check for mobile platform
-      if (this.platform.is('cordova')) {
-        // set to portrait
-        this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT)
-      }
-
-      // Check for logged in user
-      this.authProvider.userIsLoggedIn()
-        .subscribe(isAuthenticated => {
-          if (isAuthenticated) {
-            this.rootPage = ShoppingListPage;
-          }
-        })
-    });
+    }
+    this.menuCtrl.enable(false);
+    this.initializeApp();
   }
 
-  openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
-    this.nav.setRoot(page.component);
+  async initializeApp() {
+    await this.platformService.isReady();
+    if (this.authService.isAuthenticated()) {
+      this.menuCtrl.enable(true);
+      this.navCtrl.navigateRoot(ModuleRoutes.SHOPPING_LIST);
+    }
+  }
+
+  logout() {
+    this.navCtrl.navigateRoot(ModuleRoutes.LOGIN)
+      .then(() => {
+        this.menuCtrl.enable(false);
+        this.authService.logout();
+      });
   }
 }

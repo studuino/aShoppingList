@@ -1,0 +1,115 @@
+<a-header [shouldDisplayBackButton]="true">
+  <ng-container class="header-center-content">{{selectedItem?.title}}</ng-container>
+</a-header>
+
+<ion-content>
+  <ion-grid *ngIf="selectedItem">
+    <!--RENAME TITLE-->
+    <ion-row>
+      <ion-col>
+        <ion-title text-center>Title</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <ion-input text-center
+                     debounce="500"
+                     type="text"
+                     (ionChange)="updateSelectedItemInCategory()"
+                     [(ngModel)]="selectedItem.title"></ion-input>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
+    <br>
+
+    <!--QUANTITY-->
+    <ion-row>
+      <ion-col>
+        <ion-title text-center>Quantity</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <!--DECREASE-->
+        <ion-buttons justify-content-center>
+          <ion-button fill="outline"
+                      color="danger"
+                      (click)="decreaseAmount()">
+            <ion-icon name="remove"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-col>
+
+      <ion-col>
+        <!--DISPLAY AMOUNT-->
+        <ion-input text-center
+                   debounce="500"
+                   [value]="selectedItem.quantity"></ion-input>
+      </ion-col>
+
+      <ion-col>
+        <!--INCREASE-->
+        <ion-buttons justify-content-center>
+          <ion-button color="success"
+                      fill="outline"
+                      (click)="increaseAmount()">
+            <ion-icon name="add"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-col>
+    </ion-row>
+    <ion-item-divider></ion-item-divider>
+
+    <br>
+
+    <!--UNIT PRICE-->
+    <ion-row>
+      <ion-col>
+        <ion-title text-center>Unit Price</ion-title>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="4"></ion-col>
+      <ion-col size="4">
+        <ion-item>
+          <ion-input text-center
+                     debounce="500"
+                     (ionChange)="updateSelectedItemInCategory()"
+                     [(ngModel)]="selectedItem.price"></ion-input>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4">Kr.</ion-col>
+    </ion-row>
+    <ion-item-divider></ion-item-divider>
+
+    <br>
+
+    <!--CATEGORY-->
+    <ion-row align-items-center>
+      <ion-col>
+        <ion-title text-center>Category</ion-title>
+      </ion-col>
+    </ion-row>
+    <!--CATEGORY SELECT-->
+    <ion-row *ngIf="$categories | async as categories">
+      <ion-col>
+        <ion-select
+            text-center
+            class="category-select"
+            (ionChange)="moveItemToCategory()"
+            [selectedText]="selectedCategory.title"
+            [(ngModel)]="selectedCategory">
+          <ion-select-option *ngFor="let category of categories"
+                             [selected]="selectedCategory.title === 'Uncategorized' || selectedCategory.uid.match(category.uid)"
+                             [value]="category">{{category.title}}
+          </ion-select-option>
+        </ion-select>
+      </ion-col>
+    </ion-row>
+
+    <ion-item-divider></ion-item-divider>
+
+  </ion-grid>
+</ion-content>

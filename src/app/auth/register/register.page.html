@@ -1,0 +1,121 @@
+<ion-content>
+  <!--Logo-->
+  <br>
+  <ion-grid>
+    <!--Logo-->
+    <a-logo></a-logo>
+
+    <!--FORM-->
+    <ion-row justify-content-center>
+      <!--LEFT COL (only needed on browser)-->
+      <ion-col *ngIf="browserMode"></ion-col>
+      <!--CENTER COL-->
+      <ion-col size="8">
+        <!--Login form-->
+        <ng-container *ngIf="browserMode then browser; else mobile"></ng-container>
+      </ion-col>
+      <!--RIGHT COL (only needed on browser)-->
+      <ion-col *ngIf="browserMode"></ion-col>
+    </ion-row>
+
+    <ion-row justify-content-center>
+      <ion-col>
+        <!--REGISTER LINK-->
+        <div text-center>
+          Already have an account? Go to <a routerLink="/login">login</a>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+
+<ng-template #browser>
+  <ion-card>
+    <!--HEADER-->
+    <ion-card-header>
+      <ion-card-title text-center>Welcome to aShoppingList!</ion-card-title>
+    </ion-card-header>
+
+    <!--FORM-->
+    <ion-card-content>
+      <ng-container [ngTemplateOutlet]="form"></ng-container>
+    </ion-card-content>
+  </ion-card>
+</ng-template>
+
+<ng-template #mobile>
+  <ng-container [ngTemplateOutlet]="form"></ng-container>
+</ng-template>
+
+<ng-template #form>
+  <form [formGroup]="registerForm"
+        novalidate
+        (ngSubmit)="register()">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <h2 text-center>Register here</h2>
+        </ion-col>
+      </ion-row>
+
+      <ion-row justify-content-center>
+        <ion-col sizeXl="8" sizeLg="8" sizeSm="12" sizeMd="12">
+          <div padding>
+            <!--REGISTER EMAIL-->
+            <ion-item>
+              <ion-input name="email"
+                         type="email"
+                         placeholder="your@email.com"
+                         formControlName="email"
+                         required></ion-input>
+            </ion-item>
+            <div *ngIf="email.touched && email.invalid">
+              <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+              Please enter a valid email
+            </div>
+
+            <!--REGISTER PASSWORD-->
+            <ion-item>
+              <ion-input name="password"
+                         type="password"
+                         placeholder="Password"
+                         formControlName="password"
+                         required></ion-input>
+            </ion-item>
+            <div *ngIf="password.touched && password.invalid">
+              <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+              Please enter a password
+            </div>
+            <div *ngIf="password.errors?.minlength">
+              <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+              Password should be at least 6 characters
+            </div>
+
+            <ion-item>
+              <ion-input name="repeatPassword"
+                         type="password"
+                         placeholder="Repeat Password"
+                         formControlName="repeatPassword"
+                         required></ion-input>
+            </ion-item>
+            <div *ngIf="confirmPassword.touched &&
+                      confirmPassword.invalid &&
+                      confirmPassword.getError('passwordsMustMatch')">
+              <ion-icon color="danger" name="information-circle-outline"></ion-icon>
+              Please type password again
+            </div>
+          </div>
+          <div padding>
+            <ion-button size="large"
+                        type="submit"
+                        [disabled]="!registerForm.valid"
+                        expand="block">
+              Register
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ng-template>

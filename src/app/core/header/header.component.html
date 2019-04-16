@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-grid>
+      <ion-row text-center>
+        <!--LEFT CONTENT-->
+        <ion-col size="2">
+          <ng-container *ngIf="browserMode then browser; else mobile"></ng-container>
+        </ion-col>
+
+        <!--Center Content-->
+        <ion-col size="4">
+          <ng-content select=".header-center-content"></ng-content>
+        </ion-col>
+
+        <!--Right Content-->
+        <ion-col size="4">
+          <ng-content select=".header-right-content"></ng-content>
+        </ion-col>
+
+        <!--Optional end content-->
+        <ion-col>
+          <ng-content select=".header-end-content"></ng-content>
+        </ion-col>
+
+        <ion-col *ngIf="browserMode">
+          <ion-buttons justify-content-end>
+            <ion-button (click)="logout()">
+              <ion-icon icon="log-out" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+
+<!--BROWSER MARKUP-->
+<ng-template #browser>
+  <!--BUTTONS-->
+  <ion-buttons>
+    <ng-container *ngIf="shouldDisplayBackButton then backButton; else browserButtons"></ng-container>
+  </ion-buttons>
+
+  <ng-template #browserButtons>
+    <!--SHOPPING LIST LINK-->
+    <ion-button [ngClass]="{'active': isShoppingUrl()}" (click)="navigateToShopping()">
+      <ion-icon icon="basket" slot="icon-only"></ion-icon>
+    </ion-button>
+
+    <!--CATEGORY LINK-->
+    <ion-button [ngClass]="{'active': isCategories()}" (click)="navigateToCategories()">
+      <ion-icon icon="filing" slot="icon-only"></ion-icon>
+    </ion-button>
+
+    <!--PROFILE LINK-->
+    <ion-button [ngClass]="{'active': isProfile()}" (click)="navigateToProfile()">
+      <ion-icon icon="contact" slot="icon-only"></ion-icon>
+    </ion-button>
+  </ng-template>
+</ng-template>
+
+<!--MOBILE MARKUP-->
+<ng-template #mobile>
+  <!--Left Menu Toggle-->
+  <ng-container *ngIf="shouldDisplayBackButton then backButton; else menuButton"></ng-container>
+  <ng-template #menuButton>
+    <ion-buttons>
+      <ion-menu-button slot="start"></ion-menu-button>
+    </ion-buttons>
+  </ng-template>
+</ng-template>
+
+<ng-template #backButton>
+  <ion-buttons>
+    <ion-back-button slot="start" defaultHref="home"></ion-back-button>
+  </ion-buttons>
+</ng-template>
+
+

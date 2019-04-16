@@ -1,0 +1,29 @@
+<a-header>
+  <ng-container class="header-center-content">
+    <ion-label>Your Profile</ion-label>
+  </ng-container>
+</a-header>
+
+<ion-content *ngIf="currentUser">
+  <ion-grid text-center>
+    <!--USER INFO-->
+    <ion-row>
+      <ion-col>
+        <label>Email: {{currentUser.email}}</label>
+      </ion-col>
+    </ion-row>
+
+    <!--USER ACTIONS-->
+    <ion-row>
+      <ion-col></ion-col>
+      <ion-col>
+        <ion-buttons justify-content-center>
+          <ion-button color="danger"
+                      (click)="onDeleteClicked()">DELETE ACCOUNT
+          </ion-button>
+        </ion-buttons>
+      </ion-col>
+      <ion-col></ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
