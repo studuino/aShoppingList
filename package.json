@@ -13,7 +13,7 @@
     "release-web": "ionic build --prod && firebase deploy",
     "ng": "ng",
     "start": "ng serve",
-    "build": "npm run release",
+    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "cypress open"
